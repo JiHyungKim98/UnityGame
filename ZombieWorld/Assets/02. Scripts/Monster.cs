@@ -1,0 +1,71 @@
+using UnityEngine;
+using UnityEngine.AI;
+using System.Collections;
+
+namespace ZombieWorld
+{
+    public class Monster : MonoBehaviour
+    {
+        protected NavMeshAgent nav;
+        public Vector3 direction;
+        public Transform target;
+        public float velocity;
+        public float enemyMoveTime;
+
+        public MonsterObserver observer;
+        public Player m_player;
+
+        void Awake()
+        {
+            nav = GetComponent<NavMeshAgent>();
+
+        }
+        void Start()
+        {
+            enemyMoveTime = 2.0f;
+            observer = GameObject.Find("PointOfView").GetComponent("MonsterObserver") as MonsterObserver;
+            m_player = GameObject.Find("Player").GetComponent("Player") as Player;
+        }
+        void Update()
+        {
+            target = GameObject.Find("Player").transform;
+
+            if (observer.m_IsPlayerInRange)
+            {
+                MoveToTarget();
+            }
+            else
+            {
+                StartCoroutine(randPos());
+            }
+
+        }
+        public IEnumerator randPos()
+        {
+            float NewX = Random.Range(-0.01f, 0.01f);
+            float NewZ= Random.Range(-0.01f, 0.01f);
+            Vector3 NewPos = new Vector3(this.transform.position.x+NewX, 0, this.transform.position.z + NewZ).normalized;
+            //Debug.Log("현재 랜덤 위치" + NewPos);
+            nav.SetDestination(NewPos);
+            yield return new WaitForSeconds(enemyMoveTime);
+        }
+        public void MoveToTarget()
+        {
+            this.transform.LookAt(target.transform);
+            this.transform.position = Vector3.MoveTowards(this.transform.position,target.transform.position,0.1f);
+            
+        }
+
+        //void OnCollisionEnter(Collision hit)
+
+        //{
+        //    if (hit.gameObject.CompareTag("Player"))
+        //    {
+        //        Debug.Log("PlayerHit");
+        //        m_player.collider.Move(transform.forward * -3.0f);
+        //    }
+        //}
+
+
+    }
+}
