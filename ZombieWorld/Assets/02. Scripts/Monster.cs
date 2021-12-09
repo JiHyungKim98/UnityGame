@@ -11,6 +11,7 @@ namespace ZombieWorld
         public Transform target;
         public float velocity;
         public float enemyMoveTime;
+        public float followTime;
 
         public MonsterObserver observer;
         public Player m_player;
@@ -23,6 +24,7 @@ namespace ZombieWorld
         void Start()
         {
             enemyMoveTime = 2.0f;
+            followTime = 5.0f;
             observer = GameObject.Find("PointOfView").GetComponent("MonsterObserver") as MonsterObserver;
             m_player = GameObject.Find("Player").GetComponent("Player") as Player;
         }
@@ -32,7 +34,8 @@ namespace ZombieWorld
 
             if (observer.m_IsPlayerInRange)
             {
-                MoveToTarget();
+                //Debug.Log("before MoveToTarget()");
+                StartCoroutine(MoveToTarget());
             }
             else
             {
@@ -49,20 +52,30 @@ namespace ZombieWorld
             nav.SetDestination(NewPos);
             yield return new WaitForSeconds(enemyMoveTime);
         }
-        public void MoveToTarget()
+
+        //public void MoveToTarget()
+        //{
+        //    Debug.Log("after MoveToTarget()");
+        //    this.transform.LookAt(target.transform);
+        //    this.transform.position = Vector3.MoveTowards(this.transform.position,target.transform.position,0.1f);
+            
+        //}
+        public IEnumerator MoveToTarget()
         {
+            //Debug.Log("after MoveToTarget()");
             this.transform.LookAt(target.transform);
             this.transform.position = Vector3.MoveTowards(this.transform.position,target.transform.position,0.1f);
-            
+            yield return new WaitForSeconds(followTime);
         }
 
         //void OnCollisionEnter(Collision hit)
 
         //{
-        //    if (hit.gameObject.CompareTag("Player"))
+        //    if (hit.transform.tag == "Player")
         //    {
         //        Debug.Log("PlayerHit");
-        //        m_player.collider.Move(transform.forward * -3.0f);
+        //        //m_player.collider.Move(transform.forward * -3.0f);
+        //        MoveToTarget();
         //    }
         //}
 

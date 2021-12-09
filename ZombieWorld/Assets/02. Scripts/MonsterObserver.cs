@@ -4,14 +4,13 @@ using UnityEngine;
 
 public class MonsterObserver : MonoBehaviour
 {
-    public Transform player;
     public bool m_IsPlayerInRange;
 
     void OnTriggerEnter(Collider other)
     {
         if (other.transform.tag == "Player")
         {
-            Debug.Log("player in");
+            //Debug.Log("player in");
             m_IsPlayerInRange = true;
         }
     }
@@ -20,7 +19,7 @@ public class MonsterObserver : MonoBehaviour
         if (other.transform.tag == "Player")
         {
             m_IsPlayerInRange = false;
-            Debug.Log("player out");
+            //Debug.Log("player out");
         }
     }
 

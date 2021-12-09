@@ -130,13 +130,13 @@ namespace ZombieWorld
         {
             //MoveDir.y = jumpSpeedF;
             controller.Move(this.transform.forward * -3.0f);
-            CurrentPlayerHP -= 10;
+            CurrentPlayerHP -= damage;
         
         }
 
         private void Heal(float point)
         {
-            CurrentPlayerHP += 10;
+            CurrentPlayerHP += point;
         
         }
     }
