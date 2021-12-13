@@ -52,8 +52,8 @@ namespace ZombieWorld
         }
         public IEnumerator randPos()
         {
-            float NewX = Random.Range(-0.01f, 0.01f);
-            float NewZ= Random.Range(-0.01f, 0.01f);
+            float NewX = UnityEngine.Random.Range(-0.01f, 0.01f);
+            float NewZ= UnityEngine.Random.Range(-0.01f, 0.01f);
             Vector3 NewPos = new Vector3(this.transform.position.x+NewX, 0, this.transform.position.z + NewZ).normalized;
             //Debug.Log("현재 랜덤 위치" + NewPos);
             nav.SetDestination(NewPos);
