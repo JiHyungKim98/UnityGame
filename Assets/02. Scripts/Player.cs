@@ -4,8 +4,7 @@ using UnityEngine;
 
 namespace ZombieWorld
 {
-<<<<<<< HEAD
-    public class Player : MonoBehaviour{
+
     public class Player : BaseCharacter
     {
 
