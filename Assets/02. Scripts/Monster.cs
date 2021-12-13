@@ -1,11 +1,18 @@
+using System;
 using UnityEngine;
 using UnityEngine.AI;
+<<<<<<< HEAD
 using System.Collections;
+=======
+>>>>>>> c455e4b94af234772b8f794155e5151a9f0fa674
 
 namespace ZombieWorld
 {
-    public class Monster : MonoBehaviour
+    
+    [RequireComponent(typeof(NavMeshAgent))]
+    public class Monster : BaseCharacter
     {
+<<<<<<< HEAD
         protected NavMeshAgent nav;
         public Vector3 direction;
         public Transform target;
@@ -80,5 +87,32 @@ namespace ZombieWorld
         //}
 
 
+=======
+        private NavMeshAgent agent;
+        private void Awake()
+        {
+            agent = GetComponent<NavMeshAgent>();
+        }
+
+        public void OnSpawn()
+        {
+            
+        }
+
+        public void Die()
+        {
+            
+        }
+
+        public void Attack()
+        {
+            
+        }
+
+        public void UserSkill()
+        {
+            //TODO: 
+        }
+>>>>>>> c455e4b94af234772b8f794155e5151a9f0fa674
     }
 }
