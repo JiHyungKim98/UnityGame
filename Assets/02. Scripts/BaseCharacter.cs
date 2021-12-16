@@ -1,14 +1,29 @@
 using UnityEngine;
+using System.Collections.Generic;
+using System.Collections;
 
 namespace ZombieWorld
 {
     public class BaseCharacter : MonoBehaviour
     {
         private float hp;
-
-        private void TakeDamage(float damage)
+        public float HP
         {
-            hp -= damage;
+            get
+            {
+                return this.hp;
+            }
+            set
+            {
+                this.hp = value;
+            }
         }
+        public IEnumerator TakeDamage(float damage)
+        {
+            this.hp -= damage;
+            yield return new WaitForSeconds(1.0f);
+        }
+
+       
     }
 }

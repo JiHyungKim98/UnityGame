@@ -1,15 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace ZombieWorld
 {
 
     public class Player : BaseCharacter
     {
-
-        public float hp;
-
         public float walkSpeed;  
         public float runSpeed;
         public float speed;
@@ -17,13 +15,19 @@ namespace ZombieWorld
         public float gravity;  
         public float fRotSpeed;
 
+        public bool isAttack = false;
+        public bool isSwing = false;
+
         private CharacterController controller;
-        private Vector3 MoveDir;              
+        private Vector3 MoveDir;
+        public TextMesh txtPlayerHP=null;
+
+        public Monster p_monster;
 
         public Animator animator; 
         
-        private float MaxPlayerHP = 100f;
-        private float CurrentPlayerHP;
+        private float p_MaxHP = 100f;
+        //private float p_CurrentHP;
         
         enum PlayerAni
         {
@@ -43,24 +47,28 @@ namespace ZombieWorld
         void Awake()
         {
             animator = GetComponent<Animator>();
+            p_monster= GameObject.Find("SA_Zombie_Bellhop").GetComponent("Monster") as Monster;
+            //observer = GameObject.Find("PointOfView").GetComponent("MonsterObserver") as MonsterObserver;
+            base.HP = p_MaxHP;
 
-            CurrentPlayerHP = MaxPlayerHP;
-            walkSpeed = 0.3f;
-            runSpeed = 1f;
-            fRotSpeed = 100f;
-            jumpSpeedF = 8.0f;
-            gravity = 20.0f;
+            //walkSpeed = 0.3f;
+            //runSpeed = 1f;
+            //fRotSpeed = 100f;
+            //jumpSpeedF = 8.0f;
+            //gravity = 20.0f;
         }
 
         void Start()
         {
             MoveDir = Vector3.zero;
             controller = GetComponent<CharacterController>();
+            txtPlayerHP = GameObject.Find("Player").GetComponent<TextMesh>();
         }
 
         void Update()
         {
             UpdateState();
+            txtPlayerHP.text= base.HP.ToString();
         }
 
         private void FixedUpdate()
@@ -80,9 +88,9 @@ namespace ZombieWorld
                 speed = walkSpeed;
             }
 
-            if (controller.isGrounded == true) 
+            
 
-            if (controller.isGrounded == true) //ĳ���Ͱ� ���� ��ġ�ϸ�
+            if (controller.isGrounded == true) 
 
             {
                 float fRot = fRotSpeed * Time.deltaTime;
@@ -125,26 +133,36 @@ namespace ZombieWorld
             // attack - one hand
             if (Input.GetMouseButtonDown(0))
             {
-                animator.SetInteger("WeaponType_int", 12);
-                animator.SetInteger("MeleeType_int", 1);
+                //Debug.Log("mouse left");
+                if (!isAttack) { 
+                    StartCoroutine(AttackCoroutine());
+                }
+                
             }
-            else
-            {
-                animator.SetInteger("WeaponType_int", 0);
-                animator.SetInteger("MeleeType_int", 0);
-            }
-
+            
             // attack - two hand
-            if (Input.GetMouseButtonDown(1))
-            {
-                animator.SetInteger("WeaponType_int", 12);
-                animator.SetInteger("MeleeType_int", 2);
-            }
+            //else if (Input.GetMouseButtonDown(1))
+            //{
+            //    //Debug.Log("mouse right");
+            //    animator.SetInteger("WeaponType_int", 12);
+            //    animator.SetInteger("MeleeType_int", 2);
+            //}
             else
             {
                 animator.SetInteger("WeaponType_int", 0);
                 animator.SetInteger("MeleeType_int", 0);
             }
+        }
+
+        protected IEnumerator AttackCoroutine()
+        {
+            isAttack = true;
+            isSwing = true;
+            animator.SetInteger("WeaponType_int", 12);
+            animator.SetInteger("MeleeType_int", 1);
+            yield return new WaitForSeconds(1.0f);
+            isSwing = false;
+            isAttack = false;
         }
 
         void OnControllerColliderHit(ControllerColliderHit hit)
@@ -152,24 +170,20 @@ namespace ZombieWorld
         {
             if (hit.gameObject.CompareTag("Enemy"))
             {
-                Debug.Log("Enemy");
-                TakeDamage(10);
+                controller.Move(this.transform.forward * -3.0f);
+                p_TakeDamage(10);
+
             }
         }
-
-
-        private void TakeDamage(float damage)
+        public void p_TakeDamage(float damage)
         {
-            //MoveDir.y = jumpSpeedF;
-            controller.Move(this.transform.forward * -3.0f);
-            CurrentPlayerHP -= damage;
-
+            controller.Move(p_monster.transform.forward * 1.0f);
+            base.StartCoroutine(TakeDamage(10));
         }
-
         private void Heal(float point)
         {
 
-            CurrentPlayerHP += point;
+            base.HP += point;
 
         }
     }

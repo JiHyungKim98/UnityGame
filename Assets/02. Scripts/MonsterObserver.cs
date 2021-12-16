@@ -10,7 +10,7 @@ public class MonsterObserver : MonoBehaviour
     {
         if (other.transform.tag == "Player")
         {
-            Debug.Log("player in");
+            //Debug.Log("player in");
             m_IsPlayerInRange = true;
         }
     }
@@ -19,7 +19,7 @@ public class MonsterObserver : MonoBehaviour
         if (other.transform.tag == "Player")
         {
             m_IsPlayerInRange = false;
-            Debug.Log("player out");
+            //Debug.Log("player out");
         }
     }
 
