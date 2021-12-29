@@ -10,23 +10,23 @@ namespace ZombieWorld
     [RequireComponent(typeof(NavMeshAgent))]
     public class Monster : BaseCharacter
     {
-
         protected NavMeshAgent nav;
         public Vector3 direction;
         public Transform target;
         public float velocity;
         public float enemyMoveTime;
         public float followTime;
-        public Vector3 m_direction;
 
 
-        Rigidbody m_rigidbody;
+        public float AtkDelay = 2.0f;
+        public bool isAttack;
+        Rigidbody rigidbody;
         public MonsterObserver observer;
-        public Player m_player;
+        public Player player;
         public TextMesh txtEnemyHP = null;
 
-        private float m_MaxHP = 10f;
-        private float m_CurrentHP;
+        private float MaxHP = 10f;
+        private float CurrentHP;
 
         public Animator animator;
 
@@ -35,18 +35,17 @@ namespace ZombieWorld
             nav = GetComponent<NavMeshAgent>();
             animator = GetComponent<Animator>();
             txtEnemyHP = GameObject.Find("SA_Zombie_Bellhop").GetComponent<TextMesh>();
-            base.HP = m_MaxHP;
+            base.HP = MaxHP;
             observer = GameObject.Find("PointOfView").GetComponent("MonsterObserver") as MonsterObserver;
-            m_player = GameObject.Find("Player").GetComponent("Player") as Player;
-            m_rigidbody = GetComponent<Rigidbody>();
-            m_rigidbody.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ;
+            player = GameObject.Find("Player").GetComponent("Player") as Player;
+            rigidbody = GetComponent<Rigidbody>();
+            rigidbody.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ;
         }
         void Start()
         {
-            m_CurrentHP = m_MaxHP;
+            CurrentHP = MaxHP;
             enemyMoveTime = 2.0f;
             followTime = 5.0f;
-            
         }
         void Update()
         {
@@ -72,6 +71,44 @@ namespace ZombieWorld
             
 
         }
+        private void FixedUpdate()
+        {
+            if(Vector3.Distance(this.transform.position,player.transform.position) <= 1.0f)
+            {
+                if (!isAttack)
+                {
+                    isAttack = true;
+                    StartCoroutine(Attack());
+                }
+            }
+            
+        }
+
+        //private void OnTriggerEnter(Collider other)
+        //{
+        //    if (other.transform.tag == "Player")
+        //    {
+        //        Attack();
+        //    }
+        //    if (other.gameObject.tag == "Weapon_oneHand")
+        //    {
+        //        if (player.isAttack == true)
+        //        {
+        //            base.StartCoroutine(TakeDamage(2));
+        //            this.transform.Translate(player.transform.forward * 0.5f);
+        //            this.transform.LookAt(target.transform);
+        //            //StartCoroutine(MoveToTarget());
+        //        }
+        //    }
+        //}
+        //private void OnTriggerEnter(Collider other)
+        //{
+        //    if (other.transform.tag == "Weapon_oneHand"&&player.isAttack==true)
+        //    {
+        //        Debug.Log("무기에 공격당함");
+        //    }
+        //}
+
         public IEnumerator randPos()
         {
             float NewX = UnityEngine.Random.Range(-0.01f, 0.01f);
@@ -90,27 +127,7 @@ namespace ZombieWorld
             yield return new WaitForSeconds(followTime);
         }
 
-        private void OnTriggerEnter(Collider other)
-        {
-            if(other.transform.tag == "Player")
-            {
-                Attack();
-                //Debug.Log("플레이어와 충돌!");
-            }
-            if (other.gameObject.tag == "Weapon_oneHand")
-            {
-                if (m_player.isSwing == true && m_player.isAttack==true)
-                {
-                    base.StartCoroutine(TakeDamage(2));
-                    this.transform.Translate(m_player.transform.forward*0.5f);
-                    this.transform.LookAt(target.transform);
-                    //StartCoroutine(MoveToTarget());
-                }
-                
 
-
-            }
-        }
 
 
         public void OnSpawn()
@@ -124,12 +141,28 @@ namespace ZombieWorld
             animator.SetFloat("ZombieHP", -1.0f);
             // 좀비 pool에 넣는작업
         }
-
-        public void Attack()
+        // Attack() 한대때리고 3초 기다리고 이런식으로 바꿔야함
+        
+        IEnumerator Attack()
         {
-            m_player.p_TakeDamage(10);
-            //m_player.controller.Move(this.transform.forward * 0.5f);
+            player.GetDamage(10);
+            yield return new WaitForSeconds(AtkDelay);
+            
+            isAttack = false;
         }
+        public void GetDamage(float damage)
+        {
+            base.StartCoroutine(TakeDamage(10));
+            this.transform.Translate(player.transform.forward * 0.5f);
+            this.transform.LookAt(target.transform);
+            StartCoroutine(MoveToTarget());
+        }
+
+        //public void Attack() 
+        //{
+        //    Debug.Log("공격?");
+        //    player.p_TakeDamage(10);
+        //}
 
         public void UserSkill()
         {

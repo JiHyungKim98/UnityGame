@@ -16,17 +16,19 @@ namespace ZombieWorld
         public float fRotSpeed;
 
         public bool isAttack = false;
-        public bool isSwing = false;
+        public float attackDelay = 1.0f;
+        public float timer;
+        //public bool isSwing = false;
 
         private CharacterController controller;
         private Vector3 MoveDir;
         public TextMesh txtPlayerHP=null;
 
-        public Monster p_monster;
+        public Monster monster;
 
         public Animator animator; 
         
-        private float p_MaxHP = 100f;
+        private float MaxHP = 100f;
         //private float p_CurrentHP;
         
         enum PlayerAni
@@ -47,15 +49,15 @@ namespace ZombieWorld
         void Awake()
         {
             animator = GetComponent<Animator>();
-            p_monster= GameObject.Find("SA_Zombie_Bellhop").GetComponent("Monster") as Monster;
+            monster= GameObject.Find("SA_Zombie_Bellhop").GetComponent("Monster") as Monster;
             //observer = GameObject.Find("PointOfView").GetComponent("MonsterObserver") as MonsterObserver;
-            base.HP = p_MaxHP;
+            base.HP = MaxHP;
 
-            //walkSpeed = 0.3f;
-            //runSpeed = 1f;
-            //fRotSpeed = 100f;
-            //jumpSpeedF = 8.0f;
-            //gravity = 20.0f;
+            walkSpeed = 0.3f;
+            runSpeed = 1f;
+            fRotSpeed = 10f;
+            jumpSpeedF = 8.0f;
+            gravity = 20.0f;
         }
 
         void Start()
@@ -74,8 +76,18 @@ namespace ZombieWorld
         private void FixedUpdate()
         {
             MoveChracter();
+            //Attack();
+
         }
 
+        //private void Attack()
+        //{
+        //    if (Vector3.Distance(monster.transform.position, GameObject.FindWithTag("Weapon_oneHand").transform.position) <= 0.0f && isAttack==true)
+        //    {
+        //        Debug.Log("weaponÀÌ¶û ºÎµúÈû!");
+        //        monster.GetDamage(10);
+        //    }
+        //}
 
         private void MoveChracter()
         {
@@ -93,7 +105,8 @@ namespace ZombieWorld
             if (controller.isGrounded == true) 
 
             {
-                float fRot = fRotSpeed * Time.deltaTime;
+                float fRot = fRotSpeed;
+                //float fRot = fRotSpeed * Time.deltaTime;
 
                 transform.Rotate(Vector3.up * Input.GetAxis("Horizontal") * fRot);
 
@@ -105,9 +118,11 @@ namespace ZombieWorld
             }
 
            
-            MoveDir.y -= gravity * Time.deltaTime;
+            MoveDir.y -= gravity;
+            //MoveDir.y -= gravity * Time.deltaTime;
 
-            controller.Move(MoveDir * Time.deltaTime);
+            controller.Move(MoveDir);
+            //controller.Move(MoveDir * Time.deltaTime);
         }
 
         private void UpdateState()
@@ -133,13 +148,24 @@ namespace ZombieWorld
             // attack - one hand
             if (Input.GetMouseButtonDown(0))
             {
+                
                 //Debug.Log("mouse left");
-                if (!isAttack) { 
+                if (!isAttack) {
+                    isAttack = true;
+                    Debug.Log("Attack success");
+                    
                     StartCoroutine(AttackCoroutine());
+                }
+                else
+                {
+                    Debug.Log("Attack fail");
+                    
+                    //animator.SetInteger("WeaponType_int", 0);
+                    //animator.SetInteger("MeleeType_int", 0);
                 }
                 
             }
-            
+
             // attack - two hand
             //else if (Input.GetMouseButtonDown(1))
             //{
@@ -156,28 +182,26 @@ namespace ZombieWorld
 
         protected IEnumerator AttackCoroutine()
         {
-            isAttack = true;
-            isSwing = true;
             animator.SetInteger("WeaponType_int", 12);
             animator.SetInteger("MeleeType_int", 1);
-            yield return new WaitForSeconds(1.0f);
-            isSwing = false;
+            yield return new WaitForSeconds(attackDelay);
             isAttack = false;
+            
         }
 
-        void OnControllerColliderHit(ControllerColliderHit hit)
+        //void OnControllerColliderHit(ControllerColliderHit hit)
 
-        {
-            if (hit.gameObject.CompareTag("Enemy"))
-            {
-                controller.Move(this.transform.forward * -3.0f);
-                p_TakeDamage(10);
+        //{
+        //    if (hit.gameObject.CompareTag("Enemy"))
+        //    {
+        //        controller.Move(this.transform.forward * -3.0f);
+        //        p_TakeDamage(10);
 
-            }
-        }
-        public void p_TakeDamage(float damage)
+        //    }
+        //}
+        public void GetDamage(float damage)
         {
-            controller.Move(p_monster.transform.forward * 1.0f);
+            //controller.Move(monster.transform.forward * 1.0f);
             base.StartCoroutine(TakeDamage(10));
         }
         private void Heal(float point)
