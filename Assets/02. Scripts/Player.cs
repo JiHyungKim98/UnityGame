@@ -8,29 +8,30 @@ namespace ZombieWorld
 
     public class Player : BaseCharacter
     {
+        /* Player Move */
         public float walkSpeed;  
         public float runSpeed;
-        public float speed;
-        public float jumpSpeedF; 
+        public float currentSpeed;
+        public float jumpSpeed; 
         public float gravity;  
-        public float fRotSpeed;
+        public float rotationSpeed;
+        private Vector3 MoveDir;
 
+        /* Player Attack */
         public bool isAttack = false;
         public float attackDelay = 1.0f;
-        public float timer;
-        //public bool isSwing = false;
 
+        /* Player HP */
+        private float MaxHP = 100f;
+
+        /* Component Connect */
         private CharacterController controller;
-        private Vector3 MoveDir;
-        public TextMesh txtPlayerHP=null;
+        public TextMesh txtMeshHP=null;
+        public Animator animator;
 
+        /* Script Connect */
         public Monster monster;
 
-        public Animator animator; 
-        
-        private float MaxHP = 100f;
-        //private float p_CurrentHP;
-        
         enum PlayerAni
         {
             idle=0,
@@ -49,71 +50,43 @@ namespace ZombieWorld
         void Awake()
         {
             animator = GetComponent<Animator>();
-            monster= GameObject.Find("SA_Zombie_Bellhop").GetComponent("Monster") as Monster;
-            //observer = GameObject.Find("PointOfView").GetComponent("MonsterObserver") as MonsterObserver;
+            controller = GetComponent<CharacterController>();
+
+            monster = GameObject.FindWithTag("Enemy").GetComponent("Monster") as Monster;
+            txtMeshHP = GameObject.Find("Player").GetComponent<TextMesh>();
+
             base.HP = MaxHP;
+            MoveDir = Vector3.zero;
 
             walkSpeed = 0.3f;
             runSpeed = 1f;
-            fRotSpeed = 10f;
-            jumpSpeedF = 8.0f;
+            rotationSpeed = 10f;
+            jumpSpeed = 8.0f;
             gravity = 20.0f;
-        }
-
-        void Start()
-        {
-            MoveDir = Vector3.zero;
-            controller = GetComponent<CharacterController>();
-            txtPlayerHP = GameObject.Find("Player").GetComponent<TextMesh>();
         }
 
         void Update()
         {
             UpdateState();
-            txtPlayerHP.text= base.HP.ToString();
+            txtMeshHP.text= base.HP.ToString();
         }
 
         private void FixedUpdate()
         {
             MoveChracter();
-            //Attack();
-
         }
-
-        //private void Attack()
-        //{
-        //    if (Vector3.Distance(monster.transform.position, GameObject.FindWithTag("Weapon_oneHand").transform.position) <= 0.0f && isAttack==true)
-        //    {
-        //        Debug.Log("weaponÀÌ¶û ºÎµúÈû!");
-        //        monster.GetDamage(10);
-        //    }
-        //}
 
         private void MoveChracter()
         {
-            if (Input.GetKey(KeyCode.LeftShift))
-            {
-                speed = runSpeed;
-            }
-            else
-            {
-                speed = walkSpeed;
-            }
-
-            
-
             if (controller.isGrounded == true) 
 
             {
-                float fRot = fRotSpeed;
+                //float fRot = rotationSpeed;
                 //float fRot = fRotSpeed * Time.deltaTime;
 
-                transform.Rotate(Vector3.up * Input.GetAxis("Horizontal") * fRot);
+                transform.Rotate(Vector3.up * Input.GetAxis("Horizontal") * rotationSpeed);
 
-                MoveDir = new Vector3(0, 0, Input.GetAxis("Vertical") * speed); 
-
-               
-
+                MoveDir = new Vector3(0, 0, Input.GetAxis("Vertical") * currentSpeed); 
                 MoveDir = transform.TransformDirection(MoveDir); 
             }
 
@@ -127,11 +100,19 @@ namespace ZombieWorld
 
         private void UpdateState()
         {
+            if (Input.GetKey(KeyCode.LeftShift))
+            {
+                currentSpeed = runSpeed;
+            }
+            else
+            {
+                currentSpeed = walkSpeed;
+            }
             // Move
             if (MoveDir.x > 0 || MoveDir.x < 0 || MoveDir.z > 0 || MoveDir.z < 0)
             {
                 animator.SetBool("Static_b", false);
-                animator.SetFloat("Speed_f", speed);
+                animator.SetFloat("Speed_f", currentSpeed);
             }
             else
                 animator.SetFloat("Speed_f", 0f);
@@ -140,7 +121,7 @@ namespace ZombieWorld
             if (Input.GetButton("Jump"))
             {
                 animator.SetBool("Jump_b", true);
-                MoveDir.y = jumpSpeedF;
+                MoveDir.y = jumpSpeed;
             }
             else
                 animator.SetBool("Jump_b", false);
@@ -159,9 +140,6 @@ namespace ZombieWorld
                 else
                 {
                     Debug.Log("Attack fail");
-                    
-                    //animator.SetInteger("WeaponType_int", 0);
-                    //animator.SetInteger("MeleeType_int", 0);
                 }
                 
             }
@@ -189,24 +167,22 @@ namespace ZombieWorld
             
         }
 
-        //void OnControllerColliderHit(ControllerColliderHit hit)
+        void OnControllerColliderHit(ControllerColliderHit hit)
 
-        //{
-        //    if (hit.gameObject.CompareTag("Enemy"))
-        //    {
-        //        controller.Move(this.transform.forward * -3.0f);
-        //        p_TakeDamage(10);
+        {
+            if (hit.gameObject.CompareTag("Enemy"))
+            {
+                controller.Move(this.transform.forward * -3.0f);
+                GetDamage(10);
+            }
+        }
 
-        //    }
-        //}
         public void GetDamage(float damage)
         {
-            //controller.Move(monster.transform.forward * 1.0f);
             base.StartCoroutine(TakeDamage(10));
         }
         private void Heal(float point)
         {
-
             base.HP += point;
 
         }

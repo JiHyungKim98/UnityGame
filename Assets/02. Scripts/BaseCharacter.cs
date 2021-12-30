@@ -23,7 +23,11 @@ namespace ZombieWorld
             this.hp -= damage;
             yield return new WaitForSeconds(1.0f);
         }
+        private void Update()
+        {
+            if (hp < 0.0f)
+                hp = 0.0f;
+        }
 
-       
     }
 }

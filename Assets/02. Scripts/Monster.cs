@@ -10,126 +10,142 @@ namespace ZombieWorld
     [RequireComponent(typeof(NavMeshAgent))]
     public class Monster : BaseCharacter
     {
-        protected NavMeshAgent nav;
-        public Vector3 direction;
-        public Transform target;
-        public float velocity;
+        /* Enemy Move */
         public float enemyMoveTime;
+        public Vector3 direction;
         public float followTime;
 
+        /* Enemy Attack */
+        public float attackDelay = 2.0f;
+        public bool isAttack=false;
 
-        public float AtkDelay = 2.0f;
-        public bool isAttack;
-        Rigidbody rigidbody;
+        /* Enemy HP */
+        private float MaxHP = 10f;
+
+        /* Enemy Die */
+        public bool isDie = false;
+
+        /* Component Connect */
+        protected NavMeshAgent nav;
+        public Transform target;
+        public Animator animator;
+        public TextMesh txtMeshHP = null;
+        private Rigidbody rigidbody;
+
+        /* Script Connect */
         public MonsterObserver observer;
         public Player player;
-        public TextMesh txtEnemyHP = null;
 
-        private float MaxHP = 10f;
-        private float CurrentHP;
+        enum State
+        {
+            Idle,
+            Walk,
+            Chase,
+            Attack,
+            Dead
+        }
 
-        public Animator animator;
+        State state = State.Idle;
 
         void Awake()
         {
             nav = GetComponent<NavMeshAgent>();
             animator = GetComponent<Animator>();
-            txtEnemyHP = GameObject.Find("SA_Zombie_Bellhop").GetComponent<TextMesh>();
-            base.HP = MaxHP;
+            rigidbody = GetComponent<Rigidbody>();
+
+            txtMeshHP = GameObject.Find("SA_Zombie_Bellhop").GetComponent<TextMesh>();
             observer = GameObject.Find("PointOfView").GetComponent("MonsterObserver") as MonsterObserver;
             player = GameObject.Find("Player").GetComponent("Player") as Player;
-            rigidbody = GetComponent<Rigidbody>();
+            
+
+            base.HP = MaxHP;
             rigidbody.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ;
-        }
-        void Start()
-        {
-            CurrentHP = MaxHP;
+
             enemyMoveTime = 2.0f;
             followTime = 5.0f;
         }
         void Update()
         {
-            target = GameObject.Find("Player").transform;
-            txtEnemyHP.text = base.HP.ToString();
-            if (base.HP<0)
+            txtMeshHP.text = base.HP.ToString();
+        }
+
+        private void FixedUpdate()
+        {
+            /* Enemy Dead */
+            if (base.HP < 0.0f || Mathf.Approximately(base.HP, 0.0f))
             {
-                Die();
+                state = State.Dead;
+                animator.SetFloat("ZombieHP", -1.0f);
             }
+
+            /* Enemy Live */
             else
             {
                 animator.SetFloat("ZombieHP", 1.0f);
-            }
-
-            if (observer.m_IsPlayerInRange)
-            {
-                StartCoroutine(MoveToTarget());
-            }
-            else
-            {
-                StartCoroutine(randPos());
-            }
-            
-
-        }
-        private void FixedUpdate()
-        {
-            if(Vector3.Distance(this.transform.position,player.transform.position) <= 1.0f)
-            {
-                if (!isAttack)
+                /* Enemy Chase & Attack */
+                if (observer.m_IsPlayerInRange)
                 {
-                    isAttack = true;
-                    StartCoroutine(Attack());
+                    /* Attack */
+                    if (Vector3.Distance(this.transform.position, player.transform.position) <= 1.5f)
+                    {
+                        state = State.Attack;
+                        if (!isAttack)
+                        {
+                            isAttack = true;
+                            StartCoroutine(Attack());
+                        }
+                    }
+                    /* Chase */
+                    else
+                    {
+                        state = State.Chase;
+                        StartCoroutine(MoveToTarget());
+                    }
+
+                }
+                /* Enemy Walk */
+                else
+                {
+                    state = State.Walk;
+                    StartCoroutine(randPos());
                 }
             }
-            
         }
 
-        //private void OnTriggerEnter(Collider other)
-        //{
-        //    if (other.transform.tag == "Player")
-        //    {
-        //        Attack();
-        //    }
-        //    if (other.gameObject.tag == "Weapon_oneHand")
-        //    {
-        //        if (player.isAttack == true)
-        //        {
-        //            base.StartCoroutine(TakeDamage(2));
-        //            this.transform.Translate(player.transform.forward * 0.5f);
-        //            this.transform.LookAt(target.transform);
-        //            //StartCoroutine(MoveToTarget());
-        //        }
-        //    }
-        //}
-        //private void OnTriggerEnter(Collider other)
-        //{
-        //    if (other.transform.tag == "Weapon_oneHand"&&player.isAttack==true)
-        //    {
-        //        Debug.Log("무기에 공격당함");
-        //    }
-        //}
+
+        private void OnCollisionEnter(Collision collision)
+        {
+            if (collision.transform.tag == "Weapon_oneHand"&&player.isAttack==true)
+            {
+                StartCoroutine(GetDamage());
+            }
+        }
+        public IEnumerator GetDamage()
+        {
+            base.StartCoroutine(TakeDamage(2));
+            yield break;
+            //this.transform.Translate(player.transform.forward * 0.5f);
+            //this.transform.LookAt(target.transform);
+        }
 
         public IEnumerator randPos()
         {
             float NewX = UnityEngine.Random.Range(-0.01f, 0.01f);
             float NewZ= UnityEngine.Random.Range(-0.01f, 0.01f);
             Vector3 NewPos = new Vector3(this.transform.position.x+NewX, 0, this.transform.position.z + NewZ).normalized;
-            //Debug.Log("현재 랜덤 위치" + NewPos);
             nav.SetDestination(NewPos);
             yield return new WaitForSeconds(enemyMoveTime);
         }
 
         public IEnumerator MoveToTarget()
         {
-            //Debug.Log("after MoveToTarget()");
-            this.transform.LookAt(target.transform);
-            this.transform.position = Vector3.MoveTowards(this.transform.position,target.transform.position,0.1f);
+            target = GameObject.Find("Player").transform;
+            nav.SetDestination(target.position);
             yield return new WaitForSeconds(followTime);
+
+            //this.transform.LookAt(target.transform);
+            //this.transform.position = Vector3.MoveTowards(this.transform.position,target.transform.position,0.1f);
         }
-
-
-
-
         public void OnSpawn()
         {
             //GameObject SA_Zombie_Bellhop
@@ -138,31 +154,24 @@ namespace ZombieWorld
 
         public void Die()
         {
-            animator.SetFloat("ZombieHP", -1.0f);
             // 좀비 pool에 넣는작업
         }
-        // Attack() 한대때리고 3초 기다리고 이런식으로 바꿔야함
         
         IEnumerator Attack()
         {
             player.GetDamage(10);
-            yield return new WaitForSeconds(AtkDelay);
-            
+            yield return new WaitForSeconds(attackDelay);
             isAttack = false;
         }
-        public void GetDamage(float damage)
-        {
-            base.StartCoroutine(TakeDamage(10));
-            this.transform.Translate(player.transform.forward * 0.5f);
-            this.transform.LookAt(target.transform);
-            StartCoroutine(MoveToTarget());
-        }
 
-        //public void Attack() 
+        //public void GetDamage(float damage)
         //{
-        //    Debug.Log("공격?");
-        //    player.p_TakeDamage(10);
+        //    base.StartCoroutine(TakeDamage(10));
+        //    this.transform.Translate(player.transform.forward * 0.5f);
+        //    this.transform.LookAt(target.transform);
+        //    StartCoroutine(MoveToTarget());
         //}
+
 
         public void UserSkill()
         {
