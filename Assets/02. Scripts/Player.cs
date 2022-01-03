@@ -19,7 +19,7 @@ namespace ZombieWorld
 
         /* Player Attack */
         public bool isAttack = false;
-        public float attackDelay = 1.0f;
+        public float attackDelay = 0.333f;
         public bool isSwing = false;
 
         /* Player HP */
@@ -32,6 +32,7 @@ namespace ZombieWorld
 
         /* Script Connect */
         public Monster monster;
+        private Item item;
 
         enum PlayerAni
         {
@@ -65,6 +66,11 @@ namespace ZombieWorld
             rotationSpeed = 10f;
             jumpSpeed = 8.0f;
             gravity = 20.0f;
+        }
+
+        void Start()
+        {
+            item = GetComponentInChildren<Item>();
         }
 
         void Update()
@@ -162,14 +168,13 @@ namespace ZombieWorld
 
         protected IEnumerator AttackCoroutine()
         {
-            
             animator.SetInteger("WeaponType_int", 12);
             animator.SetInteger("MeleeType_int", 1);
-            yield return new WaitForSeconds(attackDelay);
+            yield return new WaitForSeconds(attackDelay * 0.5f);
+            item.Attack();
+            yield return new WaitForSeconds(attackDelay * 0.5f);
             isAttack = false;
             isSwing = false;
-
-
         }
 
         void OnControllerColliderHit(ControllerColliderHit hit)
