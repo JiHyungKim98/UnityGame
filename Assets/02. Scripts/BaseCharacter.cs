@@ -20,14 +20,15 @@ namespace ZombieWorld
         }
         public IEnumerator TakeDamage(float damage)
         {
+            if (this.hp < 0)
+                this.hp = 0.0f;
+            else 
+            { 
             this.hp -= damage;
+            }
             yield return new WaitForSeconds(1.0f);
         }
-        private void Update()
-        {
-            if (hp < 0.0f)
-                hp = 0.0f;
-        }
+        
 
     }
 }

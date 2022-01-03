@@ -36,6 +36,7 @@ namespace ZombieWorld
         public MonsterObserver observer;
         public Player player;
 
+        Coroutine randPosCoroution = null;
         enum State
         {
             Idle,
@@ -61,11 +62,19 @@ namespace ZombieWorld
             base.HP = MaxHP;
             rigidbody.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ;
 
+            
+
             enemyMoveTime = 2.0f;
             followTime = 5.0f;
         }
         void Update()
         {
+            if (isDie == true)
+            {
+                animator.SetFloat("ZombieHP", -1.0f);
+                Die();
+            }
+
             txtMeshHP.text = base.HP.ToString();
         }
 
@@ -74,8 +83,10 @@ namespace ZombieWorld
             /* Enemy Dead */
             if (base.HP < 0.0f || Mathf.Approximately(base.HP, 0.0f))
             {
+                base.HP = 0.0f;
                 state = State.Dead;
-                animator.SetFloat("ZombieHP", -1.0f);
+                isDie = true;
+                
             }
 
             /* Enemy Live */
@@ -106,26 +117,29 @@ namespace ZombieWorld
                 /* Enemy Walk */
                 else
                 {
+                    
                     state = State.Walk;
-                    StartCoroutine(randPos());
+                    randPosCoroution=StartCoroutine(randPos());
                 }
             }
         }
 
 
-        private void OnCollisionEnter(Collision collision)
+        //private void OnCollisionEnter(Collision collision)
+        //{
+        //    if (collision.transform.tag == "Weapon_oneHand" && player.isAttack == true)
+        //    {
+        //        StartCoroutine(GetDamage());
+        //    }
+        //}
+
+        public void GetDamage()
         {
-            if (collision.transform.tag == "Weapon_oneHand"&&player.isAttack==true)
-            {
-                StartCoroutine(GetDamage());
-            }
-        }
-        public IEnumerator GetDamage()
-        {
+            nav.enabled = false;
             base.StartCoroutine(TakeDamage(2));
-            yield break;
-            //this.transform.Translate(player.transform.forward * 0.5f);
+            this.transform.Translate(player.transform.forward * 1.0f);
             //this.transform.LookAt(target.transform);
+            nav.enabled = true;
         }
 
         public IEnumerator randPos()
@@ -154,6 +168,7 @@ namespace ZombieWorld
 
         public void Die()
         {
+            StopCoroutine(randPosCoroution);
             // 좀비 pool에 넣는작업
         }
         
@@ -163,15 +178,6 @@ namespace ZombieWorld
             yield return new WaitForSeconds(attackDelay);
             isAttack = false;
         }
-
-        //public void GetDamage(float damage)
-        //{
-        //    base.StartCoroutine(TakeDamage(10));
-        //    this.transform.Translate(player.transform.forward * 0.5f);
-        //    this.transform.LookAt(target.transform);
-        //    StartCoroutine(MoveToTarget());
-        //}
-
 
         public void UserSkill()
         {

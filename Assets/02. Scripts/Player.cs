@@ -20,6 +20,7 @@ namespace ZombieWorld
         /* Player Attack */
         public bool isAttack = false;
         public float attackDelay = 1.0f;
+        public bool isSwing = false;
 
         /* Player HP */
         private float MaxHP = 100f;
@@ -57,6 +58,7 @@ namespace ZombieWorld
 
             base.HP = MaxHP;
             MoveDir = Vector3.zero;
+            //isSwing = true;
 
             walkSpeed = 0.3f;
             runSpeed = 1f;
@@ -129,10 +131,10 @@ namespace ZombieWorld
             // attack - one hand
             if (Input.GetMouseButtonDown(0))
             {
-                
-                //Debug.Log("mouse left");
+                isSwing = true;
                 if (!isAttack) {
                     isAttack = true;
+                    
                     Debug.Log("Attack success");
                     
                     StartCoroutine(AttackCoroutine());
@@ -160,11 +162,14 @@ namespace ZombieWorld
 
         protected IEnumerator AttackCoroutine()
         {
+            
             animator.SetInteger("WeaponType_int", 12);
             animator.SetInteger("MeleeType_int", 1);
             yield return new WaitForSeconds(attackDelay);
             isAttack = false;
-            
+            isSwing = false;
+
+
         }
 
         void OnControllerColliderHit(ControllerColliderHit hit)
