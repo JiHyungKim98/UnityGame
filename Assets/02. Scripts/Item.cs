@@ -20,18 +20,15 @@ public class Item : MonoBehaviour
     }
 
     // Update is called once per frame
-    void FixedUpdate()
+    public void Attack()
     {
-        Debug.Log(player.isSwing);
-        if (player.isSwing)
+        enemy = GameObject.FindWithTag("Enemy").transform;
+        if (Vector3.Distance(this.transform.position, enemy.position) <= 3.0f && player.isAttack == true)
         {
-            enemy = GameObject.FindWithTag("Enemy").transform;
-            if (Vector3.Distance(this.transform.position, enemy.position) <= 3.0f && player.isAttack == true)
-            {
-                StartCoroutine(GiveDamage());
-            }
+            StartCoroutine(GiveDamage());
         }
     }
+    
     public IEnumerator GiveDamage()
     {
         monster.GetDamage();

@@ -119,7 +119,7 @@ namespace ZombieWorld
                 {
                     
                     state = State.Walk;
-                    randPosCoroution=StartCoroutine(randPos());
+                    randPosCoroution = StartCoroutine(randPos());
                 }
             }
         }
@@ -163,13 +163,14 @@ namespace ZombieWorld
         public void OnSpawn()
         {
             //GameObject SA_Zombie_Bellhop
-            // Á»ºñ pool¿¡¼­ »©´Â ÀÛ¾÷
+            // ï¿½ï¿½ï¿½ï¿½ poolï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Û¾ï¿½
         }
 
         public void Die()
         {
             StopCoroutine(randPosCoroution);
-            // Á»ºñ pool¿¡ ³Ö´ÂÀÛ¾÷
+            StopCoroutine(randPos());
+            // ï¿½ï¿½ï¿½ï¿½ poolï¿½ï¿½ ï¿½Ö´ï¿½ï¿½Û¾ï¿½
         }
         
         IEnumerator Attack()
