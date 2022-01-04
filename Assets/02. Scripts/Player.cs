@@ -22,12 +22,30 @@ namespace ZombieWorld
         public float attackDelay = 1.0f;
         public bool isSwing = false;
 
-        /* Player HP */
+        /* Player Stat */
         private float MaxHP = 100f;
+        private float MaxMP = 5f;
+        private float currentMp;
+        private float TimerMP;
+
+        public float MP
+        {
+            get
+            {
+                return this.currentMp;
+            }
+            set
+            {
+                this.currentMp = value;
+            }
+        }
+
+        /* Player Die */
+        public bool isDie;
 
         /* Component Connect */
         private CharacterController controller;
-        public TextMesh txtMeshHP=null;
+        //public TextMesh txtMeshHP=null;
         public Animator animator;
 
         /* Script Connect */
@@ -54,9 +72,10 @@ namespace ZombieWorld
             controller = GetComponent<CharacterController>();
 
             monster = GameObject.FindWithTag("Enemy").GetComponent("Monster") as Monster;
-            txtMeshHP = GameObject.Find("Player").GetComponent<TextMesh>();
+            //txtMeshHP = GameObject.Find("Player").GetComponent<TextMesh>();
 
             base.HP = MaxHP;
+            MP = MaxMP;
             MoveDir = Vector3.zero;
             //isSwing = true;
 
@@ -70,7 +89,8 @@ namespace ZombieWorld
         void Update()
         {
             UpdateState();
-            txtMeshHP.text= base.HP.ToString();
+            //txtMeshHP.text= base.HP.ToString();
+            
         }
 
         private void FixedUpdate()
@@ -80,86 +100,131 @@ namespace ZombieWorld
 
         private void MoveChracter()
         {
-            if (controller.isGrounded == true) 
-
+            if (!isDie)
             {
-                //float fRot = rotationSpeed;
-                //float fRot = fRotSpeed * Time.deltaTime;
+                if (controller.isGrounded == true)
 
-                transform.Rotate(Vector3.up * Input.GetAxis("Horizontal") * rotationSpeed);
+                {
+                    //float fRot = rotationSpeed;
+                    //float fRot = fRotSpeed * Time.deltaTime;
 
-                MoveDir = new Vector3(0, 0, Input.GetAxis("Vertical") * currentSpeed); 
-                MoveDir = transform.TransformDirection(MoveDir); 
+                    transform.Rotate(Vector3.up * Input.GetAxis("Horizontal") * rotationSpeed);
+
+                    MoveDir = new Vector3(0, 0, Input.GetAxis("Vertical") * currentSpeed);
+                    MoveDir = transform.TransformDirection(MoveDir);
+                }
+
+
+                MoveDir.y -= gravity;
+                //MoveDir.y -= gravity * Time.deltaTime;
+
+                controller.Move(MoveDir);
+                //controller.Move(MoveDir * Time.deltaTime);
             }
 
-           
-            MoveDir.y -= gravity;
-            //MoveDir.y -= gravity * Time.deltaTime;
-
-            controller.Move(MoveDir);
-            //controller.Move(MoveDir * Time.deltaTime);
         }
 
         private void UpdateState()
         {
-            if (Input.GetKey(KeyCode.LeftShift))
+            if (base.HP <= 0)
             {
-                currentSpeed = runSpeed;
+                isDie = true;
+                Die();
             }
-            else
+            if (!isDie)
             {
-                currentSpeed = walkSpeed;
-            }
-            // Move
-            if (MoveDir.x > 0 || MoveDir.x < 0 || MoveDir.z > 0 || MoveDir.z < 0)
-            {
-                animator.SetBool("Static_b", false);
-                animator.SetFloat("Speed_f", currentSpeed);
-            }
-            else
-                animator.SetFloat("Speed_f", 0f);
-
-            // Jump
-            if (Input.GetButton("Jump"))
-            {
-                animator.SetBool("Jump_b", true);
-                MoveDir.y = jumpSpeed;
-            }
-            else
-                animator.SetBool("Jump_b", false);
-
-            // attack - one hand
-            if (Input.GetMouseButtonDown(0))
-            {
-                isSwing = true;
-                if (!isAttack) {
-                    isAttack = true;
-                    
-                    Debug.Log("Attack success");
-                    
-                    StartCoroutine(AttackCoroutine());
+                if (MP <= 0)
+                {
+                    MP = 0f;
+                    StartCoroutine(AllMoveStop());
                 }
+                /* Run speed */
+                if (Input.GetKey(KeyCode.LeftShift))
+                {
+                    TimerMP += Time.deltaTime;
+                    if (TimerMP >= 0.01f)
+                    {
+                        TimerMP = 0f;
+                        MP -= 0.1f;
+                    }
+                    currentSpeed = runSpeed;
+                }
+                /* Walk speed */
                 else
                 {
-                    Debug.Log("Attack fail");
+                    TimerMP = 0f;
+                    if (MP > MaxMP)
+                        MP = 5.0f;
+                    else if (MP <= MaxMP)
+                        StartCoroutine(MPFill());
+                        //MP += 0.1f;
+                    currentSpeed = walkSpeed;
                 }
-                
-            }
 
-            // attack - two hand
-            //else if (Input.GetMouseButtonDown(1))
-            //{
-            //    //Debug.Log("mouse right");
-            //    animator.SetInteger("WeaponType_int", 12);
-            //    animator.SetInteger("MeleeType_int", 2);
-            //}
-            else
-            {
-                animator.SetInteger("WeaponType_int", 0);
-                animator.SetInteger("MeleeType_int", 0);
+
+                // Move
+                if (MoveDir.x > 0 || MoveDir.x < 0 || MoveDir.z > 0 || MoveDir.z < 0)
+                {
+                    animator.SetBool("Static_b", false);
+                    animator.SetFloat("Speed_f", currentSpeed);
+                }
+                else
+                    animator.SetFloat("Speed_f", 0f);
+
+                // Jump
+                if (Input.GetButton("Jump"))
+                {
+                    animator.SetBool("Jump_b", true);
+                    MoveDir.y = jumpSpeed;
+                }
+                else
+                    animator.SetBool("Jump_b", false);
+
+                // attack - one hand
+                if (Input.GetMouseButtonDown(0))
+                {
+                    isSwing = true;
+                    if (!isAttack)
+                    {
+                        isAttack = true;
+
+                        Debug.Log("Attack success");
+
+                        StartCoroutine(AttackCoroutine());
+                    }
+                    else
+                    {
+                        Debug.Log("Attack fail");
+                    }
+
+                }
+
+                // attack - two hand
+                //else if (Input.GetMouseButtonDown(1))
+                //{
+                //    //Debug.Log("mouse right");
+                //    animator.SetInteger("WeaponType_int", 12);
+                //    animator.SetInteger("MeleeType_int", 2);
+                //}
+                else
+                {
+                    animator.SetInteger("WeaponType_int", 0);
+                    animator.SetInteger("MeleeType_int", 0);
+                }
             }
+            
         }
-
+        IEnumerator MPFill()
+        {
+            MP += 0.1f;
+            yield return new WaitForSeconds(1.0f);
+        }
+        IEnumerator AllMoveStop()
+        {
+            Debug.Log("AllMoveStop!");
+            currentSpeed = 0;
+            yield return new WaitForSeconds(2.0f);
+        }
         protected IEnumerator AttackCoroutine()
         {
             
@@ -190,6 +255,10 @@ namespace ZombieWorld
         {
             base.HP += point;
 
+        }
+        public void Die()
+        {
+            animator.SetBool("Death_b", true);
         }
     }
 }
