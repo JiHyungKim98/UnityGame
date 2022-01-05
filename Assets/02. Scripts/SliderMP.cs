@@ -7,14 +7,16 @@ using ZombieWorld;
 public class SliderMP : MonoBehaviour
 {
     Slider sliderMP;
-    GameObject obj;
+    GameObject FillArea;
+    GameObject Fill;
     public Player player;
 
 
     private void Awake()
     {
         sliderMP = GetComponent<Slider>();
-        obj = transform.Find("Fill Area").gameObject;
+        FillArea = transform.Find("Fill Area").gameObject;
+        //Fill = GameObject.Find("Background");
     }
     // Start is called before the first frame update
     void Start()
@@ -27,9 +29,16 @@ public class SliderMP : MonoBehaviour
     {
         sliderMP.value = player.MP;
 
-        if (sliderMP.value <= 0)
-            obj.SetActive(false);
+        if (sliderMP.value <= 0) 
+        { 
+            FillArea.SetActive(false);
+            //Fill.GetComponent<Image>().color=new Color(174/255, 174 / 255, 174 / 255);
+        }
         else
-            obj.SetActive(true);
+        {
+            FillArea.SetActive(true);
+            //Fill.GetComponent<Image>().color = new Color(255 / 255, 255 / 255, 255 / 255);
+        }
+            
     }
 }

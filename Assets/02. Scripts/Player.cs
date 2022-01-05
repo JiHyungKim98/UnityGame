@@ -26,7 +26,10 @@ namespace ZombieWorld
         private float MaxHP = 100f;
         private float MaxMP = 5f;
         private float currentMp;
-        private float TimerMP;
+        private float TimerMPPlus=0f;
+        private float TimerMPMinus=0f;
+        public bool isMPEmpty;
+        //public bool isMPFilling;
 
         public float MP
         {
@@ -141,30 +144,56 @@ namespace ZombieWorld
             {
                 if (MP <= 0)
                 {
+                    isMPEmpty = true;
                     MP = 0f;
-                    StartCoroutine(AllMoveStop());
+                    //StartCoroutine(AllMoveStop());
                 }
+                else if (MP >= 5.0f)
+                {
+                    MP = 5.0f;
+                }
+
+                if(isMPEmpty)
+                    StartCoroutine(AllMoveStop());
+
                 /* Run speed */
                 if (Input.GetKey(KeyCode.LeftShift))
                 {
-                    TimerMP += Time.deltaTime;
-                    if (TimerMP >= 0.01f)
+                    TimerMPMinus += Time.deltaTime;
+                    TimerMPPlus = 0f;
+
+                    if (isMPEmpty == false)
+                        currentSpeed = runSpeed;
+                    else
+                        currentSpeed = 0;
+
+                    if (TimerMPMinus >= 0.02f)
                     {
-                        TimerMP = 0f;
+                        TimerMPMinus = 0f;
                         MP -= 0.1f;
                     }
-                    currentSpeed = runSpeed;
                 }
                 /* Walk speed */
                 else
                 {
-                    TimerMP = 0f;
-                    if (MP > MaxMP)
-                        MP = 5.0f;
-                    else if (MP <= MaxMP)
-                        StartCoroutine(MPFill());
-                        //MP += 0.1f;
-                    currentSpeed = walkSpeed;
+                    TimerMPPlus += Time.deltaTime;
+                    TimerMPMinus = 0f;
+
+                    if (isMPEmpty == false)
+                        currentSpeed = walkSpeed;
+                    else
+                        currentSpeed = 0;
+
+                    
+                    if (TimerMPPlus >= 0.05f) 
+                    {
+                        TimerMPPlus = 0f;
+                        MP += 0.1f;
+                    }
+
+                    if (MP >= 5f)
+                        MP = 5f;
+
                 }
 
 
@@ -220,16 +249,20 @@ namespace ZombieWorld
             }
             
         }
-        IEnumerator MPFill()
-        {
-            MP += 0.1f;
-            yield return new WaitForSeconds(1.0f);
-        }
+
+        //IEnumerator MPFill()
+        //{
+        //    yield return new WaitForSeconds(3.0f);
+        //    MP += 0.1f;
+        //    isMPFilling = false;
+
+        //}
         IEnumerator AllMoveStop()
         {
             Debug.Log("AllMoveStop!");
-            currentSpeed = 0;
-            yield return new WaitForSeconds(2.0f);
+            //currentSpeed = 0;
+            yield return new WaitForSeconds(3.0f);
+            isMPEmpty = false;
         }
         protected IEnumerator AttackCoroutine()
         {
