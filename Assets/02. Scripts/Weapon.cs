@@ -5,7 +5,7 @@ using UnityEngine.UI;
 using ZombieWorld;
 
 
-public class Item : MonoBehaviour
+public class Weapon : MonoBehaviour
 {
     public Transform enemy;
     public Player player;

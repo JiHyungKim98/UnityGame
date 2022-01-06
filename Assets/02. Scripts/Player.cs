@@ -52,8 +52,9 @@ namespace ZombieWorld
         public Animator animator;
 
         /* Script Connect */
-        public Monster monster;
-        private Item item;
+        private Monster monster;
+        private Weapon weapon;
+        private Bandage bandage;
 
         enum PlayerAni
         {
@@ -75,7 +76,7 @@ namespace ZombieWorld
             animator = GetComponent<Animator>();
             controller = GetComponent<CharacterController>();
 
-            monster = GameObject.FindWithTag("Enemy").GetComponent("Monster") as Monster;
+            
             //txtMeshHP = GameObject.Find("Player").GetComponent<TextMesh>();
 
             base.HP = MaxHP;
@@ -92,7 +93,9 @@ namespace ZombieWorld
 
         void Start()
         {
-            item = GetComponentInChildren<Item>();
+            monster = GameObject.FindWithTag("Enemy").GetComponent("Monster") as Monster;
+            weapon = GetComponentInChildren<Weapon>();
+            bandage = GameObject.FindWithTag("ItemHeal").GetComponent("Bandage") as Bandage;
         }
 
         void Update()
@@ -235,6 +238,12 @@ namespace ZombieWorld
                     animator.SetInteger("WeaponType_int", 0);
                     animator.SetInteger("MeleeType_int", 0);
                 }
+
+                /* Item Pick Up */
+                if (Input.GetKeyDown(KeyCode.C))
+                {
+                    bandage.IsNear();
+                }
             }
             
         }
@@ -258,7 +267,7 @@ namespace ZombieWorld
             animator.SetInteger("WeaponType_int", 12);
             animator.SetInteger("MeleeType_int", 1);
             yield return new WaitForSeconds(attackDelay * 0.5f);
-            item.Attack();
+            weapon.Attack();
             yield return new WaitForSeconds(attackDelay * 0.5f);
             isAttack = false;
             isSwing = false;

@@ -18,6 +18,7 @@ namespace ZombieWorld
         /* Enemy Attack */
         public float attackDelay = 2.0f;
         public bool isAttack=false;
+        public bool isFollow;
 
         /* Enemy HP */
         private float MaxHP = 10f;
@@ -27,7 +28,7 @@ namespace ZombieWorld
 
         /* Component Connect */
         protected NavMeshAgent nav;
-        public Transform target;
+        GameObject target;
         public Animator animator;
         //public TextMesh txtMeshHP = null;
         private Rigidbody rigidbody;
@@ -54,19 +55,20 @@ namespace ZombieWorld
             animator = GetComponent<Animator>();
             rigidbody = GetComponent<Rigidbody>();
 
-            //txtMeshHP = GameObject.Find("SA_Zombie_Bellhop").GetComponent<TextMesh>();
-            observer = GameObject.Find("PointOfView").GetComponent("MonsterObserver") as MonsterObserver;
-            player = GameObject.Find("Player").GetComponent("Player") as Player;
-            
-
             base.HP = MaxHP;
             rigidbody.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ;
-
             
-
             enemyMoveTime = 2.0f;
             followTime = 5.0f;
         }
+
+        private void Start()
+        {
+            observer = GameObject.Find("PointOfView").GetComponent("MonsterObserver") as MonsterObserver;
+            player = GameObject.Find("Player").GetComponent("Player") as Player;
+            target = GameObject.Find("Player");
+        }
+
         void Update()
         {
             if (isDie == true)
@@ -84,7 +86,6 @@ namespace ZombieWorld
                 base.HP = 0.0f;
                 state = State.Dead;
                 isDie = true;
-                
             }
 
             /* Enemy Live */
@@ -107,8 +108,12 @@ namespace ZombieWorld
                     /* Chase */
                     else
                     {
-                        state = State.Chase;
-                        StartCoroutine(MoveToTarget());
+                        if (!isFollow) 
+                        {
+                            isFollow = true;
+                            state = State.Chase;
+                            StartCoroutine(MoveToTarget());
+                        }
                     }
 
                 }
@@ -150,17 +155,23 @@ namespace ZombieWorld
 
         public IEnumerator MoveToTarget()
         {
-            target = GameObject.Find("Player").transform;
-            nav.SetDestination(target.position);
-            yield return new WaitForSeconds(followTime);
-
-            //this.transform.LookAt(target.transform);
-            //this.transform.position = Vector3.MoveTowards(this.transform.position,target.transform.position,0.1f);
+            float timer=0;
+            while (true)
+            {
+                //Debug.Log("Timer"+timer);
+                timer += Time.deltaTime;
+                nav.SetDestination(target.transform.position);
+                if (timer >= followTime)
+                {
+                    isFollow = false;
+                    yield break;
+                }
+            }
         }
         public void OnSpawn()
         {
             //GameObject SA_Zombie_Bellhop
-            // ���� pool���� ���� �۾�
+            
         }
 
         public void Die()
