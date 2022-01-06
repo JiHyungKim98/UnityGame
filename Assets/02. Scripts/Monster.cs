@@ -29,7 +29,7 @@ namespace ZombieWorld
         protected NavMeshAgent nav;
         public Transform target;
         public Animator animator;
-        public TextMesh txtMeshHP = null;
+        //public TextMesh txtMeshHP = null;
         private Rigidbody rigidbody;
 
         /* Script Connect */
@@ -54,7 +54,7 @@ namespace ZombieWorld
             animator = GetComponent<Animator>();
             rigidbody = GetComponent<Rigidbody>();
 
-            txtMeshHP = GameObject.Find("SA_Zombie_Bellhop").GetComponent<TextMesh>();
+            //txtMeshHP = GameObject.Find("SA_Zombie_Bellhop").GetComponent<TextMesh>();
             observer = GameObject.Find("PointOfView").GetComponent("MonsterObserver") as MonsterObserver;
             player = GameObject.Find("Player").GetComponent("Player") as Player;
             
@@ -74,8 +74,6 @@ namespace ZombieWorld
                 animator.SetFloat("ZombieHP", -1.0f);
                 Die();
             }
-
-            txtMeshHP.text = base.HP.ToString();
         }
 
         private void FixedUpdate()
@@ -117,7 +115,6 @@ namespace ZombieWorld
                 /* Enemy Walk */
                 else
                 {
-                    
                     state = State.Walk;
                     randPosCoroution = StartCoroutine(randPos());
                 }

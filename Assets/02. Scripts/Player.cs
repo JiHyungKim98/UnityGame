@@ -97,9 +97,7 @@ namespace ZombieWorld
 
         void Update()
         {
-            UpdateState();
-            //txtMeshHP.text= base.HP.ToString();
-            
+            UpdateState();            
         }
 
         private void FixedUpdate()
@@ -112,23 +110,15 @@ namespace ZombieWorld
             if (!isDie)
             {
                 if (controller.isGrounded == true)
-
                 {
-                    //float fRot = rotationSpeed;
-                    //float fRot = fRotSpeed * Time.deltaTime;
-
                     transform.Rotate(Vector3.up * Input.GetAxis("Horizontal") * rotationSpeed);
 
                     MoveDir = new Vector3(0, 0, Input.GetAxis("Vertical") * currentSpeed);
                     MoveDir = transform.TransformDirection(MoveDir);
                 }
 
-
                 MoveDir.y -= gravity;
-                //MoveDir.y -= gravity * Time.deltaTime;
-
                 controller.Move(MoveDir);
-                //controller.Move(MoveDir * Time.deltaTime);
             }
 
         }
@@ -146,7 +136,6 @@ namespace ZombieWorld
                 {
                     isMPEmpty = true;
                     MP = 0f;
-                    //StartCoroutine(AllMoveStop());
                 }
                 else if (MP >= 5.0f)
                 {

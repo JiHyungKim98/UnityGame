@@ -23,7 +23,7 @@ public class Item : MonoBehaviour
     public void Attack()
     {
         enemy = GameObject.FindWithTag("Enemy").transform;
-        if (Vector3.Distance(this.transform.position, enemy.position) <= 3.0f && player.isAttack == true)
+        if (Vector3.Distance(this.transform.position, enemy.position) <= 3.0f) // && player.isAttack == true
         {
             StartCoroutine(GiveDamage());
         }
