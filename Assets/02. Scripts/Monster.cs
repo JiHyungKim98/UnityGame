@@ -139,8 +139,7 @@ namespace ZombieWorld
         {
             nav.enabled = false;
             base.StartCoroutine(TakeDamage(2));
-            this.transform.Translate(player.transform.forward * 1.0f);
-            //this.transform.LookAt(target.transform);
+            this.transform.rotation= Quaternion.LookRotation(player.transform.position-this.transform.position);
             nav.enabled = true;
         }
 

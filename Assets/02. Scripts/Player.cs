@@ -19,7 +19,7 @@ namespace ZombieWorld
 
         /* Player Attack */
         public bool isAttack = false;
-        public float attackDelay = 0.333f;
+        public float attackDelay = 1f;
         public bool isSwing = false;
 
         /* Player Stat */
@@ -222,6 +222,7 @@ namespace ZombieWorld
                     else
                     {
                         Debug.Log("Attack fail");
+                        
                     }
 
                 }
@@ -233,11 +234,11 @@ namespace ZombieWorld
                 //    animator.SetInteger("WeaponType_int", 12);
                 //    animator.SetInteger("MeleeType_int", 2);
                 //}
-                else
-                {
-                    animator.SetInteger("WeaponType_int", 0);
-                    animator.SetInteger("MeleeType_int", 0);
-                }
+                //else
+                //{
+                //    animator.SetInteger("WeaponType_int", 0);
+                //    animator.SetInteger("MeleeType_int", 0);
+                //}
 
                 /* Item Pick Up */
                 if (Input.GetKeyDown(KeyCode.C))
@@ -268,9 +269,12 @@ namespace ZombieWorld
             animator.SetInteger("MeleeType_int", 1);
             yield return new WaitForSeconds(attackDelay * 0.5f);
             weapon.Attack();
+            animator.SetInteger("WeaponType_int", 0);
+            animator.SetInteger("MeleeType_int", 0);
             yield return new WaitForSeconds(attackDelay * 0.5f);
             isAttack = false;
             isSwing = false;
+            
         }
 
         void OnControllerColliderHit(ControllerColliderHit hit)
