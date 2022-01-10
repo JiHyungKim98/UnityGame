@@ -158,7 +158,6 @@ namespace ZombieWorld
             float timer=0;
             while (true)
             {
-                //Debug.Log("Timer"+timer);
                 timer += Time.deltaTime;
                 nav.SetDestination(target.transform.position);
                 if (timer >= followTime)
@@ -166,6 +165,8 @@ namespace ZombieWorld
                     isFollow = false;
                     yield break;
                 }
+
+                yield return null;
             }
         }
         public void OnSpawn()
