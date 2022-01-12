@@ -69,7 +69,17 @@ namespace ZombieWorld
             LeaningAgainstWall=8,
             SittingOnGround=9
         }
-        
+
+        enum State
+        {
+            Idle,
+            Walk,
+            Run,
+            Attack,
+            Jump,
+            Dead
+        }
+        State state = State.Idle;
 
         void Awake()
         {
@@ -84,9 +94,9 @@ namespace ZombieWorld
             MoveDir = Vector3.zero;
             //isSwing = true;
 
-            walkSpeed = 0.3f;
-            runSpeed = 1f;
-            rotationSpeed = 10f;
+            walkSpeed = 0.1f;
+            runSpeed = 0.2f;
+            rotationSpeed = 2f;
             jumpSpeed = 8.0f;
             gravity = 20.0f;
         }
@@ -100,6 +110,7 @@ namespace ZombieWorld
 
         void Update()
         {
+            Debug.Log("Player State:" + state);
             UpdateState();            
         }
 
@@ -130,6 +141,7 @@ namespace ZombieWorld
         {
             if (base.HP <= 0)
             {
+                state = State.Dead;
                 isDie = true;
                 Die();
             }
@@ -145,12 +157,15 @@ namespace ZombieWorld
                     MP = 5.0f;
                 }
 
-                if(isMPEmpty)
+                if (isMPEmpty)
+                {
                     StartCoroutine(AllMoveStop());
+                }
 
                 /* Run speed */
                 if (Input.GetKey(KeyCode.LeftShift))
                 {
+                    state = State.Run;
                     TimerMPMinus += Time.deltaTime;
                     TimerMPPlus = 0f;
 
@@ -168,6 +183,7 @@ namespace ZombieWorld
                 /* Walk speed */
                 else
                 {
+                    state = State.Walk;
                     TimerMPPlus += Time.deltaTime;
                     TimerMPMinus = 0f;
 
@@ -201,6 +217,7 @@ namespace ZombieWorld
                 // Jump
                 if (Input.GetButton("Jump"))
                 {
+                    state = State.Jump;
                     animator.SetBool("Jump_b", true);
                     MoveDir.y = jumpSpeed;
                 }
@@ -265,6 +282,7 @@ namespace ZombieWorld
         }
         protected IEnumerator AttackCoroutine()
         {
+            state = State.Attack;
             animator.SetInteger("WeaponType_int", 12);
             animator.SetInteger("MeleeType_int", 1);
             yield return new WaitForSeconds(attackDelay * 0.5f);

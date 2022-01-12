@@ -19,20 +19,17 @@ public class SliderHPMonster : MonoBehaviour
     }
     private void Start()
     {
-        monster = GameObject.FindWithTag("Enemy").GetComponent("Monster") as Monster;
+        monster = this.transform.parent.parent.parent.gameObject.GetComponent("Monster") as Monster;
+        //GameObject.FindWithTag("Enemy").GetComponent("Monster") as Monster;
         player = GameObject.FindWithTag("Player").GetComponent("Player") as Player;
     }
     // Update is called once per frame
     void Update()
     {
-        //if (Vector3.Distance(monster.transform.position, player.transform.position) <= 5.0f)
-        //{
-        //    sliderHP.SetActive(true);
-        //}
         sliderHP.value = monster.HP;
 
         if (sliderHP.value <= 0)
-            obj.SetActive(false);
+            sliderHP.gameObject.SetActive(false);
         else
             obj.SetActive(true);
     }

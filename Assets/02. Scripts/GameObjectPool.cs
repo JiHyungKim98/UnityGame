@@ -8,6 +8,14 @@ namespace ZombieWorld
         public delegate T Func (); // delegate는 메서드를 참조해줌. T니까 T형식의 메서드를 참조함.
 	
         private readonly int _count;
+        public int Count
+        {
+            get
+            {
+                return this._count;
+            }
+            
+        }
 
         private readonly Func _createFunc;
 

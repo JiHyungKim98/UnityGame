@@ -35,6 +35,7 @@ namespace ZombieWorld
 
         /* Script Connect */
         public MonsterObserver observer;
+        public MonsterController monsterController;
         public Player player;
 
         Coroutine randPosCoroution = null;
@@ -51,6 +52,8 @@ namespace ZombieWorld
 
         void Awake()
         {
+            gameObject.GetComponent<Monster>().enabled = true;
+
             nav = GetComponent<NavMeshAgent>();
             animator = GetComponent<Animator>();
             rigidbody = GetComponent<Rigidbody>();
@@ -64,17 +67,22 @@ namespace ZombieWorld
 
         private void Start()
         {
-            observer = GameObject.Find("PointOfView").GetComponent("MonsterObserver") as MonsterObserver;
+            // monster = this.transform.parent.parent.parent.gameObject.GetComponent("Monster") as Monster;
+            observer = this.transform.Find("PointOfView").GetComponent("MonsterObserver") as MonsterObserver;
+            //GameObject.Find("PointOfView").GetComponent("MonsterObserver") as MonsterObserver;
             player = GameObject.Find("Player").GetComponent("Player") as Player;
             target = GameObject.Find("Player");
+            monsterController= GameObject.Find("MonsterController").GetComponent("MonsterController") as MonsterController;
         }
 
         void Update()
         {
-            if (isDie == true)
+            Debug.Log("Monster State:" + state);
+            if (isDie)
             {
+                isDie = false;
                 animator.SetFloat("ZombieHP", -1.0f);
-                Die();
+                StartCoroutine(Die());
             }
         }
 
@@ -120,7 +128,7 @@ namespace ZombieWorld
                 /* Enemy Walk */
                 else
                 {
-                    state = State.Walk;
+                    
                     randPosCoroution = StartCoroutine(randPos());
                 }
             }
@@ -139,12 +147,14 @@ namespace ZombieWorld
         {
             nav.enabled = false;
             base.StartCoroutine(TakeDamage(2));
-            this.transform.rotation= Quaternion.LookRotation(player.transform.position-this.transform.position);
+            //this.transform.rotation= Quaternion.LookRotation(player.transform.position-this.transform.position);
             nav.enabled = true;
         }
 
         public IEnumerator randPos()
         {
+            Debug.Log("Coroutine: randPos()");
+            state = State.Walk;
             float NewX = UnityEngine.Random.Range(-0.01f, 0.01f);
             float NewZ= UnityEngine.Random.Range(-0.01f, 0.01f);
             Vector3 NewPos = new Vector3(this.transform.position.x+NewX, 0, this.transform.position.z + NewZ).normalized;
@@ -154,7 +164,9 @@ namespace ZombieWorld
 
         public IEnumerator MoveToTarget()
         {
-            float timer=0;
+            Debug.Log("Coroutine:MoveToTarget()");
+
+            float timer =0;
             while (true)
             {
                 timer += Time.deltaTime;
@@ -171,14 +183,16 @@ namespace ZombieWorld
         public void OnSpawn()
         {
             //GameObject SA_Zombie_Bellhop
-            
         }
 
-        public void Die()
+        IEnumerator Die()
         {
             StopCoroutine(randPosCoroution);
             StopCoroutine(randPos());
-            // ���� pool�� �ִ��۾�
+            yield return new WaitForSeconds(2.0f);
+            monsterController.OnDie(this);
+            this.gameObject.GetComponent<Monster>().enabled = false;
+
         }
         
         IEnumerator Attack()
