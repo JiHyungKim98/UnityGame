@@ -16,6 +16,7 @@ namespace ZombieWorld
         public float enemyMoveTime;
         public Vector3 direction;
         public float followTime;
+        public bool isRandomPosEnd=false;
 
         /* Enemy Attack */
         public float attackDelay = 2.0f;
@@ -130,8 +131,12 @@ namespace ZombieWorld
                 /* Enemy Walk */
                 else
                 {
+                    if (!isRandomPosEnd)
+                    {
+                        isRandomPosEnd = true;
+                        randPosCoroution = StartCoroutine(randPos());
+                    }
                     
-                    randPosCoroution = StartCoroutine(randPos());
                 }
             }
         }
@@ -163,6 +168,7 @@ namespace ZombieWorld
             Vector3 NewPos = new Vector3(this.transform.position.x+NewX, 0, this.transform.position.z + NewZ).normalized;
             nav.SetDestination(NewPos);
             yield return new WaitForSeconds(enemyMoveTime);
+            isRandomPosEnd = false;
         }
 
         public IEnumerator MoveToTarget()
