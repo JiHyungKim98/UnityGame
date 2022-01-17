@@ -7,13 +7,13 @@ using UnityEngine.UI;
 
 public class MonsterController : MonoBehaviour
 {
-    [SerializeField] private List<Monster> _monsters = new List<Monster>();
+    [SerializeField] public List<GameObject> _monsters = new List<GameObject>();
     private GameObjectPool<Monster> _monsterPool;
+    public GameObject monsterPrefab;
     public Monster monster;
-    //Slider sliderHP;
-    //GameObject obj;
+    Transform[] child;
 
-    public Player player;
+
     private int Spawner;
 
 
@@ -21,17 +21,25 @@ public class MonsterController : MonoBehaviour
     private void Start()
     {
         Spawner = 0;
-        monster = GameObject.FindWithTag("Enemy").GetComponent("Monster") as Monster;
-        _monsterPool = new GameObjectPool<Monster>(1, ()=> 
+        Instantiate(monsterPrefab);
+        monster = monsterPrefab.GetComponent("Monster") as Monster;
+
+        _monsterPool = new GameObjectPool<Monster>(3, ()=> 
         {
             var poolMonster = Instantiate(monster,this.transform); 
             return poolMonster;
         });
 
-        //for (int i = 0; i < _monsterPool.Count; i++) // 처음에 최대 몬스터 SetActive(true)
-        //{
-        //    _monsterPool.Pop();
-        //}
+        for (int i = 0; i < _monsterPool.Count; i++) // 처음에 최대 몬스터 SetActive(true)
+        {
+            //_monsters=
+            _monsterPool.Pop();
+        }
+        //child = new Transform[transform.GetChildCount()];
+        foreach(Transform child in transform)
+        {
+            _monsters.Add(child.gameObject);
+        }
     }
 
     public void OnDie(Monster obj)
@@ -46,6 +54,7 @@ public class MonsterController : MonoBehaviour
         {
             for(int i = 0; i < Spawner; i++)
             {
+                Debug.Log("Monster Queue에서 꺼내기");
                 _monsterPool.Pop();
             }
             Spawner = 0;

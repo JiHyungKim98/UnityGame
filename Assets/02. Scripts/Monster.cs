@@ -8,6 +8,8 @@ namespace ZombieWorld
 {
     
     [RequireComponent(typeof(NavMeshAgent))]
+    [RequireComponent(typeof(Rigidbody))]
+
     public class Monster : BaseCharacter
     {
         /* Enemy Move */
@@ -145,6 +147,7 @@ namespace ZombieWorld
 
         public void GetDamage()
         {
+            Debug.Log("GetDamage");
             nav.enabled = false;
             base.StartCoroutine(TakeDamage(2));
             //this.transform.rotation= Quaternion.LookRotation(player.transform.position-this.transform.position);

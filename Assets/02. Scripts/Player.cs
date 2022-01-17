@@ -48,11 +48,9 @@ namespace ZombieWorld
 
         /* Component Connect */
         private CharacterController controller;
-        //public TextMesh txtMeshHP=null;
         public Animator animator;
 
         /* Script Connect */
-        private Monster monster;
         private Weapon weapon;
         private Bandage bandage;
 
@@ -103,7 +101,6 @@ namespace ZombieWorld
 
         void Start()
         {
-            monster = GameObject.FindWithTag("Enemy").GetComponent("Monster") as Monster;
             weapon = GetComponentInChildren<Weapon>();
             bandage = GameObject.FindWithTag("ItemHeal").GetComponent("Bandage") as Bandage;
         }

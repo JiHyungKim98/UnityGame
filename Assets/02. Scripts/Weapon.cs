@@ -7,31 +7,57 @@ using ZombieWorld;
 
 public class Weapon : MonoBehaviour
 {
-    public Transform enemy;
+    //public Transform enemy;
     public Player player;
-    public Monster monster;
+    public Transform ParentObj; // 부모 오브젝트
+    public Transform[] ChildrenOjb; // 자식 오브젝트 배열
+    public MonsterController monsterController;
 
-    // Start is called before the first frame update
     private void Awake()
     {
-       //isSwing = true;
-       player= GameObject.FindWithTag("Player").GetComponent("Player") as Player;
-       monster=GameObject.FindWithTag("Enemy").GetComponent("Monster") as Monster;
+        ParentObj = GameObject.FindWithTag("MonsterController").transform;
+        player = GameObject.FindWithTag("Player").GetComponent("Player") as Player;
+        monsterController = GameObject.FindWithTag("MonsterController").GetComponent("MonsterController") as MonsterController;
+
+        //foreach (Transform child in transform)
+        //{
+        //    _monsters.Add(child.gameObject);
+        //}
+
+        //Debug.Log("CHild개수"+ParentObj.gameObject.transform.GetChildCount());
+        //foreach(Transform child in )
+        //ChildrenOjb = new Transform[ParentObj.transform.GetChildCount()];
+        //ParentObj.gameObject.GetComponentsInChildren<Transform>();
+        //monsterTags = GameObject.FindGameObjectsWithTag("Enemy");
     }
 
     // Update is called once per frame
     public void Attack()
     {
-        enemy = GameObject.FindWithTag("Enemy").transform;
-        if (Vector3.Distance(this.transform.position, enemy.position) <= 3.0f) // && player.isAttack == true
+        for(int i=0;i<monsterController._monsters.Count;i++)
         {
-            StartCoroutine(GiveDamage());
+            if (monsterController._monsters[i].activeSelf == true)
+            {
+                Debug.Log("Active 켜짐");
+                if (Vector3.Distance(this.transform.position, monsterController._monsters[i].transform.position) <= 3.0f)
+                {
+                    StartCoroutine(GiveDamage(monsterController._monsters[i].transform));
+                }
+            }
+
+            else
+            {
+                Debug.Log("Active 꺼짐");
+            }
+            
         }
+
     }
     
-    public IEnumerator GiveDamage()
+    public IEnumerator GiveDamage(Transform monster)
     {
-        monster.GetDamage();
+        Debug.Log("GiveDamage");
+        monster.GetComponent<Monster>().GetDamage();
         yield break;
     }
 }
