@@ -55,6 +55,7 @@ namespace ZombieWorld
 
         void Awake()
         {
+            Debug.Log("monster 스크립트 시작");
             gameObject.GetComponent<Monster>().enabled = true;
 
             nav = GetComponent<NavMeshAgent>();
@@ -191,7 +192,9 @@ namespace ZombieWorld
         }
         public void OnSpawn()
         {
-            //GameObject SA_Zombie_Bellhop
+            base.HP = MaxHP;
+            this.gameObject.transform.position=new Vector3(2.31f, -4.87f, 2.735f);
+            StartCoroutine(randPos());
         }
 
         IEnumerator Die()
@@ -200,7 +203,8 @@ namespace ZombieWorld
             StopCoroutine(randPos());
             yield return new WaitForSeconds(2.0f);
             monsterController.OnDie(this);
-            this.gameObject.GetComponent<Monster>().enabled = false;
+            //this.gameObject.GetComponent<Monster>().enabled = false;
+            Debug.Log("monster 스크립트 종ㄽ");
 
         }
         

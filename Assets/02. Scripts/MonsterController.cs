@@ -11,6 +11,7 @@ public class MonsterController : MonoBehaviour
     private GameObjectPool<Monster> _monsterPool;
     public GameObject monsterPrefab;
     public Monster monster;
+    public Monster monsterObj;
     Transform[] child;
 
 
@@ -47,6 +48,7 @@ public class MonsterController : MonoBehaviour
         Spawner++;
         Debug.Log("Monster Queue에 넣기");
         _monsterPool.Push(obj);
+        //obj.OnSpawn();
     }
     private void Update()
     {
@@ -55,7 +57,8 @@ public class MonsterController : MonoBehaviour
             for(int i = 0; i < Spawner; i++)
             {
                 Debug.Log("Monster Queue에서 꺼내기");
-                _monsterPool.Pop();
+                monsterObj=_monsterPool.Pop();
+                monsterObj.OnSpawn();
             }
             Spawner = 0;
         }

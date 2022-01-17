@@ -29,8 +29,14 @@ public class SliderHPMonster : MonoBehaviour
         sliderHP.value = monster.HP;
 
         if (sliderHP.value <= 0)
-            sliderHP.gameObject.SetActive(false);
+        {
+            //sliderHP.gameObject.SetActive(false);
+            obj.SetActive(false);
+        }
         else
+        {
+            sliderHP.gameObject.SetActive(true);
             obj.SetActive(true);
+        }
     }
 }
