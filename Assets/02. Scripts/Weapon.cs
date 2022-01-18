@@ -7,28 +7,42 @@ using ZombieWorld;
 
 public class Weapon : MonoBehaviour
 {
-    //public Transform enemy;
+    [SerializeField] public List<GameObject> _bullets = new List<GameObject>();
+    private GameObjectPool<Bullet> _bulletPool;
+    public GameObject bulletPrefab;
+    public Bullet bullet;
+    public Bullet bulletObj;
+
     public Player player;
-    public Transform ParentObj; // 부모 오브젝트
-    public Transform[] ChildrenOjb; // 자식 오브젝트 배열
+
     public MonsterController monsterController;
 
     private void Awake()
     {
-        ParentObj = GameObject.FindWithTag("MonsterController").transform;
+        bulletPrefab = Resources.Load("Bullet") as GameObject;
+
         player = GameObject.FindWithTag("Player").GetComponent("Player") as Player;
         monsterController = GameObject.FindWithTag("MonsterController").GetComponent("MonsterController") as MonsterController;
+    }
+    private void Start()
+    {
+        Instantiate(bulletPrefab);
+        bullet = bulletPrefab.GetComponent("Bullet") as Bullet;
 
-        //foreach (Transform child in transform)
+        _bulletPool = new GameObjectPool<Bullet>(20, () =>
+        {
+            var poolBullet = Instantiate(bullet, this.transform.GetChild(0).GetChild(0).transform); // shooter
+            return poolBullet;
+        });
+        //for (int i = 0; i < _bulletPool.Count; i++) // Initialize Bullet
         //{
-        //    _monsters.Add(child.gameObject);
+        //    _bulletPool.Pop();
         //}
+        foreach (Transform child in transform.GetChild(0).transform)
+        {
+            _bullets.Add(child.gameObject);
+        }
 
-        //Debug.Log("CHild개수"+ParentObj.gameObject.transform.GetChildCount());
-        //foreach(Transform child in )
-        //ChildrenOjb = new Transform[ParentObj.transform.GetChildCount()];
-        //ParentObj.gameObject.GetComponentsInChildren<Transform>();
-        //monsterTags = GameObject.FindGameObjectsWithTag("Enemy");
     }
 
     // Update is called once per frame
@@ -51,6 +65,13 @@ public class Weapon : MonoBehaviour
             }
             
         }
+
+    }
+
+    public void Fire()
+    {
+        bulletObj=_bulletPool.Pop();
+
 
     }
     

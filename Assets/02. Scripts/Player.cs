@@ -21,6 +21,8 @@ namespace ZombieWorld
         public bool isAttack = false;
         public float attackDelay = 1f;
         public bool isSwing = false;
+        GameObject gun;
+        GameObject bat;
 
         /* Player Stat */
         private float MaxHP = 100f;
@@ -29,8 +31,7 @@ namespace ZombieWorld
         private float TimerMPPlus=0f;
         private float TimerMPMinus=0f;
         public bool isMPEmpty;
-        //public bool isMPFilling;
-
+        
         public float MP
         {
             get
@@ -52,7 +53,7 @@ namespace ZombieWorld
 
         /* Script Connect */
         private Weapon weapon;
-        private Bandage bandage;
+        private Item item;
 
         enum PlayerAni
         {
@@ -85,12 +86,10 @@ namespace ZombieWorld
             controller = GetComponent<CharacterController>();
 
             
-            //txtMeshHP = GameObject.Find("Player").GetComponent<TextMesh>();
-
             base.HP = MaxHP;
             MP = MaxMP;
             MoveDir = Vector3.zero;
-            //isSwing = true;
+
 
             walkSpeed = 0.1f;
             runSpeed = 0.2f;
@@ -102,7 +101,9 @@ namespace ZombieWorld
         void Start()
         {
             weapon = GetComponentInChildren<Weapon>();
-            bandage = GameObject.FindWithTag("ItemHeal").GetComponent("Bandage") as Bandage;
+            gun = GameObject.FindWithTag("Gun");
+            bat = GameObject.FindWithTag("Weapon_oneHand");
+            //item = GameObject.FindWithTag("ItemHeal").GetComponent("Bandage") as Bandage;
         }
 
         void Update()
@@ -228,10 +229,21 @@ namespace ZombieWorld
                     if (!isAttack)
                     {
                         isAttack = true;
-
-                        Debug.Log("Attack success");
-
-                        StartCoroutine(AttackCoroutine());
+                        if (weapon.gameObject.transform.GetChild(0).gameObject == gun)
+                        {
+                            Debug.Log("Gun Attack success");
+                            StartCoroutine(AttackCoroutineGun());
+                        }
+                        
+                        else if(weapon.gameObject.transform.GetChild(0).gameObject == bat)
+                        {
+                            Debug.Log("Bat Attack success");
+                            StartCoroutine(AttackCoroutineBat());
+                        }
+                        else
+                        {
+                            Debug.Log("Bat&Gun Attack fail");
+                        }
                     }
                     else
                     {
@@ -257,7 +269,7 @@ namespace ZombieWorld
                 /* Item Pick Up */
                 if (Input.GetKeyDown(KeyCode.C))
                 {
-                    bandage.IsNear();
+                    item.IsNear();
                 }
             }
             
@@ -277,7 +289,7 @@ namespace ZombieWorld
             yield return new WaitForSeconds(3.0f);
             isMPEmpty = false;
         }
-        protected IEnumerator AttackCoroutine()
+        protected IEnumerator AttackCoroutineBat()
         {
             state = State.Attack;
             animator.SetInteger("WeaponType_int", 12);
@@ -290,6 +302,19 @@ namespace ZombieWorld
             isAttack = false;
             isSwing = false;
             
+        }
+
+        protected IEnumerator AttackCoroutineGun()
+        {
+            state = State.Attack;
+            animator.SetBool("Shoot_b", true);
+            yield return new WaitForSeconds(attackDelay * 0.5f);
+            weapon.Fire();
+            //animator.SetBool("Shoot_b", false);
+            yield return new WaitForSeconds(attackDelay * 0.5f);
+            isAttack = false;
+            isSwing = false;
+
         }
 
         void OnControllerColliderHit(ControllerColliderHit hit)

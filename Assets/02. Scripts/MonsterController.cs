@@ -12,12 +12,15 @@ public class MonsterController : MonoBehaviour
     public GameObject monsterPrefab;
     public Monster monster;
     public Monster monsterObj;
-    Transform[] child;
+
 
 
     private int Spawner;
 
-
+    private void Awake()
+    {
+        monsterPrefab = Resources.Load("Zombie_coworker") as GameObject;
+    }
 
     private void Start()
     {
@@ -41,6 +44,7 @@ public class MonsterController : MonoBehaviour
         {
             _monsters.Add(child.gameObject);
         }
+        //_monsters.RemoveAt(0);
     }
 
     public void OnDie(Monster obj)

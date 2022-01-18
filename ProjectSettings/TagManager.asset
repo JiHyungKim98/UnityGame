@@ -8,6 +8,13 @@ TagManager:
   - Weapon_oneHand
   - ItemHeal
   - MonsterController
+  - MedicBag
+  - Bullet
+  - Bandage
+  - Map
+  - Candle
+  - Gun
+  - bat
   layers:
   - Default
   - TransparentFX

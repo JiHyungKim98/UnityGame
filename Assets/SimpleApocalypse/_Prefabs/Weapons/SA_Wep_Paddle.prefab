@@ -11,13 +11,14 @@ GameObject:
   - component: {fileID: 448380}
   - component: {fileID: 3303344}
   - component: {fileID: 2307020}
+  - component: {fileID: 1758758665}
   m_Layer: 0
   m_Name: SA_Wep_Paddle
-  m_TagString: Untagged
+  m_TagString: Weapon_oneHand
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &448380
 Transform:
   m_ObjectHideFlags: 0
@@ -83,3 +84,21 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &1758758665
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 151786}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fef0feba6039f5c42ad32ae66a7c9c46, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _bullets: []
+  bulletPrefab: {fileID: 0}
+  bullet: {fileID: 0}
+  bulletObj: {fileID: 0}
+  player: {fileID: 0}
+  monsterController: {fileID: 0}

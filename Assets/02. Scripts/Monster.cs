@@ -143,13 +143,7 @@ namespace ZombieWorld
         }
 
 
-        //private void OnCollisionEnter(Collision collision)
-        //{
-        //    if (collision.transform.tag == "Weapon_oneHand" && player.isAttack == true)
-        //    {
-        //        StartCoroutine(GetDamage());
-        //    }
-        //}
+       
 
         public void GetDamage()
         {
