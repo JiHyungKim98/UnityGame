@@ -15,7 +15,6 @@ TagManager:
   - Candle
   - Gun
   - bat
-  - Weapon
   layers:
   - Default
   - TransparentFX
@@ -52,10 +51,4 @@ TagManager:
   m_SortingLayers:
   - name: Default
     uniqueID: 0
-    locked: 0
-  - name: UI
-    uniqueID: 352675465
-    locked: 0
-  - name: OnUI
-    uniqueID: 3208759603
     locked: 0
