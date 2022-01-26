@@ -19,9 +19,9 @@ public class WeaponChild : MonoBehaviour
     {
         if (Vector3.Distance(this.transform.position, player.transform.position) <= 5.0)
         {
-
+            //Debug.Log("Weapon Cnt" + weapon.weaponCnt);
             weapon._weapons.Add(this.gameObject);
-            weapon.weaponCnt = 1;
+            //weapon.weaponCnt = 1;
             if (GameObject.Find("WeaponController").transform.GetChild(0).transform.childCount == 0)
             {
                 this.transform.parent = GameObject.Find("WeaponController").transform.GetChild(0).transform;

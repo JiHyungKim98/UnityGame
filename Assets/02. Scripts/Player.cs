@@ -31,7 +31,13 @@ namespace ZombieWorld
         private float TimerMPPlus=0f;
         private float TimerMPMinus=0f;
         public bool isMPEmpty;
-        
+
+
+        public bool isNKeyDown;
+        public GameObject MainWeapon;
+        public GameObject SubWeapon;
+
+
         public float MP
         {
             get
@@ -104,6 +110,8 @@ namespace ZombieWorld
             gun = GameObject.Find("Gun");
             bat = GameObject.Find("Paddle");
             //item = GameObject.FindWithTag("ItemHeal").GetComponent("Bandage") as Bandage;
+            MainWeapon = GameObject.FindWithTag("MainWeapon");
+            SubWeapon = GameObject.FindWithTag("SubWeapon");
         }
 
         void Update()
@@ -274,7 +282,18 @@ namespace ZombieWorld
                 }
                 if (Input.GetKeyDown(KeyCode.N))
                 {
-                    weaponController.GetWeapon();
+                    if (!isNKeyDown)
+                    {
+                        isNKeyDown = true;
+                        weaponController.GetWeapon();
+                        isNKeyDown = false;
+                    }
+
+                }
+                if (Input.GetKeyDown(KeyCode.H))
+                {
+                    MainWeapon.transform.GetChild(0).SetParent(MainWeapon.transform.GetChild(2).transform);
+                    SubWeapon.transform.GetChild(0).SetParent(MainWeapon.transform.GetChild(0).transform);
                 }
 
                 /* Weapon Change */

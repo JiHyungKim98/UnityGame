@@ -16,7 +16,7 @@ public class Weapon : MonoBehaviour
     public Bullet bulletObj;
 
     public Player player;
-
+    public GameObject gun;
     public MonsterController monsterController;
     public WeaponChild weaponchild;
 
@@ -27,6 +27,7 @@ public class Weapon : MonoBehaviour
         player = GameObject.FindWithTag("Player").GetComponent("Player") as Player;
         monsterController = GameObject.FindWithTag("MonsterController").GetComponent("MonsterController") as MonsterController;
         weaponchild = GameObject.FindWithTag("Weapon").GetComponent("WeaponChild") as WeaponChild;
+        gun = GameObject.Find("Gun");
     }
     private void Start()
     {
@@ -35,35 +36,39 @@ public class Weapon : MonoBehaviour
     }
     private void Update()
     {
-        Debug.Log("Weapon Cnt" + weaponCnt);
-        if (weaponCnt > 0)
+        
+        if (_weapons.Count > 0)
         {
-            weaponCnt = 0;
-            for(int i = 0; i < _weapons.Count; i++)
+            if (!isGun)
             {
-                if (_weapons[i].gameObject.ToString() == "Gun")
+                isGun = true;
+                for (int i = 0; i < _weapons.Count; i++)
                 {
-                    Debug.Log("Weapon gun list");
-                    bullet = bulletPrefab.GetComponent("Bullet") as Bullet;
+                    if (_weapons[i].gameObject == gun)
+                    {
+                        Debug.Log("Weapon gun list");
+                        bullet = bulletPrefab.GetComponent("Bullet") as Bullet;
 
 
-                    _bulletPool = new GameObjectPool<Bullet>(20, () =>
-                    {
-                        var poolBullet = Instantiate(bullet, this.transform.GetChild(0).GetChild(0).transform);
-                        //Instantiate(bullet, this.transform.GetChild(0).GetChild(0).transform); // shooter
-                        return poolBullet;
-                    });
-                    //for (int i = 0; i < _bulletPool.Count; i++) // Initialize Bullet
-                    //{
-                    //    _bulletPool.Pop();
-                    //}
-                    //foreach (Transform child in transform.GetChild(0).transform)
-                    foreach (Transform child in transform.GetChild(0).transform)
-                    {
-                        _bullets.Add(child.gameObject);
+                        _bulletPool = new GameObjectPool<Bullet>(20, () =>
+                        {
+                            var poolBullet = Instantiate(bullet, this.transform.GetChild(0).GetChild(0).GetChild(0).transform);
+                            //Instantiate(bullet, this.transform.GetChild(0).GetChild(0).transform); // shooter
+                            return poolBullet;
+                        });
+                        //for (int i = 0; i < _bulletPool.Count; i++) // Initialize Bullet
+                        //{
+                        //    _bulletPool.Pop();
+                        //}
+                        //foreach (Transform child in transform.GetChild(0).transform)
+                        foreach (Transform child in transform.GetChild(0).transform)
+                        {
+                            _bullets.Add(child.gameObject);
+                        }
                     }
                 }
             }
+            
             
         }
     }
