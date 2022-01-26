@@ -25,7 +25,7 @@ public class MonsterController : MonoBehaviour
     private void Start()
     {
         Spawner = 0;
-        Instantiate(monsterPrefab);
+        //Instantiate(monsterPrefab); // Áö¿ì±â
         monster = monsterPrefab.GetComponent("Monster") as Monster;
 
         _monsterPool = new GameObjectPool<Monster>(3, ()=> 

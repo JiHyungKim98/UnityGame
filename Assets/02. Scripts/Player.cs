@@ -52,7 +52,7 @@ namespace ZombieWorld
         public Animator animator;
 
         /* Script Connect */
-        private Weapon weapon;
+        private Weapon weaponController;
         private Item item;
 
         enum PlayerAni
@@ -100,15 +100,15 @@ namespace ZombieWorld
 
         void Start()
         {
-            weapon = GetComponentInChildren<Weapon>();
-            gun = GameObject.FindWithTag("Gun");
-            bat = GameObject.FindWithTag("Weapon_oneHand");
+            weaponController = GetComponentInChildren<Weapon>();
+            gun = GameObject.Find("Gun");
+            bat = GameObject.Find("Paddle");
             //item = GameObject.FindWithTag("ItemHeal").GetComponent("Bandage") as Bandage;
         }
 
         void Update()
         {
-            Debug.Log("Player State:" + state);
+            //Debug.Log("Player State:" + state);
             UpdateState();            
         }
 
@@ -229,13 +229,13 @@ namespace ZombieWorld
                     if (!isAttack)
                     {
                         isAttack = true;
-                        if (weapon.gameObject.transform.GetChild(0).gameObject == gun)
+                        if (weaponController.gameObject.transform.GetChild(0).GetChild(0).gameObject == gun)
                         {
                             Debug.Log("Gun Attack success");
                             StartCoroutine(AttackCoroutineGun());
                         }
                         
-                        else if(weapon.gameObject.transform.GetChild(0).gameObject == bat)
+                        else if(weaponController.gameObject.transform.GetChild(0).GetChild(0).gameObject == bat)
                         {
                             Debug.Log("Bat Attack success");
                             StartCoroutine(AttackCoroutineBat());
@@ -270,6 +270,17 @@ namespace ZombieWorld
                 if (Input.GetKeyDown(KeyCode.C))
                 {
                     item.IsNear();
+                    //weaponController.GetWeapon();
+                }
+                if (Input.GetKeyDown(KeyCode.N))
+                {
+                    weaponController.GetWeapon();
+                }
+
+                /* Weapon Change */
+                if (Input.GetKeyDown(KeyCode.H))
+                {
+                    
                 }
             }
             
@@ -284,7 +295,7 @@ namespace ZombieWorld
         //}
         IEnumerator AllMoveStop()
         {
-            Debug.Log("AllMoveStop!");
+            //Debug.Log("AllMoveStop!");
             //currentSpeed = 0;
             yield return new WaitForSeconds(3.0f);
             isMPEmpty = false;
@@ -295,7 +306,7 @@ namespace ZombieWorld
             animator.SetInteger("WeaponType_int", 12);
             animator.SetInteger("MeleeType_int", 1);
             yield return new WaitForSeconds(attackDelay * 0.5f);
-            weapon.Attack();
+            weaponController.Attack();
             animator.SetInteger("WeaponType_int", 0);
             animator.SetInteger("MeleeType_int", 0);
             yield return new WaitForSeconds(attackDelay * 0.5f);
@@ -307,13 +318,15 @@ namespace ZombieWorld
         protected IEnumerator AttackCoroutineGun()
         {
             state = State.Attack;
-            animator.SetBool("Shoot_b", true);
-            yield return new WaitForSeconds(attackDelay * 0.5f);
-            weapon.Fire();
-            //animator.SetBool("Shoot_b", false);
-            yield return new WaitForSeconds(attackDelay * 0.5f);
+            animator.SetBool("Shoot_b", true); 
+            animator.SetInteger("WeaponType_int", 2);
+            yield return new WaitForSeconds(attackDelay * 1f);
+            weaponController.Fire();
+            yield return new WaitForSeconds(attackDelay * 1f);
             isAttack = false;
             isSwing = false;
+            animator.SetBool("Shoot_b", false);
+            animator.SetInteger("WeaponType_int", 0);
 
         }
 

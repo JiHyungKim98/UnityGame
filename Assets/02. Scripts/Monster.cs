@@ -40,6 +40,7 @@ namespace ZombieWorld
         public MonsterObserver observer;
         public MonsterController monsterController;
         public Player player;
+        public Weapon weapon;
 
         Coroutine randPosCoroution = null;
         enum State
@@ -55,7 +56,7 @@ namespace ZombieWorld
 
         void Awake()
         {
-            Debug.Log("monster 스크립트 시작");
+            //Debug.Log("monster 스크립트 시작");
             gameObject.GetComponent<Monster>().enabled = true;
 
             nav = GetComponent<NavMeshAgent>();
@@ -77,11 +78,12 @@ namespace ZombieWorld
             player = GameObject.Find("Player").GetComponent("Player") as Player;
             target = GameObject.Find("Player");
             monsterController= GameObject.Find("MonsterController").GetComponent("MonsterController") as MonsterController;
+            weapon = GameObject.Find("WeaponController").GetComponent("Weapon") as Weapon;
         }
 
         void Update()
         {
-            Debug.Log("Monster State:" + state);
+            //Debug.Log("Monster State:" + state);
             if (isDie)
             {
                 isDie = false;
@@ -124,7 +126,7 @@ namespace ZombieWorld
                         {
                             isFollow = true;
                             state = State.Chase;
-                            StartCoroutine(MoveToTarget());
+                            //StartCoroutine(MoveToTarget());
                         }
                     }
 
@@ -135,7 +137,7 @@ namespace ZombieWorld
                     if (!isRandomPosEnd)
                     {
                         isRandomPosEnd = true;
-                        randPosCoroution = StartCoroutine(randPos());
+                        //randPosCoroution = StartCoroutine(randPos());
                     }
                     
                 }
@@ -147,20 +149,26 @@ namespace ZombieWorld
 
         public void GetDamage()
         {
-            Debug.Log("GetDamage");
+            Debug.Log("Bat Damage");
             nav.enabled = false;
             base.StartCoroutine(TakeDamage(2));
-            //this.transform.rotation= Quaternion.LookRotation(player.transform.position-this.transform.position);
+            nav.enabled = true;
+        }
+        public void GetDamageGun()
+        {
+            Debug.Log("Gun Damage");
+            nav.enabled = false;
+            base.StartCoroutine(TakeDamage(5));
             nav.enabled = true;
         }
 
         public IEnumerator randPos()
         {
-            Debug.Log("Coroutine: randPos()");
+            //Debug.Log("Coroutine: randPos()");
             state = State.Walk;
             float NewX = UnityEngine.Random.Range(-0.01f, 0.01f);
             float NewZ= UnityEngine.Random.Range(-0.01f, 0.01f);
-            Vector3 NewPos = new Vector3(this.transform.position.x+NewX, 0, this.transform.position.z + NewZ).normalized;
+            Vector3 NewPos = new Vector3(this.transform.position.x+NewX, 0, this.transform.position.z + NewZ);
             nav.SetDestination(NewPos);
             yield return new WaitForSeconds(enemyMoveTime);
             isRandomPosEnd = false;
@@ -168,7 +176,7 @@ namespace ZombieWorld
 
         public IEnumerator MoveToTarget()
         {
-            Debug.Log("Coroutine:MoveToTarget()");
+            //Debug.Log("Coroutine:MoveToTarget()");
 
             float timer =0;
             while (true)
@@ -198,7 +206,7 @@ namespace ZombieWorld
             yield return new WaitForSeconds(2.0f);
             monsterController.OnDie(this);
             //this.gameObject.GetComponent<Monster>().enabled = false;
-            Debug.Log("monster 스크립트 종ㄽ");
+            //Debug.Log("monster 스크립트 종ㄽ");
 
         }
         
@@ -212,6 +220,16 @@ namespace ZombieWorld
         public void UserSkill()
         {
             //TODO: 
+        }
+
+        private void OnCollisionEnter(Collision collision)
+        {
+            if (collision.collider.CompareTag("Bullet"))
+            {
+                Debug.Log("총알!");
+                weapon.MonsterAttack(collision.gameObject.GetComponent<Bullet>());
+                GetDamageGun();
+            }
         }
     }
 }

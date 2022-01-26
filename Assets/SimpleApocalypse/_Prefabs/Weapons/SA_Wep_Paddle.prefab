@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 1758758665}
   m_Layer: 0
   m_Name: SA_Wep_Paddle
-  m_TagString: Weapon_oneHand
+  m_TagString: Weapon
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -97,6 +97,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _bullets: []
+  _weapons: []
   bulletPrefab: {fileID: 0}
   bullet: {fileID: 0}
   bulletObj: {fileID: 0}
