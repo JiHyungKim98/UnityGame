@@ -3,6 +3,7 @@ using UnityEngine;
 using UnityEngine.AI;
 
 using System.Collections;
+using UnityEngine.Serialization;
 
 namespace ZombieWorld
 {
@@ -40,7 +41,7 @@ namespace ZombieWorld
         public MonsterObserver observer;
         public MonsterController monsterController;
         public Player player;
-        public Weapon weapon;
+        [FormerlySerializedAs("weapon")] public WeaponContainer weaponContainer;
 
         Coroutine randPosCoroution = null;
         enum State
@@ -56,7 +57,7 @@ namespace ZombieWorld
 
         void Awake()
         {
-            //Debug.Log("monster ½ºÅ©¸³Æ® ½ÃÀÛ");
+            //Debug.Log("monster ï¿½ï¿½Å©ï¿½ï¿½Æ® ï¿½ï¿½ï¿½ï¿½");
             gameObject.GetComponent<Monster>().enabled = true;
 
             nav = GetComponent<NavMeshAgent>();
@@ -206,7 +207,7 @@ namespace ZombieWorld
             yield return new WaitForSeconds(2.0f);
             monsterController.OnDie(this);
             //this.gameObject.GetComponent<Monster>().enabled = false;
-            //Debug.Log("monster ½ºÅ©¸³Æ® Á¾¤­");
+            //Debug.Log("monster ï¿½ï¿½Å©ï¿½ï¿½Æ® ï¿½ï¿½ï¿½ï¿½");
 
         }
         
@@ -226,8 +227,8 @@ namespace ZombieWorld
         {
             if (collision.collider.CompareTag("Bullet"))
             {
-                Debug.Log("ÃÑ¾Ë!");
-                weapon.MonsterAttack(collision.gameObject.GetComponent<Bullet>());
+                Debug.Log("ï¿½Ñ¾ï¿½!");
+                weaponContainer.MonsterAttack(collision.gameObject.GetComponent<Bullet>());
                 GetDamageGun();
             }
         }

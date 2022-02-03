@@ -1,19 +1,18 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Jjamcat.Util;
 using UnityEngine;
 using ZombieWorld;
 using UnityEngine.UI;
 
-public class MonsterController : MonoBehaviour
+public class MonsterController : Singleton<MonsterController>
 {
     [SerializeField] public List<GameObject> _monsters = new List<GameObject>();
     private GameObjectPool<Monster> _monsterPool;
     public GameObject monsterPrefab;
     public Monster monster;
     public Monster monsterObj;
-
-
 
     private int Spawner;
 
@@ -25,7 +24,7 @@ public class MonsterController : MonoBehaviour
     private void Start()
     {
         Spawner = 0;
-        //Instantiate(monsterPrefab); // Áö¿ì±â
+        //Instantiate(monsterPrefab); // ï¿½ï¿½ï¿½ï¿½ï¿½
         monster = monsterPrefab.GetComponent("Monster") as Monster;
 
         _monsterPool = new GameObjectPool<Monster>(3, ()=> 
@@ -34,7 +33,7 @@ public class MonsterController : MonoBehaviour
             return poolMonster;
         });
 
-        for (int i = 0; i < _monsterPool.Count; i++) // Ã³À½¿¡ ÃÖ´ë ¸ó½ºÅÍ SetActive(true)
+        for (int i = 0; i < _monsterPool.Count; i++) // Ã³ï¿½ï¿½ï¿½ï¿½ ï¿½Ö´ï¿½ ï¿½ï¿½ï¿½ï¿½ SetActive(true)
         {
             //_monsters=
             _monsterPool.Pop();
@@ -50,7 +49,7 @@ public class MonsterController : MonoBehaviour
     public void OnDie(Monster obj)
     {
         Spawner++;
-        Debug.Log("Monster Queue¿¡ ³Ö±â");
+        Debug.Log("Monster Queueï¿½ï¿½ ï¿½Ö±ï¿½");
         _monsterPool.Push(obj);
         //obj.OnSpawn();
     }
@@ -60,7 +59,7 @@ public class MonsterController : MonoBehaviour
         {
             for(int i = 0; i < Spawner; i++)
             {
-                Debug.Log("Monster Queue¿¡¼­ ²¨³»±â");
+                Debug.Log("Monster Queueï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½");
                 monsterObj=_monsterPool.Pop();
                 monsterObj.OnSpawn();
             }

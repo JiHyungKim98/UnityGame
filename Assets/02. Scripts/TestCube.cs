@@ -1,19 +1,20 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public class TestCube : MonoBehaviour
 {
-    public Weapon weapon;
+    [FormerlySerializedAs("weapon")] public WeaponContainer weaponContainer;
     private void Awake()
     {
-        weapon = GameObject.Find("Weapon").GetComponent("Weapon") as Weapon;
+        weaponContainer = GameObject.Find("Weapon").GetComponent("Weapon") as WeaponContainer;
     }
     private void OnCollisionEnter(Collision collision)
     {
         if (collision.collider.CompareTag("Bullet"))
         {
-            weapon.MonsterAttack(collision.gameObject.GetComponent<Bullet>());
+            weaponContainer.MonsterAttack(collision.gameObject.GetComponent<Bullet>());
         }
     }
 }

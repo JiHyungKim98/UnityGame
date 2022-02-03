@@ -57,7 +57,7 @@ namespace ZombieWorld
         public Animator animator;
 
         /* Script Connect */
-        private Weapon weaponController;
+        private WeaponContainer _weaponContainerController;    //weapon
         private Item item;
 
         enum PlayerAni
@@ -105,7 +105,7 @@ namespace ZombieWorld
 
         void Start()
         {
-            weaponController = GetComponentInChildren<Weapon>();
+            _weaponContainerController = GetComponentInChildren<WeaponContainer>();
             gun = GameObject.Find("Gun");
             bat = GameObject.Find("Paddle");
             //item = GameObject.FindWithTag("ItemHeal").GetComponent("Bandage") as Bandage;
@@ -290,8 +290,10 @@ namespace ZombieWorld
             if (!isNKeyDown)
             {
                 isNKeyDown = true;
-                weaponController.GetWeapon();
+                MapController.Instance.GetNearestWeapon(transform.position);
                 isNKeyDown = false;
+                
+                //MonsterController.
             }
         }
         void WeaponChange()
@@ -317,7 +319,7 @@ namespace ZombieWorld
             animator.SetInteger("WeaponType_int", 12);
             animator.SetInteger("MeleeType_int", 1);
             yield return new WaitForSeconds(attackDelay * 0.5f);
-            weaponController.Attack();
+            _weaponContainerController.Attack();
             animator.SetInteger("WeaponType_int", 0);
             animator.SetInteger("MeleeType_int", 0);
             yield return new WaitForSeconds(attackDelay * 0.5f);
@@ -332,7 +334,7 @@ namespace ZombieWorld
             animator.SetBool("Shoot_b", true); 
             animator.SetInteger("WeaponType_int", 2);
             yield return new WaitForSeconds(attackDelay * 1f);
-            weaponController.Fire();
+            _weaponContainerController.Fire();
             yield return new WaitForSeconds(attackDelay * 1f);
             isAttack = false;
             isSwing = false;
