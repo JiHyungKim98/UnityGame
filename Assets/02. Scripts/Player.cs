@@ -5,7 +5,6 @@ using UnityEngine.UI;
 
 namespace ZombieWorld
 {
-
     public class Player : BaseCharacter
     {
         /* Player Move */
@@ -36,7 +35,7 @@ namespace ZombieWorld
         public bool isNKeyDown;
         public GameObject MainWeapon;
         public GameObject SubWeapon;
-
+        public GameObject inventory;
 
         public float MP
         {
@@ -110,8 +109,8 @@ namespace ZombieWorld
             gun = GameObject.Find("Gun");
             bat = GameObject.Find("Paddle");
             //item = GameObject.FindWithTag("ItemHeal").GetComponent("Bandage") as Bandage;
-            MainWeapon = GameObject.FindWithTag("MainWeapon");
-            SubWeapon = GameObject.FindWithTag("SubWeapon");
+            //MainWeapon = GameObject.FindWithTag("MainWeapon");
+            //SubWeapon = GameObject.FindWithTag("SubWeapon");
         }
 
         void Update()
@@ -237,13 +236,14 @@ namespace ZombieWorld
                     if (!isAttack)
                     {
                         isAttack = true;
-                        if (weaponController.gameObject.transform.GetChild(0).GetChild(0).gameObject == gun)
+                        //Debug.Log(MainWeapon.transform.GetChild(0).gameObject.name);
+                        if (MainWeapon.transform.GetChild(0).gameObject.name == "gun")
                         {
                             Debug.Log("Gun Attack success");
                             StartCoroutine(AttackCoroutineGun());
                         }
                         
-                        else if(weaponController.gameObject.transform.GetChild(0).GetChild(0).gameObject == bat)
+                        else if(MainWeapon.transform.GetChild(0).gameObject == bat)
                         {
                             Debug.Log("Bat Attack success");
                             StartCoroutine(AttackCoroutineBat());
@@ -261,57 +261,49 @@ namespace ZombieWorld
 
                 }
 
-                // attack - two hand
-                //else if (Input.GetMouseButtonDown(1))
-                //{
-                //    //Debug.Log("mouse right");
-                //    animator.SetInteger("WeaponType_int", 12);
-                //    animator.SetInteger("MeleeType_int", 2);
-                //}
-                //else
-                //{
-                //    animator.SetInteger("WeaponType_int", 0);
-                //    animator.SetInteger("MeleeType_int", 0);
-                //}
 
                 /* Item Pick Up */
                 if (Input.GetKeyDown(KeyCode.C))
                 {
-                    item.IsNear();
-                    //weaponController.GetWeapon();
+                    ItemPick();
                 }
                 if (Input.GetKeyDown(KeyCode.N))
                 {
-                    if (!isNKeyDown)
-                    {
-                        isNKeyDown = true;
-                        weaponController.GetWeapon();
-                        isNKeyDown = false;
-                    }
-
-                }
-                if (Input.GetKeyDown(KeyCode.H))
-                {
-                    MainWeapon.transform.GetChild(0).SetParent(MainWeapon.transform.GetChild(2).transform);
-                    SubWeapon.transform.GetChild(0).SetParent(MainWeapon.transform.GetChild(0).transform);
+                    WeaponPick();
                 }
 
-                /* Weapon Change */
                 if (Input.GetKeyDown(KeyCode.H))
                 {
-                    
+                    WeaponChange();
                 }
+
             }
             
         }
 
-        //IEnumerator MPFill()
-        //{
-        //    yield return new WaitForSeconds(3.0f);
-        //    MP += 0.1f;
-        //    isMPFilling = false;
+        void ItemPick()
+        {
+            item.IsNear();
+        }
+        void WeaponPick()
+        {
+            if (!isNKeyDown)
+            {
+                isNKeyDown = true;
+                weaponController.GetWeapon();
+                isNKeyDown = false;
+            }
+        }
+        void WeaponChange()
+        {
+            MainWeapon.transform.GetChild(0).SetParent(SubWeapon.transform);
+            SubWeapon.transform.GetChild(0).SetParent(MainWeapon.transform);
+            SubWeapon.gameObject.SetActive(false);
+            MainWeapon.gameObject.SetActive(true);
+            inventory.GetComponent<Inventory>().WeaponChangeUI();
 
-        //}
+
+        }
         IEnumerator AllMoveStop()
         {
             //Debug.Log("AllMoveStop!");

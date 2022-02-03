@@ -7,27 +7,33 @@ public class Bullet : MonoBehaviour
 {
     public float damage = 1f;
     private Player player;
-    private float bulletSpeed = 0.1f;
-    Vector3 dir;
+    private float bulletSpeed = 5f;
+    public static Vector3 dir;
+    public GameObject Shooter;
 
-    private void Awake()
-    {
-        player = GameObject.Find("Player").GetComponent("Player") as Player;
-        dir = new Vector3(0,0,0);
-        
-        Debug.Log("Awake Dir"+dir);
-    }
+    
     public void Shoot()
     {
-        GameObject gun = GameObject.Find("Gun");
-        dir = (this.transform.position-gun.transform.position);
+        //Shooter = GameObject.Find("gun");
+        
+
+    }
+    private void OnEnable()
+    {
+        Shooter = GameObject.Find("Shooter");
+        player = GameObject.Find("Player").GetComponent("Player") as Player;
+        //dir = (this.transform.position - player.transform.position);
+        Debug.Log("Dir" + dir);
+        GetComponent<Rigidbody>().AddForce(player.transform.forward * bulletSpeed, ForceMode.Impulse);
+        //GetComponent<Rigidbody>().AddForce(Vector3.forward * bulletSpeed);
+        //this.transform.position = Vector3.MoveTowards(this.transform.position, player.transform.forward, bulletSpeed);
 
     }
     private void Update()
     {
-        Debug.Log("Dir"+dir);
-        this.transform.position = Vector3.MoveTowards(this.transform.position, dir,bulletSpeed);
+        //Debug.Log("Dir"+dir);
+        //this.transform.position = Vector3.MoveTowards(this.transform.position, Shooter.transform.position*10,bulletSpeed);
             //new Vector3(dir.x,dir.y,dir.z);
-        //GetComponent<Rigidbody>().AddForce(Vector3.dir * bulletSpeed);
+        //GetComponent<Rigidbody>().AddForce(Vector3.forward * bulletSpeed);
     }
 }

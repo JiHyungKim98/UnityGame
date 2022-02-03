@@ -16,18 +16,18 @@ public class Weapon : MonoBehaviour
     public Bullet bulletObj;
 
     public Player player;
-    public GameObject gun;
+    //public GameObject gun;
     public MonsterController monsterController;
     public WeaponChild weaponchild;
 
     public bool isGun;
     private void Awake()
     {
-        bulletPrefab = Resources.Load("Bullet") as GameObject;
+        //bulletPrefab = Resources.Load("Bullet") as GameObject;
         player = GameObject.FindWithTag("Player").GetComponent("Player") as Player;
         monsterController = GameObject.FindWithTag("MonsterController").GetComponent("MonsterController") as MonsterController;
         weaponchild = GameObject.FindWithTag("Weapon").GetComponent("WeaponChild") as WeaponChild;
-        gun = GameObject.Find("Gun");
+        //gun = GameObject.Find("Gun");
     }
     private void Start()
     {
@@ -44,7 +44,7 @@ public class Weapon : MonoBehaviour
                 isGun = true;
                 for (int i = 0; i < _weapons.Count; i++)
                 {
-                    if (_weapons[i].gameObject == gun)
+                    if (_weapons[i].gameObject.name == "gun")
                     {
                         Debug.Log("Weapon gun list");
                         bullet = bulletPrefab.GetComponent("Bullet") as Bullet;
@@ -52,7 +52,7 @@ public class Weapon : MonoBehaviour
 
                         _bulletPool = new GameObjectPool<Bullet>(20, () =>
                         {
-                            var poolBullet = Instantiate(bullet, this.transform.GetChild(0).GetChild(0).GetChild(0).transform);
+                            var poolBullet = Instantiate(bullet);
                             //Instantiate(bullet, this.transform.GetChild(0).GetChild(0).transform); // shooter
                             return poolBullet;
                         });

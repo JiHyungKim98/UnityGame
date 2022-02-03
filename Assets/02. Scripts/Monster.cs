@@ -78,7 +78,7 @@ namespace ZombieWorld
             player = GameObject.Find("Player").GetComponent("Player") as Player;
             target = GameObject.Find("Player");
             monsterController= GameObject.Find("MonsterController").GetComponent("MonsterController") as MonsterController;
-            weapon = GameObject.Find("WeaponController").GetComponent("Weapon") as Weapon;
+            //weapon = GameObject.Find("WeaponController").GetComponent("Weapon") as Weapon;
         }
 
         void Update()
