@@ -20,8 +20,7 @@ namespace ZombieWorld
         public bool isAttack = false;
         public float attackDelay = 1f;
         public bool isSwing = false;
-        GameObject gun;
-        GameObject bat;
+
 
         /* Player Stat */
         private float MaxHP = 100f;
@@ -31,8 +30,6 @@ namespace ZombieWorld
         private float TimerMPMinus=0f;
         public bool isMPEmpty;
 
-
-        public bool isNKeyDown;
         public GameObject MainWeapon;
         public GameObject SubWeapon;
         public GameObject inventory;
@@ -54,10 +51,10 @@ namespace ZombieWorld
 
         /* Component Connect */
         private CharacterController controller;
-        public Animator animator;
+        private Animator animator;
 
         /* Script Connect */
-        private WeaponContainer _weaponContainerController;    //weapon
+        private WeaponContainer _weaponContainerController; 
         private Item item;
 
         enum PlayerAni
@@ -95,27 +92,15 @@ namespace ZombieWorld
             MP = MaxMP;
             MoveDir = Vector3.zero;
 
-
-            walkSpeed = 0.1f;
-            runSpeed = 0.2f;
-            rotationSpeed = 2f;
-            jumpSpeed = 8.0f;
-            gravity = 20.0f;
         }
 
         void Start()
         {
             _weaponContainerController = GetComponentInChildren<WeaponContainer>();
-            gun = GameObject.Find("Gun");
-            bat = GameObject.Find("Paddle");
-            //item = GameObject.FindWithTag("ItemHeal").GetComponent("Bandage") as Bandage;
-            //MainWeapon = GameObject.FindWithTag("MainWeapon");
-            //SubWeapon = GameObject.FindWithTag("SubWeapon");
         }
 
         void Update()
         {
-            //Debug.Log("Player State:" + state);
             UpdateState();            
         }
 
@@ -144,12 +129,15 @@ namespace ZombieWorld
 
         private void UpdateState()
         {
+            /* HP <= 0 */
             if (base.HP <= 0)
             {
                 state = State.Dead;
                 isDie = true;
                 Die();
             }
+
+            /* HP > 0 */
             if (!isDie)
             {
                 if (MP <= 0)
@@ -229,38 +217,14 @@ namespace ZombieWorld
                 else
                     animator.SetBool("Jump_b", false);
 
-                // attack - one hand
+
+                // attack
                 if (Input.GetMouseButtonDown(0))
                 {
-                    isSwing = true;
-                    if (!isAttack)
-                    {
-                        isAttack = true;
-                        //Debug.Log(MainWeapon.transform.GetChild(0).gameObject.name);
-                        if (MainWeapon.transform.GetChild(0).gameObject.name == "gun")
-                        {
-                            Debug.Log("Gun Attack success");
-                            StartCoroutine(AttackCoroutineGun());
-                        }
-                        
-                        else if(MainWeapon.transform.GetChild(0).gameObject == bat)
-                        {
-                            Debug.Log("Bat Attack success");
-                            StartCoroutine(AttackCoroutineBat());
-                        }
-                        else
-                        {
-                            Debug.Log("Bat&Gun Attack fail");
-                        }
-                    }
-                    else
-                    {
-                        Debug.Log("Attack fail");
-                        
-                    }
-
+                    Attack();
+                    
+                    
                 }
-
 
                 /* Item Pick Up */
                 if (Input.GetKeyDown(KeyCode.C))
@@ -286,25 +250,64 @@ namespace ZombieWorld
             item.IsNear();
         }
         void WeaponPick()
-        {
-            if (!isNKeyDown)
-            {
-                isNKeyDown = true;
-                MapController.Instance.GetNearestWeapon(transform.position);
-                isNKeyDown = false;
-                
-                //MonsterController.
-            }
+        { 
+            MapController.Instance.GetNearestWeapon(transform.position);
         }
         void WeaponChange()
         {
-            MainWeapon.transform.GetChild(0).SetParent(SubWeapon.transform);
-            SubWeapon.transform.GetChild(0).SetParent(MainWeapon.transform);
-            SubWeapon.gameObject.SetActive(false);
-            MainWeapon.gameObject.SetActive(true);
-            inventory.GetComponent<Inventory>().WeaponChangeUI();
+            if (_weaponContainerController._weapons.Count <= 0) // weaponLst empty
+            {
+                Debug.Log("무기가 없음!");
+                return;
+            }
+            else
+            {
+                MainWeapon.transform.GetChild(0).SetParent(SubWeapon.transform);
+                SubWeapon.transform.GetChild(0).SetParent(MainWeapon.transform);
+                SubWeapon.gameObject.SetActive(false);
+                MainWeapon.gameObject.SetActive(true);
+                inventory.GetComponent<Inventory>().WeaponChangeUI();
+            }
+           
+        }
 
+        void Attack()
+        {
+            if (_weaponContainerController._weapons.Count <= 0) // weapon lst empty
+            {
+                Debug.Log("무기를 안 갖고있음");
+                return;
+            }
+            else
+            {
+                isSwing = true;
+                if (!isAttack)
+                {
+                    isAttack = true;
+                    
+                    if (MainWeapon.transform.GetChild(0).gameObject.name == "gun")
+                    {
+                        Debug.Log("Gun Attack success");
+                        StartCoroutine(AttackCoroutineGun());
+                    }
 
+                    else if (MainWeapon.transform.GetChild(0).gameObject.name == "bat")
+                    {
+                        Debug.Log("Bat Attack success");
+                        StartCoroutine(AttackCoroutineBat());
+                    }
+                    else
+                    {
+                        Debug.Log("Bat&Gun Attack fail");
+                    }
+                }
+                else
+                {
+                    Debug.Log("Attack fail");
+
+                }
+            }
+            
         }
         IEnumerator AllMoveStop()
         {
