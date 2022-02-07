@@ -40,7 +40,8 @@ namespace ZombieWorld
         /* Script Connect */
         public MonsterObserver observer;
         public MonsterController monsterController;
-        public Player player;
+        public Player playerScript;
+        public GameObject playerObj;
         [FormerlySerializedAs("weapon")] public WeaponContainer weaponContainer;
 
         Coroutine randPosCoroution = null;
@@ -57,9 +58,7 @@ namespace ZombieWorld
 
         void Awake()
         {
-            //Debug.Log("monster ��ũ��Ʈ ����");
-            gameObject.GetComponent<Monster>().enabled = true;
-
+            //gameObject.GetComponent<Monster>().enabled = true;
             nav = GetComponent<NavMeshAgent>();
             animator = GetComponent<Animator>();
             rigidbody = GetComponent<Rigidbody>();
@@ -73,18 +72,16 @@ namespace ZombieWorld
 
         private void Start()
         {
-            // monster = this.transform.parent.parent.parent.gameObject.GetComponent("Monster") as Monster;
-            observer = this.transform.Find("PointOfView").GetComponent("MonsterObserver") as MonsterObserver;
-            //GameObject.Find("PointOfView").GetComponent("MonsterObserver") as MonsterObserver;
-            player = GameObject.Find("Player").GetComponent("Player") as Player;
-            target = GameObject.Find("Player");
-            monsterController= GameObject.Find("MonsterController").GetComponent("MonsterController") as MonsterController;
-            //weapon = GameObject.Find("WeaponController").GetComponent("Weapon") as Weapon;
+            observer = GetComponentInChildren<MonsterObserver>();
+
+            playerScript=playerObj.GetComponent<Player>();
+
+            monsterController = GetComponentInParent<MonsterController>();
+            
         }
 
         void Update()
         {
-            //Debug.Log("Monster State:" + state);
             if (isDie)
             {
                 isDie = false;
@@ -110,8 +107,9 @@ namespace ZombieWorld
                 /* Enemy Chase & Attack */
                 if (observer.m_IsPlayerInRange)
                 {
+                    target = playerObj.gameObject;
                     /* Attack */
-                    if (Vector3.Distance(this.transform.position, player.transform.position) <= 1.5f)
+                    if (Vector3.Distance(this.transform.position, playerScript.transform.position) <= 1.5f)
                     {
                         state = State.Attack;
                         if (!isAttack)
@@ -127,7 +125,7 @@ namespace ZombieWorld
                         {
                             isFollow = true;
                             state = State.Chase;
-                            //StartCoroutine(MoveToTarget());
+                            StartCoroutine(MoveToTarget());
                         }
                     }
 
@@ -138,7 +136,7 @@ namespace ZombieWorld
                     if (!isRandomPosEnd)
                     {
                         isRandomPosEnd = true;
-                        //randPosCoroution = StartCoroutine(randPos());
+                        randPosCoroution = StartCoroutine(randPos());
                     }
                     
                 }
@@ -213,7 +211,7 @@ namespace ZombieWorld
         
         IEnumerator Attack()
         {
-            player.GetDamage(10);
+            playerScript.GetDamage(10);
             yield return new WaitForSeconds(attackDelay);
             isAttack = false;
         }

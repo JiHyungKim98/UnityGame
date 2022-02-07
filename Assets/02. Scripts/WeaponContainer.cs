@@ -10,28 +10,28 @@ public class WeaponContainer : MonoBehaviour
     [SerializeField] public List<GameObject> _bullets = new List<GameObject>();
     [SerializeField] public List<Weapon> _weapons = new List<Weapon>();
     private GameObjectPool<Bullet> _bulletPool;
+
     public int weaponCnt = 0;
     public GameObject bulletPrefab;
     public Bullet bullet;
     public Bullet bulletObj;
 
+    //public GameObject playerObj;
     public Player player;
     //public GameObject gun;
+
+    public GameObject monsterControllerObj;
     public MonsterController monsterController;
     [FormerlySerializedAs("weaponchild")] public Weapon weapon;
 
     public bool isGun;
-    private void Awake()
-    {
-        //bulletPrefab = Resources.Load("Bullet") as GameObject;
-        player = GameObject.FindWithTag("Player").GetComponent("Player") as Player;
-        monsterController = GameObject.FindWithTag("MonsterController").GetComponent("MonsterController") as MonsterController;
-        weapon = GetComponentInChildren<Weapon>();
-        //gun = GameObject.Find("Gun");
-    }
+
+    
     private void Start()
     {
-        
+        player = GetComponentInParent<Player>();
+        monsterController = monsterControllerObj.GetComponent<MonsterController>();
+        weapon = GetComponentInChildren<Weapon>();
 
     }
     private void Update()

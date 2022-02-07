@@ -16,18 +16,13 @@ public class MonsterController : Singleton<MonsterController>
 
     private int Spawner;
 
-    private void Awake()
-    {
-        monsterPrefab = Resources.Load("Zombie_coworker") as GameObject;
-    }
 
     private void Start()
     {
         Spawner = 0;
-        //Instantiate(monsterPrefab); // �����
-        monster = monsterPrefab.GetComponent("Monster") as Monster;
+        monster = monsterPrefab.GetComponent<Monster>();
 
-        _monsterPool = new GameObjectPool<Monster>(3, ()=> 
+        _monsterPool = new GameObjectPool<Monster>(0, ()=> 
         {
             var poolMonster = Instantiate(monster,this.transform); 
             return poolMonster;

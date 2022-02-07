@@ -8,10 +8,14 @@ public class MonsterObserver : MonoBehaviour
 
     void OnTriggerEnter(Collider other)
     {
-        if (other.transform.tag == "Player")
+        if (other.tag == "Player")
         {
-            //Debug.Log("player in");
+            Debug.Log("player in");
             m_IsPlayerInRange = true;
+        }
+        else
+        {
+            Debug.Log("들어오긴함");
         }
     }
     void OnTriggerExit(Collider other)
@@ -19,7 +23,7 @@ public class MonsterObserver : MonoBehaviour
         if (other.transform.tag == "Player")
         {
             m_IsPlayerInRange = false;
-            //Debug.Log("player out");
+            Debug.Log("player out");
         }
     }
 

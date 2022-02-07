@@ -5,7 +5,10 @@ using UnityEngine.EventSystems;
 
 public class JoyStick : MonoBehaviour
 {
-    public Transform Player; // player pos
+    //public Transform player; // player pos
+    public GameObject player;
+    public Animator playerAnimator;
+
     public Transform Stick; // JoyStick
 
     private Vector3 StickFirstPos;
@@ -28,12 +31,19 @@ public class JoyStick : MonoBehaviour
     {
         if (playerMoveFlag)
         {
-            Player.transform.Translate(Vector3.forward * Time.deltaTime * 10f);
+            player.transform.Translate(Vector3.forward * Time.deltaTime * 7f);
+            playerAnimator.SetBool("Static_b", false);
+            playerAnimator.SetFloat("Speed_f", 0.1f);
+        }
+        else
+        {
+            playerAnimator.SetFloat("Speed_f", 0);
         }
     }
 
     public void Drag(BaseEventData _Data)
     {
+        playerMoveFlag = true;
         PointerEventData Data = _Data as PointerEventData;
         Vector3 Pos = Data.position;
 
@@ -47,7 +57,8 @@ public class JoyStick : MonoBehaviour
         else // move the radius
             Stick.position = StickFirstPos + JoyVec * Radius;
 
-        Player.eulerAngles = new Vector3(0, Mathf.Atan2(JoyVec.x, JoyVec.y) * Mathf.Rad2Deg, 0);
+        player.transform.eulerAngles = new Vector3(0, Mathf.Atan2(JoyVec.x, JoyVec.y) * Mathf.Rad2Deg, 0);
+
 
     }
 

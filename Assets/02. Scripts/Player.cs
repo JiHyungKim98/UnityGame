@@ -34,6 +34,8 @@ namespace ZombieWorld
         public GameObject SubWeapon;
         public GameObject inventory;
 
+        public Button attackBtn;
+
         public float MP
         {
             get
@@ -97,6 +99,8 @@ namespace ZombieWorld
         void Start()
         {
             _weaponContainerController = GetComponentInChildren<WeaponContainer>();
+
+            attackBtn.onClick.AddListener(Attack);
         }
 
         void Update()
@@ -106,26 +110,26 @@ namespace ZombieWorld
 
         private void FixedUpdate()
         {
-            MoveChracter();
+            //MoveChracter();
         }
 
-        private void MoveChracter()
-        {
-            if (!isDie)
-            {
-                if (controller.isGrounded == true)
-                {
-                    transform.Rotate(Vector3.up * Input.GetAxis("Horizontal") * rotationSpeed);
+        //private void MoveChracter()
+        //{
+        //    if (!isDie)
+        //    {
+        //        if (controller.isGrounded == true)
+        //        {
+        //            transform.Rotate(Vector3.up * Input.GetAxis("Horizontal") * rotationSpeed);
 
-                    MoveDir = new Vector3(0, 0, Input.GetAxis("Vertical") * currentSpeed);
-                    MoveDir = transform.TransformDirection(MoveDir);
-                }
+        //            MoveDir = new Vector3(0, 0, Input.GetAxis("Vertical") * currentSpeed);
+        //            MoveDir = transform.TransformDirection(MoveDir);
+        //        }
 
-                MoveDir.y -= gravity;
-                controller.Move(MoveDir);
-            }
+        //        MoveDir.y -= gravity;
+        //        controller.Move(MoveDir);
+        //    }
 
-        }
+        //}
 
         private void UpdateState()
         {
@@ -156,56 +160,56 @@ namespace ZombieWorld
                 }
 
                 /* Run speed */
-                if (Input.GetKey(KeyCode.LeftShift))
-                {
-                    state = State.Run;
-                    TimerMPMinus += Time.deltaTime;
-                    TimerMPPlus = 0f;
+                //if (Input.GetKey(KeyCode.LeftShift))
+                //{
+                //    state = State.Run;
+                //    TimerMPMinus += Time.deltaTime;
+                //    TimerMPPlus = 0f;
 
-                    if (isMPEmpty == false)
-                        currentSpeed = runSpeed;
-                    else
-                        currentSpeed = 0;
+                //    if (isMPEmpty == false)
+                //        currentSpeed = runSpeed;
+                //    else
+                //        currentSpeed = 0;
 
-                    if (TimerMPMinus >= 0.02f)
-                    {
-                        TimerMPMinus = 0f;
-                        MP -= 0.1f;
-                    }
-                }
-                /* Walk speed */
-                else
-                {
-                    state = State.Walk;
-                    TimerMPPlus += Time.deltaTime;
-                    TimerMPMinus = 0f;
+                //    if (TimerMPMinus >= 0.02f)
+                //    {
+                //        TimerMPMinus = 0f;
+                //        MP -= 0.1f;
+                //    }
+                //}
+                ///* Walk speed */
+                //else
+                //{
+                //    state = State.Walk;
+                //    TimerMPPlus += Time.deltaTime;
+                //    TimerMPMinus = 0f;
 
-                    if (isMPEmpty == false)
-                        currentSpeed = walkSpeed;
-                    else
-                        currentSpeed = 0;
+                //    if (isMPEmpty == false)
+                //        currentSpeed = walkSpeed;
+                //    else
+                //        currentSpeed = 0;
 
                     
-                    if (TimerMPPlus >= 0.05f) 
-                    {
-                        TimerMPPlus = 0f;
-                        MP += 0.1f;
-                    }
+                //    if (TimerMPPlus >= 0.05f) 
+                //    {
+                //        TimerMPPlus = 0f;
+                //        MP += 0.1f;
+                //    }
 
-                    if (MP >= 5f)
-                        MP = 5f;
+                //    if (MP >= 5f)
+                //        MP = 5f;
 
-                }
+                //}
 
 
-                // Move
-                if (MoveDir.x > 0 || MoveDir.x < 0 || MoveDir.z > 0 || MoveDir.z < 0)
-                {
-                    animator.SetBool("Static_b", false);
-                    animator.SetFloat("Speed_f", currentSpeed);
-                }
-                else
-                    animator.SetFloat("Speed_f", 0f);
+                //// Move
+                //if (MoveDir.x > 0 || MoveDir.x < 0 || MoveDir.z > 0 || MoveDir.z < 0)
+                //{
+                //    animator.SetBool("Static_b", false);
+                //    animator.SetFloat("Speed_f", currentSpeed);
+                //}
+                //else
+                //    animator.SetFloat("Speed_f", 0f);
 
                 // Jump
                 if (Input.GetButton("Jump"))
@@ -219,12 +223,11 @@ namespace ZombieWorld
 
 
                 // attack
-                if (Input.GetMouseButtonDown(0))
-                {
-                    Attack();
-                    
-                    
-                }
+                //if (Input.GetMouseButtonDown(0))
+                //{
+                //    Attack();
+                //}
+                
 
                 /* Item Pick Up */
                 if (Input.GetKeyDown(KeyCode.C))
@@ -273,6 +276,7 @@ namespace ZombieWorld
 
         void Attack()
         {
+            Debug.Log("버튼 클릭잘됨.");
             if (_weaponContainerController._weapons.Count <= 0) // weapon lst empty
             {
                 Debug.Log("무기를 안 갖고있음");
