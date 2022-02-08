@@ -2,12 +2,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using ZombieWorld;
 
 public class JoyStick : MonoBehaviour
 {
     //public Transform player; // player pos
     public GameObject player;
     public Animator playerAnimator;
+    
 
     public Transform Stick; // JoyStick
 
@@ -31,6 +33,7 @@ public class JoyStick : MonoBehaviour
     {
         if (playerMoveFlag)
         {
+            //player.GetComponent<Player>().controller.Move(Vector3.forward * Time.deltaTime * 7f);
             player.transform.Translate(Vector3.forward * Time.deltaTime * 7f);
             playerAnimator.SetBool("Static_b", false);
             playerAnimator.SetFloat("Speed_f", 0.1f);
@@ -57,6 +60,7 @@ public class JoyStick : MonoBehaviour
         else // move the radius
             Stick.position = StickFirstPos + JoyVec * Radius;
 
+        //player.GetComponent<Player>().controller.transform.eulerAngles=new Vector3(0, Mathf.Atan2(JoyVec.x, JoyVec.y) * Mathf.Rad2Deg, 0);
         player.transform.eulerAngles = new Vector3(0, Mathf.Atan2(JoyVec.x, JoyVec.y) * Mathf.Rad2Deg, 0);
 
 

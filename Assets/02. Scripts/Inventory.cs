@@ -8,64 +8,64 @@ public class Inventory : MonoBehaviour {
 
     [SerializeField] private List<GameObject> _slots = new List<GameObject>();
     [SerializeField] private List<Sprite> _weapon = new List<Sprite>();
+    [SerializeField] private List<Sprite> _item = new List<Sprite>();
 
     public GameObject MainWeaponOjb;
-    public GameObject SubWeaponOjb;
     public GameObject MainWeaponImg;
-    public GameObject SubWeaponImg;
-    public Sprite tempImg;
 
-    //public void WeaponSetUI(int num)
-    //{
-    //    if (num == 0)
-    //    {
-    //        if (MainWeaponOjb.transform.GetChild(0).name == "gun")
-    //        {
-    //            MainWeaponImg.GetComponent<Image>().sprite = _weapon[0];
-    //            Debug.Log("gun img");
-    //        }
-    //        else if (MainWeaponOjb.transform.GetChild(0).name == "Paddle")
-    //        {
-    //            Debug.Log("paddle img");
-    //            MainWeaponImg.GetComponent<Image>().sprite = _weapon[1];
-
-    //        }
-    //        else
-    //        {
-    //            Debug.Log("num0 Img drawing fail");
-    //        }
-    //    }
-    //    else
-    //    {
-    //        if(SubWeaponOjb.transform.GetChild(0).name == "gun")
-    //        {
-    //            SubWeaponImg.GetComponent<Image>().sprite = _weapon[0];
-    //        }
-    //        else if (SubWeaponOjb.transform.GetChild(0).name == "Paddle")
-    //        {
-    //            Debug.Log("paddle img");
-    //            SubWeaponImg.GetComponent<Image>().sprite = _weapon[1];
-
-    //        }
-    //        else
-    //        {
-    //            Debug.Log("num1 Img drawing fail");
-    //        }
-    //    }
-        
-    //}
-
-    public void WeaponChangeUI()
+    
+    public void AddToSlot(GameObject obj)
     {
-        if (MainWeaponOjb.transform.GetChild(0).name == "gun")
+        if (_slots.Count > 16)
         {
-            MainWeaponImg.GetComponent<Image>().sprite = _weapon[1];
-            SubWeaponImg.GetComponent<Image>().sprite = _weapon[0];
+            Debug.Log("Slot 개수 초과!");
         }
         else
         {
-            MainWeaponImg.GetComponent<Image>().sprite = _weapon[0];
-            SubWeaponImg.GetComponent<Image>().sprite = _weapon[1];
+            foreach(GameObject slot in _slots)
+            {
+                if (slot.GetComponent<Image>().sprite == null)
+                {
+                    Debug.Log("여기 비었다!");
+                    obj.transform.SetParent(slot.transform);
+                    if (obj.name == "Gun") 
+                    { 
+                    slot.GetComponent<Image>().sprite=_weapon.Find(x => x.name == "gunImg");
+                    }
+                    else if (obj.name == "Paddle")
+                    {
+                        slot.GetComponent<Image>().sprite = _weapon.Find(x => x.name == "paddleImg");
+                    }
+                    else if (obj.name == "MedicBag")
+                    {
+                        slot.GetComponent<Image>().sprite = _item.Find(x => x.name == "MedicBagImg");
+                    }
+                    else if (obj.name == "Bandage")
+                    {
+                        slot.GetComponent<Image>().sprite = _item.Find(x => x.name == "BandageImg");
+                    }
+                    else if (obj.name == "Candle")
+                    {
+                        slot.GetComponent<Image>().sprite = _item.Find(x => x.name == "CandleImg");
+                    }
+                    else if (obj.name == "Map")
+                    {
+                        slot.GetComponent<Image>().sprite = _item.Find(x => x.name == "MapImg");
+                    }
+                    else if (obj.name == "Butllet")
+                    {
+                        slot.GetComponent<Image>().sprite = _item.Find(x => x.name == "BulletImg");
+                    }
+                    break;
+                }
+            }
+
         }
+
     }
+   
+
+
+
+
 }

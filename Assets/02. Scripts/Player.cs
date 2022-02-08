@@ -52,7 +52,9 @@ namespace ZombieWorld
         public bool isDie;
 
         /* Component Connect */
-        private CharacterController controller;
+        public CharacterController controller;
+        
+        //private CharacterController controller;
         private Animator animator;
 
         /* Script Connect */
@@ -269,7 +271,7 @@ namespace ZombieWorld
                 SubWeapon.transform.GetChild(0).SetParent(MainWeapon.transform);
                 SubWeapon.gameObject.SetActive(false);
                 MainWeapon.gameObject.SetActive(true);
-                inventory.GetComponent<Inventory>().WeaponChangeUI();
+                //inventory.GetComponent<Inventory>().WeaponChangeUI();
             }
            
         }
