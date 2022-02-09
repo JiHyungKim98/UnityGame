@@ -44,7 +44,7 @@ public class WeaponContainer : MonoBehaviour
                 isGun = true;
                 for (int i = 0; i < _weapons.Count; i++)
                 {
-                    if (_weapons[i].gameObject.name == "gun")
+                    if (_weapons[i].gameObject.name == "Gun")
                     {
                         Debug.Log("Weapon gun list");
                         bullet = bulletPrefab.GetComponent("Bullet") as Bullet;
@@ -53,14 +53,13 @@ public class WeaponContainer : MonoBehaviour
                         _bulletPool = new GameObjectPool<Bullet>(20, () =>
                         {
                             var poolBullet = Instantiate(bullet);
-                            //Instantiate(bullet, this.transform.GetChild(0).GetChild(0).transform); // shooter
                             return poolBullet;
                         });
                         //for (int i = 0; i < _bulletPool.Count; i++) // Initialize Bullet
                         //{
                         //    _bulletPool.Pop();
                         //}
-                        //foreach (Transform child in transform.GetChild(0).transform)
+                        
                         foreach (Transform child in transform.GetChild(0).transform)
                         {
                             _bullets.Add(child.gameObject);

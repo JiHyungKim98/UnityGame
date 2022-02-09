@@ -33,11 +33,9 @@ public class Weapon : MonoBehaviour
         this.gameObject.SetActive(false);
         WeaponStatUI.SetActive(true);
         WeaponContainer._weapons.Add(this);
-        //Debug.Log(this.gameObject.name.ToString());
         if (this.gameObject.name == "Gun")
         {
             Debug.Log("gumImg");
-            //MainWeaponImg.GetComponent<Image>().sprite = WeaponController.GetComponent<WeaponController>()._weaponImg.Find(x=>x.name=="gunImg");
             WeaponStatUI.transform.GetChild(0).gameObject.GetComponent<Image>().sprite= 
                         WeaponController.GetComponent<WeaponController>()._weaponImg.Find(x => x.name == "gunImg");
             WeaponStatUI.transform.GetChild(1).gameObject.GetComponent<Text>().text = 
@@ -49,7 +47,6 @@ public class Weapon : MonoBehaviour
         else if(this.gameObject.name == "Paddle")
         {
             Debug.Log("paddleImg");
-            //MainWeaponImg.GetComponent<Image>().sprite = WeaponController.GetComponent<WeaponController>()._weaponImg.Find(x => x.name == "paddleImg");
             WeaponStatUI.transform.GetChild(0).gameObject.GetComponent<Image>().sprite = WeaponController.GetComponent<WeaponController>()._weaponImg.Find(x => x.name == "paddleImg");
             WeaponStatUI.transform.GetChild(1).gameObject.GetComponent<Text>().text = "Power\n+2\nAttack Speed\n+5\nAttack Distance\n+5";
             this.gameObject.GetComponent<BoxCollider>().enabled = false;

@@ -19,7 +19,7 @@ namespace ZombieWorld
         /* Player Attack */
         public bool isAttack = false;
         public float attackDelay = 1f;
-        public bool isSwing = false;
+        //public bool isSwing = false;
 
 
         /* Player Stat */
@@ -224,11 +224,6 @@ namespace ZombieWorld
                     animator.SetBool("Jump_b", false);
 
 
-                // attack
-                //if (Input.GetMouseButtonDown(0))
-                //{
-                //    Attack();
-                //}
                 
 
                 /* Item Pick Up */
@@ -252,7 +247,7 @@ namespace ZombieWorld
 
         void ItemPick()
         {
-            item.IsNear();
+            //item.IsNear();
         }
         void WeaponPick()
         { 
@@ -286,18 +281,18 @@ namespace ZombieWorld
             }
             else
             {
-                isSwing = true;
+                //isSwing = true;
                 if (!isAttack)
                 {
                     isAttack = true;
                     
-                    if (MainWeapon.transform.GetChild(0).gameObject.name == "gun")
+                    if (MainWeapon.transform.GetChild(0).gameObject.name == "Gun")
                     {
                         Debug.Log("Gun Attack success");
                         StartCoroutine(AttackCoroutineGun());
                     }
 
-                    else if (MainWeapon.transform.GetChild(0).gameObject.name == "bat")
+                    else if (MainWeapon.transform.GetChild(0).gameObject.name == "Paddle")
                     {
                         Debug.Log("Bat Attack success");
                         StartCoroutine(AttackCoroutineBat());
@@ -317,8 +312,6 @@ namespace ZombieWorld
         }
         IEnumerator AllMoveStop()
         {
-            //Debug.Log("AllMoveStop!");
-            //currentSpeed = 0;
             yield return new WaitForSeconds(3.0f);
             isMPEmpty = false;
         }
@@ -333,7 +326,7 @@ namespace ZombieWorld
             animator.SetInteger("MeleeType_int", 0);
             yield return new WaitForSeconds(attackDelay * 0.5f);
             isAttack = false;
-            isSwing = false;
+            //isSwing = false;
             
         }
 
@@ -346,7 +339,7 @@ namespace ZombieWorld
             _weaponContainerController.Fire();
             yield return new WaitForSeconds(attackDelay * 1f);
             isAttack = false;
-            isSwing = false;
+            //isSwing = false;
             animator.SetBool("Shoot_b", false);
             animator.SetInteger("WeaponType_int", 0);
 
