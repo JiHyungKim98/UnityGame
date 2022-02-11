@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using ZombieWorld;
 
 public class ConfirmUI : MonoBehaviour
 {
@@ -10,6 +11,8 @@ public class ConfirmUI : MonoBehaviour
     public GameObject CurrentWeapon;
     public GameObject MainWeapon;
     public GameObject tmpObj;
+    public Player player;
+    public GameObject RealMap;
 
     private void Start()
     {
@@ -25,13 +28,11 @@ public class ConfirmUI : MonoBehaviour
     public void Use()
     {
         if (slotObj.transform.GetChild(0).gameObject.tag=="Weapon")
-        //Debug.Log(slotObj.GetComponentInChildren<Weapon>().name);
         //if (slotObj.GetComponentInChildren<Weapon>().tag=="Weapon")
         {
              
             if (MainWeapon.transform.childCount == 0) // MainWeapon is null
             {
-                Debug.Log("if childCount" + MainWeapon.transform.childCount);
                 slotObj.GetComponent<Image>().sprite = null;
                 slotObj.transform.GetChild(0).transform.SetParent(MainWeapon.transform);
                 //slotObj.GetComponentInChildren<Weapon>().transform.SetParent(MainWeapon.transform);
@@ -82,9 +83,32 @@ public class ConfirmUI : MonoBehaviour
 
             //}
         }
+        else if(slotObj.transform.GetChild(0).gameObject.tag == "Item")
+        {
+            if (slotObj.transform.GetChild(0).name == "MedicBag")
+            {
+                player.Heal(50);
+            }
+            else if(slotObj.transform.GetChild(0).name == "Bandage")
+            {
+                player.Heal(20);
+            }
+            else if(slotObj.transform.GetChild(0).name == "Map")
+            {
+                RealMap.SetActive(true);
+            }
+            else if (slotObj.transform.GetChild(0).name == "Bullet")
+            {
+
+            }
+            else if (slotObj.transform.GetChild(0).name == "Candle")
+            {
+
+            }
+        }
         else
         {
-            Debug.Log("∆≤∑»¿Ω");
+            
         }
     }
 

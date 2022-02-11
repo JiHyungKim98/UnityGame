@@ -5,17 +5,10 @@ TagManager:
   serializedVersion: 2
   tags:
   - Enemy
-  - Weapon_oneHand
   - ItemHeal
   - MonsterController
-  - MedicBag
-  - Bullet
-  - Bandage
-  - Map
-  - Candle
-  - Gun
-  - bat
   - Weapon
+  - Item
   layers:
   - Default
   - TransparentFX

@@ -322,7 +322,15 @@ namespace ZombieWorld
         }
         public void Heal(float point)
         {
-            base.HP += point;
+            if ((base.HP + point) > 100)
+            {
+                base.HP = 100;
+            }
+            else
+            {
+                base.HP += point;
+            }
+            
 
         }
         public void Die()

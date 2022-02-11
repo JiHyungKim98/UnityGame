@@ -75,9 +75,34 @@ public class Inventory : MonoBehaviour {
             Debug.Log("PaddleImg");
             return _weapon.Find(x => x.name == "PaddleImg");
         }
+        else if(obj.name=="MedicBag")
+        {
+            Debug.Log("MedicBagImg");
+            return _weapon.Find(x => x.name == "MedicBagImg");
+        }
+        else if(obj.name=="Candle")
+        {
+            Debug.Log("CandleImg");
+            return _weapon.Find(x => x.name == "CandleImg");
+        }
+        else if(obj.name=="Bullet")
+        {
+            Debug.Log("BulletImg");
+            return _weapon.Find(x => x.name == "BulletImg");
+        }
+        else if(obj.name=="Bandage")
+        {
+            Debug.Log("BandageImg");
+            return _weapon.Find(x => x.name == "BandageImg");
+        }
+        else if(obj.name=="Map")
+        {
+            Debug.Log("BandageImg");
+            return _weapon.Find(x => x.name == "MapImg");
+        }
         else
         {
-            Debug.Log("else Img");
+            Debug.Log("elseImg");
             return null;
         }
     }
