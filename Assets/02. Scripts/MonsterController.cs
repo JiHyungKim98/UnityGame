@@ -28,7 +28,7 @@ public class MonsterController : Singleton<MonsterController>
             return poolMonster;
         });
 
-        for (int i = 0; i < _monsterPool.Count; i++) // ó���� �ִ� ���� SetActive(true)
+        for (int i = 0; i < _monsterPool.Count; i++)
         {
             //_monsters=
             _monsterPool.Pop();

@@ -25,36 +25,62 @@ public class ConfirmUI : MonoBehaviour
     public void Use()
     {
         if (slotObj.transform.GetChild(0).gameObject.tag=="Weapon")
+        //Debug.Log(slotObj.GetComponentInChildren<Weapon>().name);
+        //if (slotObj.GetComponentInChildren<Weapon>().tag=="Weapon")
         {
-            CurrentWeapon.GetComponent<Image>().sprite = slotObj.GetComponent<Image>().sprite; // Current Weapon sprite change
-
+             
             if (MainWeapon.transform.childCount == 0) // MainWeapon is null
             {
+                Debug.Log("if childCount" + MainWeapon.transform.childCount);
                 slotObj.GetComponent<Image>().sprite = null;
                 slotObj.transform.GetChild(0).transform.SetParent(MainWeapon.transform);
+                //slotObj.GetComponentInChildren<Weapon>().transform.SetParent(MainWeapon.transform);
             }
             else // already have MainWeapon
-            {
-                Debug.Log("잘해보자");
+            {                
                 MainWeapon.transform.GetChild(0).SetParent(tmpObj.transform);
-                slotObj.GetComponent<Image>().sprite = null;
+                //MainWeapon.GetComponentInChildren<Weapon>().gameObject.transform.SetParent(tmpObj.transform);
+
                 slotObj.transform.GetChild(0).transform.SetParent(MainWeapon.transform);
+                //slotObj.GetComponentInChildren<Weapon>().gameObject.transform.SetParent(MainWeapon.transform);
+
                 tmpObj.transform.GetChild(0).SetParent(slotObj.transform);
+                //tmpObj.GetComponentInChildren<Weapon>().gameObject.transform.SetParent(slotObj.transform);
+
+                slotObj.GetComponent<Image>().sprite = transform.GetComponentInParent<Inventory>().SetSprite(slotObj.transform.GetChild(0).gameObject);
+                //slotObj.GetComponent<Image>().sprite = transform.GetComponentInParent<Inventory>().SetSprite(slotObj.GetComponentInChildren<Weapon>().gameObject);
+
+                slotObj.transform.GetChild(0).gameObject.SetActive(false);
+                //slotObj.GetComponentInChildren<Weapon>().gameObject.SetActive(false);
 
             }
-            
-            
+
+            // Current Weapon sprite change
+            CurrentWeapon.GetComponent<Image>().sprite = transform.GetComponentInParent<Inventory>().SetSprite(MainWeapon.transform.GetChild(0).gameObject);
+            //CurrentWeapon.GetComponent<Image>().sprite = transform.GetComponentInParent<Inventory>().SetSprite(MainWeapon.GetComponentInChildren<Weapon>().gameObject);
+
             MainWeapon.transform.GetChild(0).gameObject.SetActive(true);
-            MainWeapon.transform.GetChild(0).gameObject.transform.localPosition=new Vector3(0, 0, 0);
+            MainWeapon.transform.GetChild(0).gameObject.transform.localPosition = new Vector3(0, 0, 0);
             if (MainWeapon.transform.GetChild(0).gameObject.name == "Gun")
             {
-                MainWeapon.transform.GetChild(0).gameObject.transform.localRotation = Quaternion.Euler(new Vector3(180 ,-90, -90));
+                MainWeapon.transform.GetChild(0).gameObject.transform.localRotation = Quaternion.Euler(new Vector3(180, -90, -90));
             }
             else
             {
                 MainWeapon.transform.GetChild(0).gameObject.transform.localRotation = Quaternion.Euler(new Vector3(0, 0, 0));
 
             }
+            //MainWeapon.GetComponentInChildren<Weapon>().gameObject.SetActive(true);
+            //MainWeapon.GetComponentInChildren<Weapon>().gameObject.transform.localPosition=new Vector3(0, 0, 0);
+            //if (MainWeapon.GetComponentInChildren<Weapon>().gameObject.name == "Gun")
+            //{
+            //    MainWeapon.GetComponentInChildren<Weapon>().gameObject.transform.localRotation = Quaternion.Euler(new Vector3(180 ,-90, -90));
+            //}
+            //else
+            //{
+            //    MainWeapon.GetComponentInChildren<Weapon>().gameObject.transform.localRotation = Quaternion.Euler(new Vector3(0, 0, 0));
+
+            //}
         }
         else
         {
@@ -69,6 +95,8 @@ public class ConfirmUI : MonoBehaviour
         {
             slotObj.transform.GetChild(0).gameObject.SetActive(true);
             slotObj.transform.GetChild(0).SetParent(transform.root.parent);
+            //slotObj.GetComponentInChildren<Weapon>().gameObject.SetActive(true);
+            //slotObj.GetComponentInChildren<Weapon>().gameObject.transform.SetParent(transform.root.parent);
 
         }
         else // child X

@@ -8,7 +8,7 @@ public class MonsterObserver : MonoBehaviour
 
     void OnTriggerEnter(Collider other)
     {
-        Debug.Log(other.transform.tag.ToString());
+        
         if (other.transform.CompareTag("Player"))
         {
             Debug.Log("player in");

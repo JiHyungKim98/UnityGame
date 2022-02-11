@@ -53,14 +53,12 @@ namespace ZombieWorld
 
         /* Component Connect */
         public CharacterController controller;
-        
+        public WeaponContainer WeaponContainer;
+
         //private CharacterController controller;
         private Animator animator;
 
-        /* Script Connect */
-        private WeaponContainer _weaponContainerController; 
-        private Item item;
-
+        
         enum PlayerAni
         {
             idle=0,
@@ -100,8 +98,7 @@ namespace ZombieWorld
 
         void Start()
         {
-            _weaponContainerController = GetComponentInChildren<WeaponContainer>();
-
+            WeaponContainer = GetComponent<WeaponContainer>();
             attackBtn.onClick.AddListener(Attack);
         }
 
@@ -226,55 +223,19 @@ namespace ZombieWorld
 
                 
 
-                /* Item Pick Up */
-                if (Input.GetKeyDown(KeyCode.C))
-                {
-                    ItemPick();
-                }
-                if (Input.GetKeyDown(KeyCode.N))
-                {
-                    WeaponPick();
-                }
-
-                if (Input.GetKeyDown(KeyCode.H))
-                {
-                    WeaponChange();
-                }
+                
 
             }
             
         }
 
-        void ItemPick()
-        {
-            //item.IsNear();
-        }
-        void WeaponPick()
-        { 
-            MapController.Instance.GetNearestWeapon(transform.position);
-        }
-        void WeaponChange()
-        {
-            if (_weaponContainerController._weapons.Count <= 0) // weaponLst empty
-            {
-                Debug.Log("무기가 없음!");
-                return;
-            }
-            else
-            {
-                MainWeapon.transform.GetChild(0).SetParent(SubWeapon.transform);
-                SubWeapon.transform.GetChild(0).SetParent(MainWeapon.transform);
-                SubWeapon.gameObject.SetActive(false);
-                MainWeapon.gameObject.SetActive(true);
-                //inventory.GetComponent<Inventory>().WeaponChangeUI();
-            }
-           
-        }
+        
+        
 
         void Attack()
         {
             Debug.Log("버튼 클릭잘됨.");
-            if (_weaponContainerController._weapons.Count <= 0) // weapon lst empty
+            if (MainWeapon.transform.childCount==0) // weapon lst empty
             {
                 Debug.Log("무기를 안 갖고있음");
                 return;
@@ -321,7 +282,7 @@ namespace ZombieWorld
             animator.SetInteger("WeaponType_int", 12);
             animator.SetInteger("MeleeType_int", 1);
             yield return new WaitForSeconds(attackDelay * 0.5f);
-            _weaponContainerController.Attack();
+            WeaponContainer.Attack();
             animator.SetInteger("WeaponType_int", 0);
             animator.SetInteger("MeleeType_int", 0);
             yield return new WaitForSeconds(attackDelay * 0.5f);
@@ -336,7 +297,7 @@ namespace ZombieWorld
             animator.SetBool("Shoot_b", true); 
             animator.SetInteger("WeaponType_int", 2);
             yield return new WaitForSeconds(attackDelay * 1f);
-            _weaponContainerController.Fire();
+            WeaponContainer.Fire();
             yield return new WaitForSeconds(attackDelay * 1f);
             isAttack = false;
             //isSwing = false;
@@ -359,7 +320,7 @@ namespace ZombieWorld
         {
             base.StartCoroutine(TakeDamage(10));
         }
-        private void Heal(float point)
+        public void Heal(float point)
         {
             base.HP += point;
 

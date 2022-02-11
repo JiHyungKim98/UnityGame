@@ -24,17 +24,16 @@ public class Inventory : MonoBehaviour {
         {
             foreach(GameObject slot in _slots)
             {
-                if (slot.GetComponent<Image>().sprite == null)
+                if (slot.transform.childCount==0)
                 {
-                    Debug.Log("여기 비었다!");
                     obj.transform.SetParent(slot.transform);
                     if (obj.name == "Gun") 
                     { 
-                    slot.GetComponent<Image>().sprite=_weapon.Find(x => x.name == "gunImg");
+                        slot.GetComponent<Image>().sprite=_weapon.Find(x => x.name == "GunImg");
                     }
                     else if (obj.name == "Paddle")
                     {
-                        slot.GetComponent<Image>().sprite = _weapon.Find(x => x.name == "paddleImg");
+                        slot.GetComponent<Image>().sprite = _weapon.Find(x => x.name == "PaddleImg");
                     }
                     else if (obj.name == "MedicBag")
                     {
@@ -52,7 +51,7 @@ public class Inventory : MonoBehaviour {
                     {
                         slot.GetComponent<Image>().sprite = _item.Find(x => x.name == "MapImg");
                     }
-                    else if (obj.name == "Butllet")
+                    else if (obj.name == "Bullet")
                     {
                         slot.GetComponent<Image>().sprite = _item.Find(x => x.name == "BulletImg");
                     }
@@ -63,6 +62,27 @@ public class Inventory : MonoBehaviour {
         }
 
     }
+
+    public Sprite SetSprite(GameObject obj)
+    {
+        if (obj.name == "Gun")
+        {
+            Debug.Log("GunImg");
+            return _weapon.Find(x => x.name == "GunImg");
+        }
+        else if (obj.name == "Paddle")
+        {
+            Debug.Log("PaddleImg");
+            return _weapon.Find(x => x.name == "PaddleImg");
+        }
+        else
+        {
+            Debug.Log("else Img");
+            return null;
+        }
+    }
+
+
 
   
    

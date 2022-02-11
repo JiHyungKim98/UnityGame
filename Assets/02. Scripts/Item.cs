@@ -4,11 +4,17 @@ using UnityEngine;
 using UnityEngine.UI;
 using ZombieWorld;
 
-public class Item : MonoBehaviour
+public class Item : ItemController
 {
+
+    private void OnEnable()
+    {
+        this.gameObject.GetComponent<BoxCollider>().enabled = true;
+    }
+
     private void OnMouseDown()
     {
-        this.gameObject.SetActive(false);
+        MouseOn(this.gameObject);
     }
 
 }
