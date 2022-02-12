@@ -18,7 +18,7 @@ public class Inventory : MonoBehaviour {
     {
         if (_slots.Count > 16)
         {
-            Debug.Log("Slot °³¼ö ÃÊ°ú!");
+            Debug.Log("Slot ï¿½ï¿½ï¿½ï¿½ ï¿½Ê°ï¿½!");
         }
         else
         {
@@ -27,34 +27,17 @@ public class Inventory : MonoBehaviour {
                 if (slot.transform.childCount==0)
                 {
                     obj.transform.SetParent(slot.transform);
-                    if (obj.name == "Gun") 
-                    { 
-                        slot.GetComponent<Image>().sprite=_weapon.Find(x => x.name == "GunImg");
-                    }
-                    else if (obj.name == "Paddle")
+                    slot.GetComponent<Image>().sprite = obj.name switch
                     {
-                        slot.GetComponent<Image>().sprite = _weapon.Find(x => x.name == "PaddleImg");
-                    }
-                    else if (obj.name == "MedicBag")
-                    {
-                        slot.GetComponent<Image>().sprite = _item.Find(x => x.name == "MedicBagImg");
-                    }
-                    else if (obj.name == "Bandage")
-                    {
-                        slot.GetComponent<Image>().sprite = _item.Find(x => x.name == "BandageImg");
-                    }
-                    else if (obj.name == "Candle")
-                    {
-                        slot.GetComponent<Image>().sprite = _item.Find(x => x.name == "CandleImg");
-                    }
-                    else if (obj.name == "Map")
-                    {
-                        slot.GetComponent<Image>().sprite = _item.Find(x => x.name == "MapImg");
-                    }
-                    else if (obj.name == "Bullet")
-                    {
-                        slot.GetComponent<Image>().sprite = _item.Find(x => x.name == "BulletImg");
-                    }
+                        "Gun" => _weapon.Find(x => x.name == "GunImg"),
+                        "Paddle" => _weapon.Find(x => x.name == "PaddleImg"),
+                        "MedicBag" => _item.Find(x => x.name == "MedicBagImg"),
+                        "Bandage" => _item.Find(x => x.name == "BandageImg"),
+                        "Candle" => _item.Find(x => x.name == "CandleImg"),
+                        "Map" => _item.Find(x => x.name == "MapImg"),
+                        "Bullet" => _item.Find(x => x.name == "BulletImg"),
+                        _ => slot.GetComponent<Image>().sprite
+                    };
                     break;
                 }
             }
@@ -65,45 +48,32 @@ public class Inventory : MonoBehaviour {
 
     public Sprite SetSprite(GameObject obj)
     {
-        if (obj.name == "Gun")
+        switch (obj.name)
         {
-            Debug.Log("GunImg");
-            return _weapon.Find(x => x.name == "GunImg");
-        }
-        else if (obj.name == "Paddle")
-        {
-            Debug.Log("PaddleImg");
-            return _weapon.Find(x => x.name == "PaddleImg");
-        }
-        else if(obj.name=="MedicBag")
-        {
-            Debug.Log("MedicBagImg");
-            return _weapon.Find(x => x.name == "MedicBagImg");
-        }
-        else if(obj.name=="Candle")
-        {
-            Debug.Log("CandleImg");
-            return _weapon.Find(x => x.name == "CandleImg");
-        }
-        else if(obj.name=="Bullet")
-        {
-            Debug.Log("BulletImg");
-            return _weapon.Find(x => x.name == "BulletImg");
-        }
-        else if(obj.name=="Bandage")
-        {
-            Debug.Log("BandageImg");
-            return _weapon.Find(x => x.name == "BandageImg");
-        }
-        else if(obj.name=="Map")
-        {
-            Debug.Log("BandageImg");
-            return _weapon.Find(x => x.name == "MapImg");
-        }
-        else
-        {
-            Debug.Log("elseImg");
-            return null;
+            case "Gun":
+                Debug.Log("GunImg");
+                return _weapon.Find(x => x.name == "GunImg");
+            case "Paddle":
+                Debug.Log("PaddleImg");
+                return _weapon.Find(x => x.name == "PaddleImg");
+            case "MedicBag":
+                Debug.Log("MedicBagImg");
+                return _weapon.Find(x => x.name == "MedicBagImg");
+            case "Candle":
+                Debug.Log("CandleImg");
+                return _weapon.Find(x => x.name == "CandleImg");
+            case "Bullet":
+                Debug.Log("BulletImg");
+                return _weapon.Find(x => x.name == "BulletImg");
+            case "Bandage":
+                Debug.Log("BandageImg");
+                return _weapon.Find(x => x.name == "BandageImg");
+            case "Map":
+                Debug.Log("BandageImg");
+                return _weapon.Find(x => x.name == "MapImg");
+            default:
+                Debug.Log("elseImg");
+                return null;
         }
     }
 
