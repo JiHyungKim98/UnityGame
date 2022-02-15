@@ -2,26 +2,40 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-
+using ZombieWorld;
 
 public class Inventory : MonoBehaviour { 
 
     [SerializeField] private List<GameObject> _slots = new List<GameObject>();
-    [SerializeField] private List<Sprite> _weapon = new List<Sprite>();
-    [SerializeField] private List<Sprite> _item = new List<Sprite>();
 
-    public GameObject MainWeaponOjb;
-    public GameObject MainWeaponImg;
+    public ItemMasterData masterData;
+
+    public GameObject ElementStatUI;
+    public GameObject WeaponImg;
+    public GameObject StatTxt;
+    public GameObject RealMap;
+    public Player player;
+    public enum Items
+    {
+        Gun,
+        Map,
+        Paddle,
+        Bandage,
+        MedicBag,
+        Bullet,
+        Candle
+    }
 
     
     public void AddToSlot(GameObject obj)
     {
         if (_slots.Count > 16)
         {
-            Debug.Log("Slot ���� �ʰ�!");
+            Debug.Log("Slot count over!");
         }
         else
         {
+            
             foreach(GameObject slot in _slots)
             {
                 if (slot.transform.childCount==0)
@@ -29,13 +43,13 @@ public class Inventory : MonoBehaviour {
                     obj.transform.SetParent(slot.transform);
                     slot.GetComponent<Image>().sprite = obj.name switch
                     {
-                        "Gun" => _weapon.Find(x => x.name == "GunImg"),
-                        "Paddle" => _weapon.Find(x => x.name == "PaddleImg"),
-                        "MedicBag" => _item.Find(x => x.name == "MedicBagImg"),
-                        "Bandage" => _item.Find(x => x.name == "BandageImg"),
-                        "Candle" => _item.Find(x => x.name == "CandleImg"),
-                        "Map" => _item.Find(x => x.name == "MapImg"),
-                        "Bullet" => _item.Find(x => x.name == "BulletImg"),
+                        "Gun" => masterData.GetItem(Items.Gun).thumbnail,
+                        "Paddle" => masterData.GetItem(Items.Paddle).thumbnail,
+                        "MedicBag" => masterData.GetItem(Items.MedicBag).thumbnail,
+                        "Candle" => masterData.GetItem(Items.Candle).thumbnail,
+                        "Map" => masterData.GetItem(Items.Map).thumbnail,
+                        "Bullet" => masterData.GetItem(Items.Bullet).thumbnail,
+                        "Bandage" => masterData.GetItem(Items.Bandage).thumbnail,
                         _ => slot.GetComponent<Image>().sprite
                     };
                     break;
@@ -51,32 +65,64 @@ public class Inventory : MonoBehaviour {
         switch (obj.name)
         {
             case "Gun":
-                Debug.Log("GunImg");
-                return _weapon.Find(x => x.name == "GunImg");
+                return masterData.GetItem(Items.Gun).thumbnail;
             case "Paddle":
-                Debug.Log("PaddleImg");
-                return _weapon.Find(x => x.name == "PaddleImg");
+                return masterData.GetItem(Items.Paddle).thumbnail;
             case "MedicBag":
-                Debug.Log("MedicBagImg");
-                return _weapon.Find(x => x.name == "MedicBagImg");
+                return masterData.GetItem(Items.MedicBag).thumbnail;
             case "Candle":
-                Debug.Log("CandleImg");
-                return _weapon.Find(x => x.name == "CandleImg");
+                return masterData.GetItem(Items.Candle).thumbnail;
             case "Bullet":
-                Debug.Log("BulletImg");
-                return _weapon.Find(x => x.name == "BulletImg");
+                return masterData.GetItem(Items.Bullet).thumbnail;
             case "Bandage":
-                Debug.Log("BandageImg");
-                return _weapon.Find(x => x.name == "BandageImg");
+                return masterData.GetItem(Items.Bandage).thumbnail;
             case "Map":
-                Debug.Log("BandageImg");
-                return _weapon.Find(x => x.name == "MapImg");
+                return masterData.GetItem(Items.Map).thumbnail;
             default:
-                Debug.Log("elseImg");
+                return null;
+
+                //return _weapon.Find(x => x.name == "GunImg");
+        }
+    }    
+    
+    public string SetTxt(GameObject obj)
+    {
+        switch (obj.name)
+        {
+            case "Gun":
+                return masterData.GetItem(Items.Gun).explain;
+            case "Paddle":
+                return masterData.GetItem(Items.Paddle).explain;
+            case "MedicBag":
+                return masterData.GetItem(Items.MedicBag).explain;
+            case "Candle":
+                return masterData.GetItem(Items.Candle).explain;
+            case "Bullet":
+                return masterData.GetItem(Items.Bullet).explain;
+            case "Bandage":
+                return masterData.GetItem(Items.Bandage).explain;
+            case "Map":
+                return masterData.GetItem(Items.Map).explain;
+            default:
                 return null;
         }
     }
 
+    public void SetStatUI(GameObject obj)
+    {
+        ElementStatUI.SetActive(true);
+        WeaponImg.GetComponent<Image>().sprite = SetSprite(obj);
+        StatTxt.GetComponent<Text>().text = SetTxt(obj);
+    }
+
+    public void ShowMap()
+    {
+        RealMap.SetActive(true);
+    }
+    public void Heal(int num)
+    {
+        player.Heal(num);
+    }
 
 
   

@@ -14,8 +14,23 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _data:
   - name: Gun
-    thumbnail: {fileID: 2800000, guid: affc7cb761e2b854fa43ecb009be548f, type: 3}
+    thumbnail: {fileID: 21300000, guid: affc7cb761e2b854fa43ecb009be548f, type: 3}
+    explain: <Weapon>\n*Damage\n+5\n*cooldown Time\n+5sec\n*Range\n+50
   - name: Map
-    thumbnail: {fileID: 2800000, guid: 9178a69cad6e78349a9f8e5bb39b6afc, type: 3}
+    thumbnail: {fileID: 21300000, guid: 9178a69cad6e78349a9f8e5bb39b6afc, type: 3}
+    explain: <Item>\nYou can see the full map.
   - name: Paddle
-    thumbnail: {fileID: 2800000, guid: 6317e870e985c1744ac40734a7b52cd3, type: 3}
+    thumbnail: {fileID: 21300000, guid: 6317e870e985c1744ac40734a7b52cd3, type: 3}
+    explain: <Weapon>\n*Damage\n+2\n*cooldown Time\n+3sec\n*Range\n+5
+  - name: Bandage
+    thumbnail: {fileID: 21300000, guid: 26dece0a9ec114d4ea58d444ffb23a80, type: 3}
+    explain: <Item>\n*Heal\n+20
+  - name: MedicBag
+    thumbnail: {fileID: 21300000, guid: 17a24b5cdbb8cbf4f83e316150eee2ff, type: 3}
+    explain: <Item>\n*Heal\n+50
+  - name: Bullet
+    thumbnail: {fileID: 21300000, guid: ec96bf21e9a24be4689b17ca7bd62342, type: 3}
+    explain: <Item>\nYou can shoot the gun with this.
+  - name: Candle
+    thumbnail: {fileID: 21300000, guid: cb10f1dac82e00a47aad9ae5e799b228, type: 3}
+    explain: <Item>\nYou can light up your surroundings with this.

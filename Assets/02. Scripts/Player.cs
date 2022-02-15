@@ -31,8 +31,8 @@ namespace ZombieWorld
         public bool isMPEmpty;
 
         public GameObject MainWeapon;
-        public GameObject SubWeapon;
         public GameObject inventory;
+
 
         public Button attackBtn;
 
@@ -93,12 +93,11 @@ namespace ZombieWorld
             base.HP = MaxHP;
             MP = MaxMP;
             MoveDir = Vector3.zero;
-
         }
 
         void Start()
         {
-            WeaponContainer = GetComponent<WeaponContainer>();
+            WeaponContainer = GetComponentInChildren<WeaponContainer>();
             attackBtn.onClick.AddListener(Attack);
         }
 
@@ -106,29 +105,6 @@ namespace ZombieWorld
         {
             UpdateState();            
         }
-
-        private void FixedUpdate()
-        {
-            //MoveChracter();
-        }
-
-        //private void MoveChracter()
-        //{
-        //    if (!isDie)
-        //    {
-        //        if (controller.isGrounded == true)
-        //        {
-        //            transform.Rotate(Vector3.up * Input.GetAxis("Horizontal") * rotationSpeed);
-
-        //            MoveDir = new Vector3(0, 0, Input.GetAxis("Vertical") * currentSpeed);
-        //            MoveDir = transform.TransformDirection(MoveDir);
-        //        }
-
-        //        MoveDir.y -= gravity;
-        //        controller.Move(MoveDir);
-        //    }
-
-        //}
 
         private void UpdateState()
         {
@@ -242,7 +218,6 @@ namespace ZombieWorld
             }
             else
             {
-                //isSwing = true;
                 if (!isAttack)
                 {
                     isAttack = true;
@@ -287,7 +262,6 @@ namespace ZombieWorld
             animator.SetInteger("MeleeType_int", 0);
             yield return new WaitForSeconds(attackDelay * 0.5f);
             isAttack = false;
-            //isSwing = false;
             
         }
 
@@ -322,6 +296,7 @@ namespace ZombieWorld
         }
         public void Heal(float point)
         {
+            Debug.Log("Heal");
             if ((base.HP + point) > 100)
             {
                 base.HP = 100;
@@ -337,5 +312,7 @@ namespace ZombieWorld
         {
             animator.SetBool("Death_b", true);
         }
+
+        
     }
 }

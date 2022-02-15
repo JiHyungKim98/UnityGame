@@ -5,5 +5,7 @@ using UnityEngine;
 public class ItemData 
 {
     public string name;
-    public Texture2D thumbnail;
+    public Sprite thumbnail;
+    public string explain;
+    //public UnityEngine.UI.Text explain;
 }

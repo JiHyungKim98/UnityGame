@@ -10,13 +10,17 @@ public class WeaponContainer : MonoBehaviour
     [SerializeField] public List<GameObject> _bullets = new List<GameObject>();
     private GameObjectPool<Bullet> _bulletPool;
 
-    
+    public Inventory inventory;
     public GameObject bulletPrefab;
     public Bullet bullet;
     public Bullet bulletObj;
     public Player player;
     public GameObject monsterControllerObj;
     public MonsterController monsterController;
+
+    public GameObject MainWeapon;
+    public GameObject CurrentWeapon;
+    public GameObject tmpObj;
     [FormerlySerializedAs("weaponchild")] public Weapon weapon;
 
     public bool isGun;
@@ -55,7 +59,6 @@ public class WeaponContainer : MonoBehaviour
 
             else
             {
-                Debug.Log("Active ����");
             }
             
         }
@@ -84,5 +87,42 @@ public class WeaponContainer : MonoBehaviour
         Debug.Log("GiveDamage");
         monster.GetComponent<Monster>().GetDamage();
         yield break;
+    }
+
+    public void SetMainWeapon(GameObject obj,GameObject slot)
+    {
+        if (MainWeapon.transform.childCount == 0) // MainWeapon is null
+        {
+            obj.GetComponentInParent<Image>().sprite = null; // slot img to null
+            obj.transform.SetParent(MainWeapon.transform);
+        }
+        else // already has
+        {
+            MainWeapon.transform.GetChild(0).SetParent(tmpObj.transform);
+            obj.transform.SetParent(MainWeapon.transform);
+            tmpObj.transform.GetChild(0).SetParent(slot.transform);
+            slot.transform.GetComponent<Image>().sprite= inventory.SetSprite(slot.transform.GetChild(0).gameObject);
+            slot.transform.GetChild(0).gameObject.SetActive(false);
+        }
+
+        // Current Weapon sprite change
+        CurrentWeapon.GetComponent<Image>().sprite = inventory.SetSprite(MainWeapon.transform.GetChild(0).gameObject);
+
+        
+        MainWeapon.transform.GetChild(0).gameObject.SetActive(true);
+        MainWeapon.transform.GetChild(0).gameObject.transform.localPosition = new Vector3(0, 0, 0);
+
+        switch (obj.name)
+        {
+            case "Gun":
+                MainWeapon.transform.GetChild(0).gameObject.transform.localRotation = Quaternion.Euler(new Vector3(180, -90, -90));
+                break;
+            case "Paddle":
+                MainWeapon.transform.GetChild(0).gameObject.transform.localRotation = Quaternion.Euler(new Vector3(0, 0, 0));
+                break;
+            default:
+                break;
+        }
+        
     }
 }

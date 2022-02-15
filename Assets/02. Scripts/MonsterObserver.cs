@@ -16,7 +16,7 @@ public class MonsterObserver : MonoBehaviour
         }
         else
         {
-            Debug.Log("들어오긴함");
+            //Debug.Log("들어오긴함");
         }
     }
     void OnTriggerExit(Collider other)

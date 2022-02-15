@@ -5,17 +5,16 @@ using UnityEngine.UI;
 using UnityEngine.Serialization;
 using ZombieWorld;
 
-public class Weapon : WeaponController
+public class Weapon : MonoBehaviour
 {
-    private void OnEnable()
-    {
-        this.gameObject.GetComponent<BoxCollider>().enabled = true;
-    }
+    public Inventory inventory;
     
-
     private void OnMouseDown()
     {
-        MouseOn(this.gameObject);
-        
+        gameObject.SetActive(false);
+        inventory.SetStatUI(this.gameObject);
+        inventory.AddToSlot(this.gameObject);
+        GetComponent<BoxCollider>().enabled = false;
+
     }
 }

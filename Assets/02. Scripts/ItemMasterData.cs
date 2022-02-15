@@ -7,8 +7,8 @@ public class ItemMasterData : ScriptableObject
 {
     public List<ItemData> _data;
 
-    /*public ItemData GetItem(Inventory.Items type)
+    public ItemData GetItem(Inventory.Items type)
     {
         return _data[(int)type];
-    }*/
+    }
 }
