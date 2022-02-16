@@ -14,7 +14,10 @@ public class Inventory : MonoBehaviour {
     public GameObject WeaponImg;
     public GameObject StatTxt;
     public GameObject RealMap;
+    public GameObject ItemController;
+    public GameObject WeaponController;
     public Player player;
+
     public enum Items
     {
         Gun,
@@ -122,6 +125,32 @@ public class Inventory : MonoBehaviour {
     public void Heal(int num)
     {
         player.Heal(num);
+    }
+
+    public void Dump(GameObject obj)
+    {
+        obj.transform.parent.GetComponent<Image>().sprite = null;
+        if (obj.transform.parent.childCount > 0) // child O
+        {
+            obj.SetActive(true);
+            obj.GetComponent<BoxCollider>().enabled = true;
+
+            if (obj.GetComponent<Weapon>() == true)
+            {
+                obj.transform.SetParent(WeaponController.transform);
+            }
+            else
+            {
+                obj.transform.SetParent(ItemController.transform);
+            }
+            
+            obj.transform.position=new Vector3(player.transform.position.x,player.transform.position.y, player.transform.position.z-5f);
+
+        }
+        else // child X
+        {
+
+        }
     }
 
 

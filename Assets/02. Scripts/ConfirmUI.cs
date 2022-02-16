@@ -19,6 +19,7 @@ public class ConfirmUI : MonoBehaviour
     {
         useBtn.onClick.AddListener(ClickUse);
         dumpBtn.onClick.AddListener(ClickDump);
+        inventory = GetComponentInParent<Inventory>();
     }
 
     public void GetGameObject(GameObject obj)
@@ -33,16 +34,7 @@ public class ConfirmUI : MonoBehaviour
 
     public void ClickDump()
     {
-        slotObj.GetComponent<Image>().sprite = null;
-        if (slotObj.transform.childCount > 0) // child O
-        {
-            slotObj.transform.GetChild(0).gameObject.SetActive(true);
-            slotObj.transform.GetChild(0).SetParent(transform.root.parent);
-
-        }
-        else // child X
-        {
-
-        }
+        GameObject thisItem = slotObj.transform.GetChild(0).gameObject;
+        inventory.Dump(thisItem);
     }
 }

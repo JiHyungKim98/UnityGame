@@ -33,9 +33,9 @@ namespace ZombieWorld
         /* Component Connect */
         protected NavMeshAgent nav;
         GameObject target;
+        public bool hasTarget;
         public Animator animator;
-        //public TextMesh txtMeshHP = null;
-        private Rigidbody rigidbody;
+        //private new Rigidbody rigidbody;
 
         /* Script Connect */
         public MonsterObserver observer;
@@ -61,10 +61,10 @@ namespace ZombieWorld
             //gameObject.GetComponent<Monster>().enabled = true;
             nav = GetComponent<NavMeshAgent>();
             animator = GetComponent<Animator>();
-            rigidbody = GetComponent<Rigidbody>();
+            //rigidbody = GetComponent<Rigidbody>();
 
             base.HP = MaxHP;
-            rigidbody.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ;
+            GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ;
             
             enemyMoveTime = 2.0f;
             followTime = 5.0f;
@@ -73,31 +73,17 @@ namespace ZombieWorld
         private void Start()
         {
             observer = GetComponentInChildren<MonsterObserver>();
-
             playerScript=playerObj.GetComponent<Player>();
-
             monsterController = GetComponentInParent<MonsterController>();
-            
         }
 
         void Update()
         {
-            if (isDie)
+            /* Enemy Die */
+            if (base.HP < 0.0f || Mathf.Approximately(base.HP, 0.0f) && isDie)
             {
-                isDie = false;
-                animator.SetFloat("ZombieHP", -1.0f);
-                StartCoroutine(Die());
-            }
-        }
-
-        private void FixedUpdate()
-        {
-            /* Enemy Dead */
-            if (base.HP < 0.0f || Mathf.Approximately(base.HP, 0.0f))
-            {
-                base.HP = 0.0f;
-                state = State.Dead;
                 isDie = true;
+                StartCoroutine(Die());
             }
 
             /* Enemy Live */
@@ -105,7 +91,9 @@ namespace ZombieWorld
             {
                 animator.SetFloat("ZombieHP", 1.0f);
                 /* Enemy Chase & Attack */
-                if (observer.m_IsPlayerInRange)
+
+                //if (observer.m_IsPlayerInRange)
+                if(Vector3.Distance(this.transform.position,playerScript.transform.position)<=10f)
                 {
                     target = playerObj.gameObject;
                     /* Attack */
@@ -121,11 +109,11 @@ namespace ZombieWorld
                     /* Chase */
                     else
                     {
-                        if (!isFollow) 
+                        state = State.Chase;
+                        if (!isFollow)
                         {
                             isFollow = true;
-                            state = State.Chase;
-                            StartCoroutine(MoveToTarget());
+                            StartCoroutine(Chase());
                         }
                     }
 
@@ -138,15 +126,16 @@ namespace ZombieWorld
                         isRandomPosEnd = true;
                         randPosCoroution = StartCoroutine(randPos());
                     }
-                    
+
                 }
             }
         }
 
+       
 
        
 
-        public void GetDamage()
+        public void GetDamageBat()
         {
             Debug.Log("Bat Damage");
             nav.enabled = false;
@@ -160,6 +149,7 @@ namespace ZombieWorld
             base.StartCoroutine(TakeDamage(5));
             nav.enabled = true;
         }
+        
 
         public IEnumerator randPos()
         {
@@ -173,24 +163,35 @@ namespace ZombieWorld
             isRandomPosEnd = false;
         }
 
-        public IEnumerator MoveToTarget()
+        public IEnumerator Chase()
         {
-            //Debug.Log("Coroutine:MoveToTarget()");
-
-            float timer =0;
             while (true)
             {
-                timer += Time.deltaTime;
-                nav.SetDestination(target.transform.position);
-                if (timer >= followTime)
+                if (Vector3.Distance(this.transform.position, target.transform.position) >= 10)
                 {
                     isFollow = false;
                     yield break;
                 }
-
+                nav.SetDestination(target.transform.position);
                 yield return null;
             }
         }
+        //public IEnumerator Chase()
+        //{
+        //    float timer = 0;
+        //    while (true)
+        //    {
+        //        timer += Time.deltaTime;
+        //        nav.SetDestination(target.transform.position);
+        //        if (timer >= followTime)
+        //        {
+        //            isFollow = false;
+        //            yield break;
+        //        }
+        //        yield return null;
+        //    }
+        //}
+
         public void OnSpawn()
         {
             base.HP = MaxHP;
@@ -200,13 +201,11 @@ namespace ZombieWorld
 
         IEnumerator Die()
         {
-            StopCoroutine(randPosCoroution);
-            StopCoroutine(randPos());
+            base.HP = 0.0f;
+            state = State.Dead;
+            animator.SetFloat("ZombieHP", -1.0f);
             yield return new WaitForSeconds(2.0f);
             monsterController.OnDie(this);
-            //this.gameObject.GetComponent<Monster>().enabled = false;
-            //Debug.Log("monster ��ũ��Ʈ ����");
-
         }
         
         IEnumerator Attack()

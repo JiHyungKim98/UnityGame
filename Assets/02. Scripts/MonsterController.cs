@@ -30,31 +30,27 @@ public class MonsterController : Singleton<MonsterController>
 
         for (int i = 0; i < _monsterPool.Count; i++)
         {
-            //_monsters=
             _monsterPool.Pop();
         }
-        //child = new Transform[transform.GetChildCount()];
         foreach(Transform child in transform)
         {
             _monsters.Add(child.gameObject);
         }
-        //_monsters.RemoveAt(0);
     }
 
     public void OnDie(Monster obj)
     {
         Spawner++;
-        Debug.Log("Monster Queue�� �ֱ�");
         _monsterPool.Push(obj);
-        //obj.OnSpawn();
+        GetComponentInChildren<Monster>().enabled = false;
     }
+
     private void Update()
     {
         if (Spawner >= 1)
         {
             for(int i = 0; i < Spawner; i++)
             {
-                Debug.Log("Monster Queue���� ������");
                 monsterObj=_monsterPool.Pop();
                 monsterObj.OnSpawn();
             }

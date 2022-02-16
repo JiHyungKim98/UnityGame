@@ -85,7 +85,7 @@ public class WeaponContainer : MonoBehaviour
     public IEnumerator GiveDamage(Transform monster)
     {
         Debug.Log("GiveDamage");
-        monster.GetComponent<Monster>().GetDamage();
+        monster.GetComponent<Monster>().GetDamageBat();
         yield break;
     }
 

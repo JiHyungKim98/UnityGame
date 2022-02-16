@@ -32,7 +32,8 @@ namespace ZombieWorld
 
         public GameObject MainWeapon;
         public GameObject inventory;
-
+        public AudioSource audioSource;
+        public AudioClip walkSound;
 
         public Button attackBtn;
 
@@ -73,7 +74,7 @@ namespace ZombieWorld
             SittingOnGround=9
         }
 
-        enum State
+        public enum State
         {
             Idle,
             Walk,
@@ -82,17 +83,21 @@ namespace ZombieWorld
             Jump,
             Dead
         }
+
+        //public State _state 
+        //{ get _state; set; }
+
         State state = State.Idle;
 
         void Awake()
         {
             animator = GetComponent<Animator>();
             controller = GetComponent<CharacterController>();
-
-            
             base.HP = MaxHP;
             MP = MaxMP;
             MoveDir = Vector3.zero;
+            audioSource = this.gameObject.GetComponent<AudioSource>();
+            //walkSound = audioSource.clip;
         }
 
         void Start()
@@ -231,7 +236,7 @@ namespace ZombieWorld
                     else if (MainWeapon.transform.GetChild(0).gameObject.name == "Paddle")
                     {
                         Debug.Log("Bat Attack success");
-                        StartCoroutine(AttackCoroutineBat());
+                        StartCoroutine(AttackCoroutineBat(MainWeapon.transform.GetChild(0).gameObject));
                     }
                     else
                     {
@@ -251,7 +256,7 @@ namespace ZombieWorld
             yield return new WaitForSeconds(3.0f);
             isMPEmpty = false;
         }
-        protected IEnumerator AttackCoroutineBat()
+        protected IEnumerator AttackCoroutineBat(GameObject weapon)
         {
             state = State.Attack;
             animator.SetInteger("WeaponType_int", 12);
@@ -274,7 +279,6 @@ namespace ZombieWorld
             WeaponContainer.Fire();
             yield return new WaitForSeconds(attackDelay * 1f);
             isAttack = false;
-            //isSwing = false;
             animator.SetBool("Shoot_b", false);
             animator.SetInteger("WeaponType_int", 0);
 

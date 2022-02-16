@@ -8,9 +8,10 @@ public class JoyStick : MonoBehaviour
 {
     //public Transform player; // player pos
     public GameObject player;
+    //public Player playerScript;
     public Animator playerAnimator;
-    
-
+    public float currentSpeed=0f;
+    public float playerSpeed=0f;
     public Transform Stick; // JoyStick
 
     private Vector3 StickFirstPos;
@@ -22,25 +23,30 @@ public class JoyStick : MonoBehaviour
     {
         Radius = GetComponent<RectTransform>().sizeDelta.y * 0.5f; // RectTransform y size.
         StickFirstPos = Stick.transform.position; // first stick pos
-
+        
         // fit radius to canvas size
         float Can = transform.parent.GetComponent<RectTransform>().localScale.x;
         Radius *= Can;
 
         playerMoveFlag = false;
+        //playerScript = player.GetComponent<Player>();
+        //playerScript.audioSource.clip = playerScript.walkSound;
     }
-    private void Update()
+    private void FixedUpdate()
     {
         if (playerMoveFlag)
         {
-            //player.GetComponent<Player>().controller.Move(Vector3.forward * Time.deltaTime * 7f);
-            player.transform.Translate(Vector3.forward * Time.deltaTime * 7f);
+            Debug.Log("Player Speed" + playerSpeed);
+            //player.GetComponent<Player>().controller.Move(JoyVec*Time.deltaTime*5f);
+            //player.transform.Translate(Vector3.forward * Time.deltaTime * 100f);
             playerAnimator.SetBool("Static_b", false);
-            playerAnimator.SetFloat("Speed_f", 0.1f);
+            playerAnimator.SetFloat("Speed_f", currentSpeed);
+            //playerScript.audioSource.Play();
         }
         else
         {
             playerAnimator.SetFloat("Speed_f", 0);
+            //playerScript.audioSource.Stop();
         }
     }
 
@@ -50,15 +56,22 @@ public class JoyStick : MonoBehaviour
         PointerEventData Data = _Data as PointerEventData;
         Vector3 Pos = Data.position;
 
-        JoyVec = (Pos - StickFirstPos).normalized;
+        JoyVec = (StickFirstPos-Pos).normalized;
 
         // My Current Pos - first JoyStick Pos
         float Distance = Vector3.Distance(Pos, StickFirstPos);
-
-        if (Distance < Radius) // move the distance 
-            Stick.position = StickFirstPos + JoyVec * Distance;
-        else // move the radius
-            Stick.position = StickFirstPos + JoyVec * Radius;
+        Debug.Log("Distance" + Distance);
+        
+        if (Distance < Radius)
+        {
+            Stick.position = StickFirstPos + (-JoyVec) * Distance;
+            currentSpeed = 0.1f;
+        }
+        else
+        {
+            Stick.position = StickFirstPos + (-JoyVec) * Radius;
+            currentSpeed = 0.2f;
+        }
 
         //player.GetComponent<Player>().controller.transform.eulerAngles=new Vector3(0, Mathf.Atan2(JoyVec.x, JoyVec.y) * Mathf.Rad2Deg, 0);
         player.transform.eulerAngles = new Vector3(0, Mathf.Atan2(JoyVec.x, JoyVec.y) * Mathf.Rad2Deg, 0);
