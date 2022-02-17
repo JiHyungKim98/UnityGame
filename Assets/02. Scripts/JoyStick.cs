@@ -8,7 +8,6 @@ public class JoyStick : MonoBehaviour
 {
     //public Transform player; // player pos
     public GameObject player;
-    //public Player playerScript;
     public Animator playerAnimator;
     public float currentSpeed=0f;
     public float playerSpeed=0f;
@@ -60,7 +59,7 @@ public class JoyStick : MonoBehaviour
 
         // My Current Pos - first JoyStick Pos
         float Distance = Vector3.Distance(Pos, StickFirstPos);
-        Debug.Log("Distance" + Distance);
+        
         
         if (Distance < Radius)
         {

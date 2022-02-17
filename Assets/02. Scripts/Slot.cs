@@ -8,13 +8,27 @@ public class Slot : MonoBehaviour
     public Inventory inventory;
     public GameObject thisItem;
     public GameObject CurrentWeapon;
+    public GameObject ConfirmUI;
     public WeaponContainer WeaponContainer;
+    public Button thisSlot;
    
 
     private void Start()
     {
         inventory = GetComponentInParent<Inventory>();
-        
+        thisSlot.onClick.AddListener(ShowConfirmUI);
+    }
+
+    public void ShowConfirmUI()
+    {
+        if (this.GetComponent<Image>().sprite == null)
+        {
+            return;
+        }
+        else
+        {
+            ConfirmUI.SetActive(true);
+        }
     }
 
     public void UseItem()

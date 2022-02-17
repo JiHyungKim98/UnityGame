@@ -32,10 +32,12 @@ namespace ZombieWorld
 
         public GameObject MainWeapon;
         public GameObject inventory;
+        public PopUp popUp;
         public AudioSource audioSource;
         public AudioClip walkSound;
-
+        public Quest quest;
         public Button attackBtn;
+        public bool isFirstAtk;
 
         public float MP
         {
@@ -215,10 +217,9 @@ namespace ZombieWorld
 
         void Attack()
         {
-            Debug.Log("버튼 클릭잘됨.");
             if (MainWeapon.transform.childCount==0) // weapon lst empty
             {
-                Debug.Log("무기를 안 갖고있음");
+                popUp.PopUpUI("No weapon.");
                 return;
             }
             else
@@ -226,7 +227,11 @@ namespace ZombieWorld
                 if (!isAttack)
                 {
                     isAttack = true;
-                    
+                    if (!isFirstAtk)
+                    {
+                        isFirstAtk = true;
+                        quest.IsFirstAtk();
+                    }
                     if (MainWeapon.transform.GetChild(0).gameObject.name == "Gun")
                     {
                         Debug.Log("Gun Attack success");
@@ -251,6 +256,8 @@ namespace ZombieWorld
             }
             
         }
+
+        
         IEnumerator AllMoveStop()
         {
             yield return new WaitForSeconds(3.0f);
