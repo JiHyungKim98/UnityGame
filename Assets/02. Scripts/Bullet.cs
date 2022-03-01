@@ -7,9 +7,9 @@ public class Bullet : MonoBehaviour
 {
     public float damage = 1f;
     private Player player;
-    private float bulletSpeed = 5f;
+    private WeaponContainer weaponContainer;
+    private float bulletSpeed = 10f;
     public static Vector3 dir;
-
     private void Start()
     {
         
@@ -17,7 +17,16 @@ public class Bullet : MonoBehaviour
     private void OnEnable()
     {
         player = GameObject.Find("Player").GetComponent<Player>();
-        GetComponent<Rigidbody>().AddForce(player.transform.forward * bulletSpeed, ForceMode.Impulse);
+        weaponContainer = GameObject.FindWithTag("WeaponContainer").GetComponent<WeaponContainer>();
+        StartCoroutine(BulletLifeTime());
+        
     }
-    
+
+    IEnumerator BulletLifeTime()
+    {
+        GetComponent<Rigidbody>().AddForce(player.transform.forward * bulletSpeed, ForceMode.Impulse);
+        yield return new WaitForSeconds(3f);
+        this.gameObject.SetActive(false);
+    }
+
 }

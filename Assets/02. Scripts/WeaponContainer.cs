@@ -82,6 +82,11 @@ public class WeaponContainer : MonoBehaviour
         _bulletPool.Push(bullet);
     }
 
+    public void BulletDuration(Bullet bullet)
+    {
+        _bulletPool.Push(bullet);
+    }
+
     public IEnumerator GiveDamage(Transform monster)
     {
         Debug.Log("GiveDamage");

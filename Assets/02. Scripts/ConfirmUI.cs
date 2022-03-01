@@ -8,11 +8,6 @@ public class ConfirmUI : MonoBehaviour
 {
     public GameObject slotObj;
     public Button useBtn, dumpBtn;
-    public GameObject CurrentWeapon;
-    public GameObject MainWeapon;
-    
-    public Player player;
-    public GameObject RealMap;
     public Inventory inventory;
 
     private void Start()
@@ -20,6 +15,7 @@ public class ConfirmUI : MonoBehaviour
         useBtn.onClick.AddListener(ClickUse);
         dumpBtn.onClick.AddListener(ClickDump);
         inventory = GetComponentInParent<Inventory>();
+        
     }
 
     public void GetGameObject(GameObject obj)

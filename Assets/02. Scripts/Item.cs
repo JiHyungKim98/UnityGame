@@ -8,10 +8,9 @@ public class Item : MonoBehaviour
 {
     public Inventory inventory;
 
-
     private void OnMouseDown()
     {
-        gameObject.SetActive(false);
+        this.gameObject.SetActive(false);
         inventory.SetStatUI(this.gameObject);
         inventory.AddToSlot(this.gameObject);
         GetComponent<BoxCollider>().enabled = false;

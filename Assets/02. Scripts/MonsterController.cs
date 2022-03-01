@@ -13,9 +13,9 @@ public class MonsterController : Singleton<MonsterController>
     public GameObject monsterPrefab;
     public Monster monster;
     public Monster monsterObj;
-
+    public Quest quest;
     private int Spawner;
-
+    public bool isDie;
 
     private void Start()
     {
@@ -43,6 +43,11 @@ public class MonsterController : Singleton<MonsterController>
         Spawner++;
         _monsterPool.Push(obj);
         GetComponentInChildren<Monster>().enabled = false;
+        if (!isDie) 
+        {
+            isDie = true;
+            quest.FirstDieEnemy();
+        }
     }
 
     private void Update()

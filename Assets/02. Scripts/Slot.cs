@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using ZombieWorld;
+
+
 public class Slot : MonoBehaviour
 {
     public Inventory inventory;
@@ -11,7 +13,9 @@ public class Slot : MonoBehaviour
     public GameObject ConfirmUI;
     public WeaponContainer WeaponContainer;
     public Button thisSlot;
-   
+    
+    public Quest quest;
+    
 
     private void Start()
     {
@@ -27,19 +31,30 @@ public class Slot : MonoBehaviour
         }
         else
         {
-            ConfirmUI.SetActive(true);
+            ConfirmUI.gameObject.SetActive(true);
         }
     }
 
     public void UseItem()
     {
+        
         thisItem = gameObject.transform.GetChild(0).gameObject;
         if (thisItem.GetComponent<Weapon>()==true)
         {
+            if (!quest.isFirstAtk)
+            {
+                quest.isFirstAtk = true;
+                quest.FirstAtk();
+            }
             WeaponContainer.SetMainWeapon(thisItem,this.gameObject);
         }
         else if(thisItem.GetComponent<Item>() == true)
         {
+            if (!quest.isFirstUseItem)
+            {
+                quest.isFirstAtk = true;
+                quest.FirstUseItem();
+            }
             switch (thisItem.name)
             {
                 case "MedicBag":
@@ -47,7 +62,6 @@ public class Slot : MonoBehaviour
                     inventory.Heal(50);
                     break;
                 case "Bullet":
-                    //player.Heal(50);
                     break;
                 case "Map":
                     inventory.ShowMap();

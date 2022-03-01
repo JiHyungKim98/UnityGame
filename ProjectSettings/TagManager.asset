@@ -9,6 +9,8 @@ TagManager:
   - MonsterController
   - Weapon
   - Item
+  - Bullet
+  - WeaponContainer
   layers:
   - Default
   - TransparentFX

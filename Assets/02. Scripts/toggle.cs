@@ -21,7 +21,6 @@ public class toggle : MonoBehaviour
         else
         {
             target.SetActive(false);
-            confirmUI.SetActive(false);
         }
     }
 }

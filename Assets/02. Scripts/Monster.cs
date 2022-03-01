@@ -45,6 +45,8 @@ namespace ZombieWorld
         [FormerlySerializedAs("weapon")] public WeaponContainer weaponContainer;
 
         Coroutine randPosCoroution = null;
+
+        public Transform firstPos;
         enum State
         {
             Idle,
@@ -58,16 +60,16 @@ namespace ZombieWorld
 
         void Awake()
         {
-            //gameObject.GetComponent<Monster>().enabled = true;
+            
             nav = GetComponent<NavMeshAgent>();
             animator = GetComponent<Animator>();
-            //rigidbody = GetComponent<Rigidbody>();
 
             base.HP = MaxHP;
             GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ;
             
             enemyMoveTime = 2.0f;
             followTime = 5.0f;
+            firstPos = this.transform;
         }
 
         private void Start()
@@ -176,27 +178,12 @@ namespace ZombieWorld
                 yield return null;
             }
         }
-        //public IEnumerator Chase()
-        //{
-        //    float timer = 0;
-        //    while (true)
-        //    {
-        //        timer += Time.deltaTime;
-        //        nav.SetDestination(target.transform.position);
-        //        if (timer >= followTime)
-        //        {
-        //            isFollow = false;
-        //            yield break;
-        //        }
-        //        yield return null;
-        //    }
-        //}
-
+       
         public void OnSpawn()
         {
             base.HP = MaxHP;
-            this.gameObject.transform.position=new Vector3(2.31f, -4.87f, 2.735f);
-            StartCoroutine(randPos());
+            this.gameObject.transform.position = firstPos.position;
+            //StartCoroutine(randPos());
         }
 
         IEnumerator Die()

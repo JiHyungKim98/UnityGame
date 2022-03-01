@@ -39,6 +39,8 @@ namespace ZombieWorld
         public Button attackBtn;
         public bool isFirstAtk;
 
+        public ParticleSystem particleObject;
+
         public float MP
         {
             get
@@ -227,11 +229,7 @@ namespace ZombieWorld
                 if (!isAttack)
                 {
                     isAttack = true;
-                    if (!isFirstAtk)
-                    {
-                        isFirstAtk = true;
-                        quest.IsFirstAtk();
-                    }
+                    
                     if (MainWeapon.transform.GetChild(0).gameObject.name == "Gun")
                     {
                         Debug.Log("Gun Attack success");
@@ -265,9 +263,11 @@ namespace ZombieWorld
         }
         protected IEnumerator AttackCoroutineBat(GameObject weapon)
         {
+            
             state = State.Attack;
             animator.SetInteger("WeaponType_int", 12);
             animator.SetInteger("MeleeType_int", 1);
+           
             yield return new WaitForSeconds(attackDelay * 0.5f);
             WeaponContainer.Attack();
             animator.SetInteger("WeaponType_int", 0);
@@ -275,16 +275,20 @@ namespace ZombieWorld
             yield return new WaitForSeconds(attackDelay * 0.5f);
             isAttack = false;
             
+
         }
 
         protected IEnumerator AttackCoroutineGun()
         {
+            particleObject.Play();
             state = State.Attack;
             animator.SetBool("Shoot_b", true); 
             animator.SetInteger("WeaponType_int", 2);
-            yield return new WaitForSeconds(attackDelay * 1f);
+            yield return new WaitForSeconds(attackDelay * 0.4f);
             WeaponContainer.Fire();
             yield return new WaitForSeconds(attackDelay * 1f);
+            
+            
             isAttack = false;
             animator.SetBool("Shoot_b", false);
             animator.SetInteger("WeaponType_int", 0);

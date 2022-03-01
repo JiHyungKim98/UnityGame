@@ -17,6 +17,7 @@ public class Inventory : MonoBehaviour {
     public GameObject ItemController;
     public GameObject WeaponController;
     public Player player;
+    public GameObject root;
 
     public enum Items
     {
@@ -28,8 +29,8 @@ public class Inventory : MonoBehaviour {
         Bullet,
         Candle
     }
-
     
+
     public void AddToSlot(GameObject obj)
     {
         if (_slots.Count > 16)
@@ -44,17 +45,7 @@ public class Inventory : MonoBehaviour {
                 if (slot.transform.childCount==0)
                 {
                     obj.transform.SetParent(slot.transform);
-                    slot.GetComponent<Image>().sprite = obj.name switch
-                    {
-                        "Gun" => masterData.GetItem(Items.Gun).thumbnail,
-                        "Paddle" => masterData.GetItem(Items.Paddle).thumbnail,
-                        "MedicBag" => masterData.GetItem(Items.MedicBag).thumbnail,
-                        "Candle" => masterData.GetItem(Items.Candle).thumbnail,
-                        "Map" => masterData.GetItem(Items.Map).thumbnail,
-                        "Bullet" => masterData.GetItem(Items.Bullet).thumbnail,
-                        "Bandage" => masterData.GetItem(Items.Bandage).thumbnail,
-                        _ => slot.GetComponent<Image>().sprite
-                    };
+                    slot.GetComponent<Image>().sprite = SetSprite(obj);
                     break;
                 }
             }
@@ -84,11 +75,10 @@ public class Inventory : MonoBehaviour {
             default:
                 return null;
 
-                //return _weapon.Find(x => x.name == "GunImg");
         }
     }    
     
-    public string SetTxt(GameObject obj)
+    public Text SetTxt(GameObject obj)
     {
         switch (obj.name)
         {
@@ -115,7 +105,7 @@ public class Inventory : MonoBehaviour {
     {
         ElementStatUI.SetActive(true);
         WeaponImg.GetComponent<Image>().sprite = SetSprite(obj);
-        StatTxt.GetComponent<Text>().text = SetTxt(obj);
+        StatTxt.GetComponent<Text>().text = SetTxt(obj).text;
     }
 
     public void ShowMap()
