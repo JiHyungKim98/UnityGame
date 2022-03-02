@@ -32,7 +32,7 @@ namespace ZombieWorld
 
         public GameObject MainWeapon;
         public GameObject inventory;
-        public PopUp popUp;
+        public GameObject popUp;
         public AudioSource audioSource;
         public AudioClip walkSound;
         public Quest quest;
@@ -221,7 +221,7 @@ namespace ZombieWorld
         {
             if (MainWeapon.transform.childCount==0) // weapon lst empty
             {
-                popUp.PopUpUI("No weapon.");
+                popUp.GetComponent<PopUp>().PopUpUI("No weapon.");
                 return;
             }
             else
@@ -268,11 +268,11 @@ namespace ZombieWorld
             animator.SetInteger("WeaponType_int", 12);
             animator.SetInteger("MeleeType_int", 1);
            
-            yield return new WaitForSeconds(attackDelay * 0.5f);
+            yield return new WaitForSeconds(attackDelay * 0.3f);
             WeaponContainer.Attack();
             animator.SetInteger("WeaponType_int", 0);
             animator.SetInteger("MeleeType_int", 0);
-            yield return new WaitForSeconds(attackDelay * 0.5f);
+            yield return new WaitForSeconds(attackDelay * 0.3f);
             isAttack = false;
             
 

@@ -19,7 +19,7 @@ public class SliderHPMonster : MonoBehaviour
     }
     private void Start()
     {
-        monster = this.transform.parent.parent.parent.gameObject.GetComponent("Monster") as Monster;
+        monster = GetComponentInParent<Monster>();
         //GameObject.FindWithTag("Enemy").GetComponent("Monster") as Monster;
         player = GameObject.FindWithTag("Player").GetComponent("Player") as Player;
     }
@@ -30,7 +30,6 @@ public class SliderHPMonster : MonoBehaviour
 
         if (sliderHP.value <= 0)
         {
-            //sliderHP.gameObject.SetActive(false);
             obj.SetActive(false);
         }
         else

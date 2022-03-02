@@ -1,18 +1,18 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using ZombieWorld;
 
 public class NPC : MonoBehaviour
 {
-    public GameObject NPCName;
-    public GameObject player;
+    public Player player;
+    public PopUp popUp;
     private void OnMouseDown()
     {
-        this.gameObject.SetActive(false);
+        this.transform.LookAt(player.transform);
+        
+        //this.gameObject.SetActive(false);
     }
 
-    private void Update()
-    {
-        NPCName.transform.LookAt(player.transform);
-    }
+    
 }

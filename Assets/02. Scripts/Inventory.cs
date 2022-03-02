@@ -17,7 +17,7 @@ public class Inventory : MonoBehaviour {
     public GameObject ItemController;
     public GameObject WeaponController;
     public Player player;
-    public GameObject root;
+    public PopUp popUp;
 
     public enum Items
     {
@@ -35,7 +35,7 @@ public class Inventory : MonoBehaviour {
     {
         if (_slots.Count > 16)
         {
-            Debug.Log("Slot count over!");
+            popUp.PopUpUI("Inventory is full");
         }
         else
         {

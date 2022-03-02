@@ -28,24 +28,20 @@ public class JoyStick : MonoBehaviour
         Radius *= Can;
 
         playerMoveFlag = false;
-        //playerScript = player.GetComponent<Player>();
-        //playerScript.audioSource.clip = playerScript.walkSound;
     }
     private void FixedUpdate()
     {
         if (playerMoveFlag)
         {
-            Debug.Log("Player Speed" + playerSpeed);
-            //player.GetComponent<Player>().controller.Move(JoyVec*Time.deltaTime*5f);
             //player.transform.Translate(Vector3.forward * Time.deltaTime * 100f);
             playerAnimator.SetBool("Static_b", false);
             playerAnimator.SetFloat("Speed_f", currentSpeed);
-            //playerScript.audioSource.Play();
+            player.GetComponent<Player>().audioSource.Play();
         }
         else
         {
             playerAnimator.SetFloat("Speed_f", 0);
-            //playerScript.audioSource.Stop();
+            player.GetComponent<Player>().audioSource.Stop();
         }
     }
 
@@ -72,7 +68,6 @@ public class JoyStick : MonoBehaviour
             currentSpeed = 0.2f;
         }
 
-        //player.GetComponent<Player>().controller.transform.eulerAngles=new Vector3(0, Mathf.Atan2(JoyVec.x, JoyVec.y) * Mathf.Rad2Deg, 0);
         player.transform.eulerAngles = new Vector3(0, Mathf.Atan2(JoyVec.x, JoyVec.y) * Mathf.Rad2Deg, 0);
 
 

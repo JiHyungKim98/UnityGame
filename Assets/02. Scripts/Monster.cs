@@ -14,10 +14,12 @@ namespace ZombieWorld
     public class Monster : BaseCharacter
     {
         /* Enemy Move */
+        public Transform firstPos;
         public float enemyMoveTime;
         public Vector3 direction;
         public float followTime;
         public bool isRandomPosEnd=false;
+        public Vector3 default_direction;
 
         /* Enemy Attack */
         public float attackDelay = 2.0f;
@@ -38,7 +40,7 @@ namespace ZombieWorld
         //private new Rigidbody rigidbody;
 
         /* Script Connect */
-        public MonsterObserver observer;
+        //public MonsterObserver observer;
         public MonsterController monsterController;
         public Player playerScript;
         public GameObject playerObj;
@@ -46,7 +48,7 @@ namespace ZombieWorld
 
         Coroutine randPosCoroution = null;
 
-        public Transform firstPos;
+        
         enum State
         {
             Idle,
@@ -64,23 +66,39 @@ namespace ZombieWorld
             nav = GetComponent<NavMeshAgent>();
             animator = GetComponent<Animator>();
 
-            base.HP = MaxHP;
+            //base.HP = MaxHP;
             GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ;
             
             enemyMoveTime = 2.0f;
             followTime = 5.0f;
             firstPos = this.transform;
+
+            default_direction.x = UnityEngine.Random.Range(-1.0f, 1.0f);
+            default_direction.z = UnityEngine.Random.Range(-1.0f, 1.0f);
+        }
+        private void OnEnable()
+        {
+            base.HP = MaxHP;
+            //float temp = Time.time * 1000f;
+            //UnityEngine.Random.InitState((int)temp);
+            animator.SetFloat("ZombieHP", 1.0f);
+
+            //int idx = UnityEngine.Random.Range(0, 10);
+            //this.gameObject.transform.position = GetComponentInParent<MonsterController>()._spawnPoints[idx].transform.position;
+            this.gameObject.transform.position = firstPos.position;
+            StartCoroutine(randPos());
         }
 
         private void Start()
         {
-            observer = GetComponentInChildren<MonsterObserver>();
+            //observer = GetComponentInChildren<MonsterObserver>();
             playerScript=playerObj.GetComponent<Player>();
             monsterController = GetComponentInParent<MonsterController>();
         }
 
         void Update()
         {
+            Debug.Log("isDie" + isDie);
             /* Enemy Die */
             if (base.HP < 0.0f || Mathf.Approximately(base.HP, 0.0f) && isDie)
             {
@@ -126,7 +144,7 @@ namespace ZombieWorld
                     if (!isRandomPosEnd)
                     {
                         isRandomPosEnd = true;
-                        randPosCoroution = StartCoroutine(randPos());
+                        StartCoroutine(randPos());
                     }
 
                 }
@@ -152,14 +170,18 @@ namespace ZombieWorld
             nav.enabled = true;
         }
         
-
+       
         public IEnumerator randPos()
         {
-            //Debug.Log("Coroutine: randPos()");
+            float temp = Time.time * 1000f;
+            UnityEngine.Random.InitState((int)temp);
+
             state = State.Walk;
-            float NewX = UnityEngine.Random.Range(-0.01f, 0.01f);
-            float NewZ= UnityEngine.Random.Range(-0.01f, 0.01f);
+            float NewX = UnityEngine.Random.Range(-1f, 1f);
+            float NewZ= UnityEngine.Random.Range(-1f, 1f);
+
             Vector3 NewPos = new Vector3(this.transform.position.x+NewX, 0, this.transform.position.z + NewZ);
+            
             nav.SetDestination(NewPos);
             yield return new WaitForSeconds(enemyMoveTime);
             isRandomPosEnd = false;
@@ -181,8 +203,8 @@ namespace ZombieWorld
        
         public void OnSpawn()
         {
-            base.HP = MaxHP;
-            this.gameObject.transform.position = firstPos.position;
+            //base.HP = MaxHP;
+            //this.gameObject.transform.position = firstPos.position;
             //StartCoroutine(randPos());
         }
 
@@ -192,7 +214,11 @@ namespace ZombieWorld
             state = State.Dead;
             animator.SetFloat("ZombieHP", -1.0f);
             yield return new WaitForSeconds(2.0f);
+            this.gameObject.SetActive(false);
+            //yield return new WaitForSeconds(30f);
             monsterController.OnDie(this);
+            
+            //monsterController.OnDie(this);
         }
         
         IEnumerator Attack()
@@ -204,17 +230,16 @@ namespace ZombieWorld
 
         public void UserSkill()
         {
-            //TODO: 
         }
 
         private void OnCollisionEnter(Collision collision)
         {
             if (collision.collider.CompareTag("Bullet"))
             {
-                Debug.Log("�Ѿ�!");
                 weaponContainer.MonsterAttack(collision.gameObject.GetComponent<Bullet>());
                 GetDamageGun();
             }
+            
         }
     }
 }

@@ -9,30 +9,17 @@ public class PopUp : MonoBehaviour
 
     public void PopUpUI(string str)
     {
-        Debug.Log("PopUpUI1");
         this.gameObject.SetActive(true);
         txt.text = str;
-        StartCoroutine(BlinkUI());
-        //this.gameObject.SetActive(false);
+        StartCoroutine(ShowPopUp());
     }
 
-    IEnumerator BlinkUI()
+    IEnumerator ShowPopUp()
     {
-        Debug.Log("PopUpUI2");
         yield return new WaitForSeconds(2.0f);
         this.gameObject.SetActive(false);
+        
     }
-    //{
-    //    int count = 0;
-    //    while (count < 3)
-    //    {
-    //        this.gameObject.SetActive(true);
-    //        yield return new WaitForSeconds(1f);
-    //        this.gameObject.SetActive(false);
-    //        yield return new WaitForSeconds(0.5f);
-    //        count++;
-    //    }
-       
         
     
 }
