@@ -62,7 +62,8 @@ namespace ZombieWorld
 
         void Awake()
         {
-            
+
+            Rigidbody rigidbody = GetComponent<Rigidbody>();
             nav = GetComponent<NavMeshAgent>();
             animator = GetComponent<Animator>();
 
@@ -98,7 +99,8 @@ namespace ZombieWorld
 
         void Update()
         {
-            Debug.Log("isDie" + isDie);
+            GetComponent<Rigidbody>().velocity = Vector3.zero;
+            GetComponent<Rigidbody>().angularVelocity = Vector3.zero;
             /* Enemy Die */
             if (base.HP < 0.0f || Mathf.Approximately(base.HP, 0.0f) && isDie)
             {
@@ -159,14 +161,14 @@ namespace ZombieWorld
         {
             Debug.Log("Bat Damage");
             nav.enabled = false;
-            base.StartCoroutine(TakeDamage(2));
+            base.StartCoroutine(TakeDamage(3));
             nav.enabled = true;
         }
         public void GetDamageGun()
         {
             Debug.Log("Gun Damage");
             nav.enabled = false;
-            base.StartCoroutine(TakeDamage(5));
+            base.StartCoroutine(TakeDamage(6));
             nav.enabled = true;
         }
         
@@ -232,11 +234,16 @@ namespace ZombieWorld
         {
         }
 
+
+
         private void OnCollisionEnter(Collision collision)
         {
             if (collision.collider.CompareTag("Bullet"))
             {
                 weaponContainer.MonsterAttack(collision.gameObject.GetComponent<Bullet>());
+                
+                
+                
                 GetDamageGun();
             }
             

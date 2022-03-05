@@ -7,12 +7,10 @@ public class NPC : MonoBehaviour
 {
     public Player player;
     public PopUp popUp;
-    private void OnMouseDown()
+    
+
+    private void Update()
     {
         this.transform.LookAt(player.transform);
-        
-        //this.gameObject.SetActive(false);
     }
-
-    
 }

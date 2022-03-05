@@ -221,7 +221,7 @@ namespace ZombieWorld
         {
             if (MainWeapon.transform.childCount==0) // weapon lst empty
             {
-                popUp.GetComponent<PopUp>().PopUpUI("No weapon.");
+                popUp.GetComponent<PopUp>().PopUpUIWarning("No weapon.",2f);
                 return;
             }
             else

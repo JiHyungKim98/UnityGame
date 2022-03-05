@@ -35,7 +35,7 @@ public class Inventory : MonoBehaviour {
     {
         if (_slots.Count > 16)
         {
-            popUp.PopUpUI("Inventory is full");
+            popUp.PopUpUIWarning("Inventory is full",2f);
         }
         else
         {

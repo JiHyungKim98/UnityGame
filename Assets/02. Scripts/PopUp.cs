@@ -5,20 +5,34 @@ using TMPro;
 
 public class PopUp : MonoBehaviour
 {
-    public TextMeshProUGUI txt;
-
-    public void PopUpUI(string str)
+    public TextMeshProUGUI txtWarning;
+    public TextMeshProUGUI txtConversation;
+    public GameObject WarningUI;
+    public GameObject ConversationUI;
+    public GameObject LetterUI;
+    public void PopUpUIWarning(string str,float second)
     {
-        this.gameObject.SetActive(true);
-        txt.text = str;
-        StartCoroutine(ShowPopUp());
+        WarningUI.SetActive(true);
+        txtWarning.text = str;
+        StartCoroutine(ShowPopUp(second,WarningUI));
+    }
+    public void PopUpUIConversation(string str,float second)
+    {
+        ConversationUI.SetActive(true);
+        txtConversation.text = str;
+        StartCoroutine(ShowPopUp(second,ConversationUI));
     }
 
-    IEnumerator ShowPopUp()
+    IEnumerator ShowPopUp(float second, GameObject obj)
     {
-        yield return new WaitForSeconds(2.0f);
-        this.gameObject.SetActive(false);
+        yield return new WaitForSeconds(second);
+        obj.SetActive(false);
         
+    }
+    public void Show(string name)
+    {
+        if (name == "letter")
+            LetterUI.SetActive(true);
     }
         
     
