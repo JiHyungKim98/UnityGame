@@ -35,10 +35,13 @@ namespace ZombieWorld
         public GameObject popUp;
         public AudioSource audioSource;
         public AudioClip walkSound;
+        public AudioClip screamSound;
+        public AudioClip rippleSound;
         public Quest quest;
         public Button attackBtn;
         public bool isFirstAtk;
-
+        public JoyStick joyStick;
+        public bool isSoundOn;
         public ParticleSystem particleObject;
 
         public float MP
@@ -85,11 +88,9 @@ namespace ZombieWorld
             Run,
             Attack,
             Jump,
-            Dead
+            Dead,
+            Damaged
         }
-
-        //public State _state 
-        //{ get _state; set; }
 
         State state = State.Idle;
 
@@ -117,6 +118,19 @@ namespace ZombieWorld
 
         private void UpdateState()
         {
+            if (!audioSource.isPlaying)
+            {
+                if (joyStick.PlayerMoveFlag == false)
+                {
+                    audioSource.Stop();
+                }
+                else
+                {
+                    PlaySound(state);
+                }
+                
+            }
+           
             /* HP <= 0 */
             if (base.HP <= 0)
             {
@@ -124,7 +138,14 @@ namespace ZombieWorld
                 isDie = true;
                 Die();
             }
-
+            if (joyStick.PlayerMoveFlag == true)
+            {
+                state = State.Walk;
+            }
+            else
+            {
+                state = State.Idle;
+            }
             /* HP > 0 */
             if (!isDie)
             {
@@ -214,7 +235,29 @@ namespace ZombieWorld
             
         }
 
-        
+        public void PlaySound(State state)
+        {
+            switch(state)
+            {
+                case State.Walk:
+                    audioSource.clip = walkSound;
+                    break;
+                case State.Attack:
+                    //audioSource.clip = walkSound;
+                    break;
+                case State.Dead:
+                    //audioSource.clip = walkSound;
+                    break;
+                case State.Damaged:
+                    audioSource.clip = screamSound;
+                    break;
+                case State.Idle:
+                    audioSource.clip = null;
+                    break;
+
+            }
+            audioSource.Play();
+        }
         
 
         void Attack()
@@ -308,11 +351,12 @@ namespace ZombieWorld
 
         public void GetDamage(float damage)
         {
-            Debug.Log("¸Â´ÂÁß!");
-            //transform.position = Vector3.Slerp(transform.position, this.transform.forward * -3.0f, 1.0f);
-            //controller.Move(this.transform.forward * -3.0f);
+            audioSource.clip = screamSound;
+            audioSource.Play();
             popUp.GetComponent<PopUp>().Show(this.gameObject);
             base.StartCoroutine(TakeDamage(10));
+            audioSource.Stop();
+            audioSource.clip = walkSound;
         }
         public void Heal(float point)
         {
