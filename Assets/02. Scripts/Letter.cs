@@ -7,6 +7,6 @@ public class Letter : MonoBehaviour
     public PopUp popup;
     private void OnMouseDown()
     {
-        popup.Show(this.gameObject.name);
+        popup.Show(this.gameObject);
     }
 }

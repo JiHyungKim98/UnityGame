@@ -300,6 +300,7 @@ namespace ZombieWorld
         {
             if (hit.gameObject.CompareTag("Enemy"))
             {
+                Debug.Log("맞는중!");
                 controller.Move(this.transform.forward * -3.0f);
                 GetDamage(10);
             }
@@ -307,6 +308,10 @@ namespace ZombieWorld
 
         public void GetDamage(float damage)
         {
+            Debug.Log("맞는중!");
+            //transform.position = Vector3.Slerp(transform.position, this.transform.forward * -3.0f, 1.0f);
+            //controller.Move(this.transform.forward * -3.0f);
+            popUp.GetComponent<PopUp>().Show(this.gameObject);
             base.StartCoroutine(TakeDamage(10));
         }
         public void Heal(float point)

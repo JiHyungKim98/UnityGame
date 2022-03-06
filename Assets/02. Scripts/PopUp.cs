@@ -10,29 +10,41 @@ public class PopUp : MonoBehaviour
     public GameObject WarningUI;
     public GameObject ConversationUI;
     public GameObject LetterUI;
+    public GameObject HurtUI;
     public void PopUpUIWarning(string str,float second)
     {
-        WarningUI.SetActive(true);
+        //WarningUI.SetActive(true);
         txtWarning.text = str;
         StartCoroutine(ShowPopUp(second,WarningUI));
     }
     public void PopUpUIConversation(string str,float second)
     {
-        ConversationUI.SetActive(true);
+        //ConversationUI.SetActive(true);
         txtConversation.text = str;
         StartCoroutine(ShowPopUp(second,ConversationUI));
     }
 
     IEnumerator ShowPopUp(float second, GameObject obj)
     {
+        obj.SetActive(true);
         yield return new WaitForSeconds(second);
         obj.SetActive(false);
         
     }
-    public void Show(string name)
+    public void Show(GameObject obj)
     {
-        if (name == "letter")
+        if (obj.name == "letter")
+        {
             LetterUI.SetActive(true);
+        }
+            
+        if (obj.name == "Player")
+        {
+            Debug.Log("player attack");
+            //HurtUI.SetActive(true);
+            StartCoroutine(ShowPopUp(1.5f, HurtUI));
+        }
+            
     }
         
     

@@ -22,7 +22,7 @@ namespace ZombieWorld
         public Vector3 default_direction;
 
         /* Enemy Attack */
-        public float attackDelay = 2.0f;
+        public float attackDelay = 5.0f;
         public bool isAttack=false;
         public bool isFollow;
 
