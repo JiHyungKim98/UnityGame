@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using TMPro;
 
 public class PopUp : MonoBehaviour
@@ -11,17 +12,19 @@ public class PopUp : MonoBehaviour
     public GameObject ConversationUI;
     public GameObject LetterUI;
     public GameObject HurtUI;
+    public Image ImgNpc;
     public void PopUpUIWarning(string str,float second)
     {
         //WarningUI.SetActive(true);
         txtWarning.text = str;
         StartCoroutine(ShowPopUp(second,WarningUI));
     }
-    public void PopUpUIConversation(string str,float second)
+    public void PopUpUIConversation(string str,Sprite Img)
     {
         //ConversationUI.SetActive(true);
+        ConversationUI.SetActive(true);
         txtConversation.text = str;
-        StartCoroutine(ShowPopUp(second,ConversationUI));
+        ImgNpc.sprite = Img;
     }
 
     IEnumerator ShowPopUp(float second, GameObject obj)

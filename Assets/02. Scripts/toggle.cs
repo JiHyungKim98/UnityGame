@@ -16,11 +16,13 @@ public class toggle : MonoBehaviour
         if (GetComponent<Toggle>().isOn == true)
         {
             target.SetActive(true);
+            Time.timeScale = 0;
             
         }
         else
         {
             target.SetActive(false);
+            Time.timeScale = 1;
         }
     }
 }

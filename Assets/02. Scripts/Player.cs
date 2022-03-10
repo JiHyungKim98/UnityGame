@@ -118,7 +118,6 @@ namespace ZombieWorld
 
         void Update()
         {
-            Debug.Log(state);
             UpdateState();
         }
 
@@ -388,7 +387,6 @@ namespace ZombieWorld
         {
             if (hit.gameObject.CompareTag("Enemy"))
             {
-                Debug.Log("¸Â´ÂÁß!");
                 controller.Move(this.transform.forward * -3.0f);
                 GetDamage(10);
             }
@@ -405,7 +403,6 @@ namespace ZombieWorld
         }
         public void Heal(float point)
         {
-            Debug.Log("Heal");
             if ((base.HP + point) > 100)
             {
                 base.HP = 100;

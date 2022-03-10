@@ -35,8 +35,8 @@ namespace ZombieWorld
         /* Component Connect */
         protected NavMeshAgent nav;
         GameObject target;
-        public bool hasTarget;
         public Animator animator;
+        public GameObject inventory;
         //private new Rigidbody rigidbody;
 
         /* Script Connect */
@@ -83,11 +83,11 @@ namespace ZombieWorld
             //float temp = Time.time * 1000f;
             //UnityEngine.Random.InitState((int)temp);
             animator.SetFloat("ZombieHP", 1.0f);
-
+            
             //int idx = UnityEngine.Random.Range(0, 10);
             //this.gameObject.transform.position = GetComponentInParent<MonsterController>()._spawnPoints[idx].transform.position;
             this.gameObject.transform.position = firstPos.position;
-            StartCoroutine(randPos());
+            //StartCoroutine(randPos());
         }
 
         private void Start()
@@ -101,6 +101,15 @@ namespace ZombieWorld
         {
             GetComponent<Rigidbody>().velocity = Vector3.zero;
             GetComponent<Rigidbody>().angularVelocity = Vector3.zero;
+            if (inventory.activeSelf == true)
+            {
+                Time.timeScale = 0;
+            }
+            else
+            {
+                Time.timeScale = 1;
+                
+            }
             /* Enemy Die */
             if (base.HP < 0.0f || Mathf.Approximately(base.HP, 0.0f) && isDie)
             {

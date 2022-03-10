@@ -2,7 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-
+using ZombieWorld;
+using _02._Scripts;
 public class Quest : MonoBehaviour
 {
     [SerializeField] private List<GameObject> _quest = new List<GameObject>();
