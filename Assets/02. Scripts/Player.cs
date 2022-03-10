@@ -33,10 +33,14 @@ namespace ZombieWorld
         public GameObject MainWeapon;
         public GameObject inventory;
         public GameObject popUp;
+
         public AudioSource audioSource;
         public AudioClip walkSound;
         public AudioClip screamSound;
         public AudioClip rippleSound;
+        public AudioClip paddleSound;
+
+
         public Quest quest;
         public Button attackBtn;
         public bool isFirstAtk;
@@ -86,7 +90,8 @@ namespace ZombieWorld
             Idle,
             Walk,
             Run,
-            Attack,
+            AttackWithRipple,
+            AttackWithPaddle,
             Jump,
             Dead,
             Damaged
@@ -113,24 +118,20 @@ namespace ZombieWorld
 
         void Update()
         {
-            UpdateState();            
+            Debug.Log(state);
+            UpdateState();
         }
 
         private void UpdateState()
         {
-            if (!audioSource.isPlaying)
-            {
-                if (joyStick.PlayerMoveFlag == false)
-                {
-                    audioSource.Stop();
-                }
-                else
-                {
-                    PlaySound(state);
-                }
-                
-            }
-           
+            //if (!audioSource.isPlaying)
+            //{
+            //    PlaySound(state);
+            //}
+            //PlaySound(state);
+
+
+
             /* HP <= 0 */
             if (base.HP <= 0)
             {
@@ -141,11 +142,23 @@ namespace ZombieWorld
             if (joyStick.PlayerMoveFlag == true)
             {
                 state = State.Walk;
+                PlaySound(state);
+            }
+            else if (joyStick.PlayerMoveFlag == false && isAttack == true)
+            {
+                if(MainWeapon.transform.GetChild(0).name=="Gun")
+                    state = State.AttackWithRipple;
+                else if(MainWeapon.transform.GetChild(0).name == "Paddle")
+                {
+                    state = State.AttackWithPaddle;
+                }
             }
             else
             {
+                PlaySound(state);
                 state = State.Idle;
             }
+            
             /* HP > 0 */
             if (!isDie)
             {
@@ -237,27 +250,53 @@ namespace ZombieWorld
 
         public void PlaySound(State state)
         {
-            switch(state)
+            if (!audioSource.isPlaying)
             {
-                case State.Walk:
-                    audioSource.clip = walkSound;
-                    break;
-                case State.Attack:
-                    //audioSource.clip = walkSound;
-                    break;
-                case State.Dead:
-                    //audioSource.clip = walkSound;
-                    break;
-                case State.Damaged:
-                    audioSource.clip = screamSound;
-                    break;
-                case State.Idle:
-                    audioSource.clip = null;
-                    break;
+                switch (state)
+                {
+                    case State.Walk:
+                        audioSource.clip = walkSound;
+                        audioSource.volume = 1;
+                        audioSource.Play();
+                        break;
+                    case State.AttackWithRipple:
+                        audioSource.clip = rippleSound;
+                        audioSource.volume = 1;
+                        audioSource.Play();
+                        break;
+                    case State.AttackWithPaddle:
+                        audioSource.clip = paddleSound;
+                        audioSource.volume = 1;
+                        audioSource.Play();
+                        //StartCoroutine(RippleSound());
+                        break;
+                    case State.Dead:
+                        //audioSource.clip = walkSound;
+                        break;
+                    case State.Damaged:
+                        audioSource.clip = screamSound;
+                        audioSource.volume = 1;
+                        audioSource.Play();
+                        break;
+                    case State.Idle:
+                        audioSource.clip = null;
+                        audioSource.volume = 0;
+                        audioSource.Stop();
+                        break;
 
+
+                }
             }
-            audioSource.Play();
+            else
+            {
+                if (state == State.Idle)
+                {
+                    audioSource.Stop();
+                }
+            }
+            
         }
+        
         
 
         void Attack()
@@ -275,14 +314,18 @@ namespace ZombieWorld
                     
                     if (MainWeapon.transform.GetChild(0).gameObject.name == "Gun")
                     {
+                        state = State.AttackWithRipple;
                         Debug.Log("Gun Attack success");
                         StartCoroutine(AttackCoroutineGun());
+                        state = State.Idle;
                     }
 
                     else if (MainWeapon.transform.GetChild(0).gameObject.name == "Paddle")
                     {
+                        state = State.AttackWithPaddle;
                         Debug.Log("Bat Attack success");
                         StartCoroutine(AttackCoroutineBat(MainWeapon.transform.GetChild(0).gameObject));
+                        state = State.Idle;
                     }
                     else
                     {
@@ -307,27 +350,29 @@ namespace ZombieWorld
         protected IEnumerator AttackCoroutineBat(GameObject weapon)
         {
             
-            state = State.Attack;
+            state = State.AttackWithPaddle;
             animator.SetInteger("WeaponType_int", 12);
             animator.SetInteger("MeleeType_int", 1);
-           
+            
             yield return new WaitForSeconds(attackDelay * 0.3f);
+            PlaySound(state);
             WeaponContainer.Attack();
             animator.SetInteger("WeaponType_int", 0);
             animator.SetInteger("MeleeType_int", 0);
             yield return new WaitForSeconds(attackDelay * 0.3f);
             isAttack = false;
-            
+            state = State.Idle;
 
         }
 
         protected IEnumerator AttackCoroutineGun()
         {
             particleObject.Play();
-            state = State.Attack;
+            state = State.AttackWithRipple;
             animator.SetBool("Shoot_b", true); 
             animator.SetInteger("WeaponType_int", 2);
             yield return new WaitForSeconds(attackDelay * 0.4f);
+            PlaySound(state);
             WeaponContainer.Fire();
             yield return new WaitForSeconds(attackDelay * 1f);
             
@@ -335,7 +380,7 @@ namespace ZombieWorld
             isAttack = false;
             animator.SetBool("Shoot_b", false);
             animator.SetInteger("WeaponType_int", 0);
-
+            state = State.Idle;
         }
 
         void OnControllerColliderHit(ControllerColliderHit hit)
