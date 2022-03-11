@@ -1,20 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using ZombieWorld;
 
-public class NPC : MonoBehaviour
+public class NPC : NPCController
 {
-    public Player player;
-    public PopUp popUp;
     
-
-    private void Update()
+    private void OnMouseDown()
     {
-        if (Vector3.Distance(transform.position, player.transform.position) < 5.0f)
-        {
-            this.transform.LookAt(player.transform);
-        }
-        
+        Debug.Log("OnMouseDown()");
+        popUp.SetConversationUI(this.gameObject);
     }
+    
 }

@@ -1,12 +1,12 @@
 using System;
 using UnityEngine;
 using UnityEngine.UI;
-
+using TMPro;
 [Serializable]
 public class NPCData
 {
     public string name;
     public Sprite thumbnail;
-    public Text Talk;
+    public TextMeshProUGUI Talk;
 }
 

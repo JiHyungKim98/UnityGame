@@ -13,18 +13,46 @@ public class PopUp : MonoBehaviour
     public GameObject LetterUI;
     public GameObject HurtUI;
     public Image ImgNpc;
+    public NPCMasterData masterData;
+    public enum NPCs
+    {
+        NPCHoon,
+        NPCPing,
+        NPCBoatMan,
+        NPCNano
+    }
+
+    public void SetConversationUI(GameObject obj) 
+    {
+        ConversationUI.SetActive(true);
+        switch (obj.name)
+        {
+            case "NPCHoon":
+                ImgNpc.sprite = masterData.GetNPC(NPCs.NPCHoon).thumbnail;
+                txtConversation.text = masterData.GetNPC(NPCs.NPCHoon).Talk.text;
+                break;
+            case "NPCPing":
+                ImgNpc.sprite = masterData.GetNPC(NPCs.NPCPing).thumbnail;
+                txtConversation.text = masterData.GetNPC(NPCs.NPCPing).Talk.text;
+                break;
+            case "NPCBoatMan":
+                ImgNpc.sprite = masterData.GetNPC(NPCs.NPCBoatMan).thumbnail;
+                txtConversation.text = masterData.GetNPC(NPCs.NPCBoatMan).Talk.text;
+                break;
+            case "NPCNano":
+                ImgNpc.sprite = masterData.GetNPC(NPCs.NPCNano).thumbnail;
+                txtConversation.text = masterData.GetNPC(NPCs.NPCNano).Talk.text;
+                break;
+            default:
+                Debug.Log("err");
+                break;
+
+        }
+    }
     public void PopUpUIWarning(string str,float second)
     {
-        //WarningUI.SetActive(true);
         txtWarning.text = str;
         StartCoroutine(ShowPopUp(second,WarningUI));
-    }
-    public void PopUpUIConversation(string str,Sprite Img)
-    {
-        //ConversationUI.SetActive(true);
-        ConversationUI.SetActive(true);
-        txtConversation.text = str;
-        ImgNpc.sprite = Img;
     }
 
     IEnumerator ShowPopUp(float second, GameObject obj)
@@ -43,8 +71,6 @@ public class PopUp : MonoBehaviour
             
         if (obj.name == "Player")
         {
-            Debug.Log("player attack");
-            //HurtUI.SetActive(true);
             StartCoroutine(ShowPopUp(1.5f, HurtUI));
         }
             

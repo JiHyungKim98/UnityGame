@@ -8,12 +8,7 @@ namespace ZombieWorld
     public class Player : BaseCharacter
     {
         /* Player Move */
-        public float walkSpeed;  
-        public float runSpeed;
-        public float currentSpeed;
         public float jumpSpeed; 
-        public float gravity;  
-        public float rotationSpeed;
         private Vector3 MoveDir;
 
         /* Player Attack */
