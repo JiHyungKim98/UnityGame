@@ -40,7 +40,7 @@ public class CameraController : MonoBehaviour
                 Mat.EnableKeyword("_ALPHAPREMULTIPLY_ON");
                 Mat.renderQueue = 3000;
                 Color matColor = Mat.color;
-                matColor.a = 0.5f;
+                matColor.a = 0.2f;
                 Mat.color = matColor;
 
             }

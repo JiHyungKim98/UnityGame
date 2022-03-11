@@ -34,3 +34,6 @@ MonoBehaviour:
   - name: Candle
     thumbnail: {fileID: 21300000, guid: cb10f1dac82e00a47aad9ae5e799b228, type: 3}
     explain: {fileID: 1813024673601397327, guid: 0a6a9d6b90ec7b24caabf9239486d887, type: 3}
+  - name: Boat
+    thumbnail: {fileID: 21300000, guid: 0e16229c5652b6948926686876bcdc76, type: 3}
+    explain: {fileID: 1813024673601397327, guid: 2fb76c0d9fb891e4291d25ac5e9872bc, type: 3}

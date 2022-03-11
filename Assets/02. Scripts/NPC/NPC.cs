@@ -11,6 +11,10 @@ public class NPC : MonoBehaviour
 
     private void Update()
     {
-        this.transform.LookAt(player.transform);
+        if (Vector3.Distance(transform.position, player.transform.position) < 5.0f)
+        {
+            this.transform.LookAt(player.transform);
+        }
+        
     }
 }
