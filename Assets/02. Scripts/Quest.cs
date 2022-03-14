@@ -4,23 +4,24 @@ using UnityEngine;
 using UnityEngine.UI;
 using ZombieWorld;
 using _02._Scripts;
+
 public class Quest : MonoBehaviour
 {
     [SerializeField] private List<GameObject> _quest = new List<GameObject>();
    
     public bool isFirstAtk;
     public bool isFirstUseItem;
-    public void FirstAtk()
+    private void Update()
     {
-        _quest[0].gameObject.GetComponent<Toggle>().isOn = true;
+        if (QuestManager.Instance.GetQuestState(QuestManager.QuestType.UseWeapon) && isFirstAtk==true)
+        {
+            _quest[0].gameObject.GetComponent<Toggle>().isOn = true;
+        }
+        if(QuestManager.Instance.GetQuestState(QuestManager.QuestType.UseWeapon) && isFirstUseItem == true)
+        {
+            _quest[1].gameObject.GetComponent<Toggle>().isOn = true;
+        }
     }
-    public void FirstUseItem()
-    {
-        _quest[1].gameObject.GetComponent<Toggle>().isOn = true;
-    }
-    public void FirstDieEnemy()
-    {
-        _quest[2].gameObject.GetComponent<Toggle>().isOn = true;
-    }
+    
 
 }

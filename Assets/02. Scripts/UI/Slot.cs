@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using ZombieWorld;
-
+using _02._Scripts;
 
 public class Slot : MonoBehaviour
 {
@@ -41,10 +41,11 @@ public class Slot : MonoBehaviour
         thisItem = gameObject.transform.GetChild(0).gameObject;
         if (thisItem.GetComponent<Weapon>()==true)
         {
+
             if (!quest.isFirstAtk)
             {
+                QuestManager.Instance.Notify(QuestManager.QuestType.UseWeapon);
                 quest.isFirstAtk = true;
-                quest.FirstAtk();
             }
             WeaponContainer.SetMainWeapon(thisItem,this.gameObject);
         }
@@ -52,8 +53,8 @@ public class Slot : MonoBehaviour
         {
             if (!quest.isFirstUseItem)
             {
+                QuestManager.Instance.Notify(QuestManager.QuestType.UseItem);
                 quest.isFirstAtk = true;
-                quest.FirstUseItem();
             }
             switch (thisItem.name)
             {

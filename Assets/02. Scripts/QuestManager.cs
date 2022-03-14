@@ -1,6 +1,8 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using Jjamcat.Util;
+using UnityEngine;
 using ZombieWorld;
 
 namespace _02._Scripts
@@ -12,6 +14,7 @@ namespace _02._Scripts
         {
             UseWeapon,
             UseItem,
+            MonsterKill
         }
 
         private Dictionary<QuestType, bool> _questState = new Dictionary<QuestType, bool>();
@@ -19,7 +22,6 @@ namespace _02._Scripts
         public void Notify(QuestType type)
         {
             _questState[QuestType.UseWeapon] = true;
-            //_questState[QuestType.UseWeapon].gameObject.GetComponent<Toggle>().isOn = true;
         }
 
         public bool GetQuestState(QuestType type)
