@@ -1,0 +1,16 @@
+diff a/Assets/02. Scripts/NPCData.cs b/Assets/02. Scripts/NPCData.cs	(rejected hunks)
+@@ -1,12 +1,12 @@
+ using System;
+ using UnityEngine;
+ using UnityEngine.UI;
+-using TMPro;
++
+ [Serializable]
+ public class NPCData
+ {
+     public string name;
+     public Sprite thumbnail;
+-    public TextMeshProUGUI Talk;
++    public Text Talk;
+ }
+ 
