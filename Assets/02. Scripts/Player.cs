@@ -48,6 +48,9 @@ namespace ZombieWorld
         public bool isSoundOn;
         public ParticleSystem particleObject;
 
+        public bool isMoveToBoat;
+        public GameObject Boat;
+        public MovingUI movingUI;
         public float MP
         {
             get
@@ -69,8 +72,10 @@ namespace ZombieWorld
 
         //private CharacterController controller;
         private Animator animator;
+        Vector3 BoatPos;
 
-        
+        public GameObject endingPos;
+
         enum PlayerAni
         {
             idle=0,
@@ -114,23 +119,32 @@ namespace ZombieWorld
         {
             WeaponContainer = GetComponentInChildren<WeaponContainer>();
             attackBtn.onClick.AddListener(Attack);
+            
         }
 
         void Update()
         {
             UpdateState();
+            if (isMoveToBoat)
+            {
+                BoatPos = new Vector3(Boat.transform.position.x, 0, Boat.transform.position.z);
+                //transform.LookAt(Boat.transform);
+                animator.SetBool("Static_b", false);
+                animator.SetFloat("Speed_f", 1.0f);
+                transform.position = Vector3.MoveTowards(transform.position, BoatPos, 1f);
+                if (Vector3.Distance(transform.position, BoatPos) <= 5f)
+                {
+                    isMoveToBoat = false;
+                    animator.SetFloat("Speed_f", 0);
+                    joyStick.enabled = true;
+                    movingUI.gameObject.SetActive(true);
+                    movingUI.BoatMove();
+                }
+            }
         }
 
         private void UpdateState()
         {
-            //if (!audioSource.isPlaying)
-            //{
-            //    PlaySound(state);
-            //}
-            //PlaySound(state);
-
-
-
             /* HP <= 0 */
             if (base.HP <= 0)
             {
@@ -246,7 +260,11 @@ namespace ZombieWorld
             }
             
         }
-
+        public void MoveToEndingPos()
+        {
+            Debug.Log("MoveToEndingPos()");
+            transform.position = endingPos.transform.position;
+        }
         public void PlaySound(State state)
         {
             if (!audioSource.isPlaying)
@@ -419,6 +437,13 @@ namespace ZombieWorld
             animator.SetBool("Death_b", true);
         }
 
+        public void MoveToBoat()
+        {
+            Debug.Log("MoveToBoat()");
+            transform.LookAt(Boat.transform);
+            isMoveToBoat = true;
+            joyStick.enabled = false;
+        }
         
     }
 }

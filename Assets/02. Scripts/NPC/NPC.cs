@@ -1,20 +1,19 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using ZombieWorld;
+using _02._Scripts;
 
-public class NPC : MonoBehaviour
+public class NPC : NPCController
 {
-    public Player player;
-    public PopUp popUp;
-    
-
-    private void Update()
+    private void OnMouseDown()
     {
-        if (Vector3.Distance(transform.position, player.transform.position) < 5.0f)
+        if(QuestManager.Instance.GetQuestState(QuestManager.QuestType.FindBoat))
         {
-            this.transform.LookAt(player.transform);
+            popUp.SetConversationUI(gameObject,1);
         }
-        
+        else
+        {
+            popUp.SetConversationUI(gameObject, 2);
+        }
     }
 }

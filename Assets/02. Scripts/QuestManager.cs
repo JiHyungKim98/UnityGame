@@ -14,14 +14,16 @@ namespace _02._Scripts
         {
             UseWeapon,
             UseItem,
-            MonsterKill
+            MonsterKill,
+            FindBoat,
+            FindNPCNano
         }
 
         private Dictionary<QuestType, bool> _questState = new Dictionary<QuestType, bool>();
 
         public void Notify(QuestType type)
         {
-            _questState[QuestType.UseWeapon] = true;
+            _questState[type] = true;
         }
 
         public bool GetQuestState(QuestType type)

@@ -6,7 +6,10 @@ using UnityEngine;
 public class NPCMasterData : ScriptableObject
 {
     public List<NPCData> _data;
-
+    public NPCData GetNPC(PopUp.NPCs type)
+    {
+        return _data[(int)type];
+    }
 }
 
 //using System.Collections.Generic;

@@ -15,13 +15,16 @@ MonoBehaviour:
   _data:
   - name: NPCHoon
     thumbnail: {fileID: 21300000, guid: 0f42bae7e3706ad4ea98b126539eda2c, type: 3}
-    Talk: {fileID: 0}
+    Talk: {fileID: 8395321248495097305, guid: f4d7dc62d08aeaa41a04ec83fa7050aa, type: 3}
   - name: NPCPing
     thumbnail: {fileID: 21300000, guid: 4ef19a5673b9f864aa863e44889dc04c, type: 3}
-    Talk: {fileID: 0}
+    Talk: {fileID: 8395321248495097305, guid: b623605687da48c439a12f030954c615, type: 3}
+  - name: NPCBoatManWithBoat
+    thumbnail: {fileID: 21300000, guid: d461b93908ab9994aa4d713d7081836e, type: 3}
+    Talk: {fileID: 8395321248495097305, guid: 85ebac27991d68743a9b0238e328ab5b, type: 3}
+  - name: NPCNano
+    thumbnail: {fileID: 21300000, guid: 537acf7bb9baf5c48b812ca2829ea05f, type: 3}
+    Talk: {fileID: 8395321248495097305, guid: 2a4235270c3aeca439be06ef14e17080, type: 3}
   - name: NPCBoatMan
     thumbnail: {fileID: 21300000, guid: d461b93908ab9994aa4d713d7081836e, type: 3}
-    Talk: {fileID: 0}
-  - name: 
-    thumbnail: {fileID: 0}
-    Talk: {fileID: 0}
+    Talk: {fileID: 8395321248495097305, guid: 5d48841145ede154f84afdfa638cf146, type: 3}

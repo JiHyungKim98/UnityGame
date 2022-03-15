@@ -12,19 +12,23 @@ public class PopUp : MonoBehaviour
     public GameObject ConversationUI;
     public GameObject LetterUI;
     public GameObject HurtUI;
+    public GameObject SelectBtn;
     public Image ImgNpc;
     public NPCMasterData masterData;
     public enum NPCs
     {
         NPCHoon,
         NPCPing,
-        NPCBoatMan,
-        NPCNano
+        NPCBoatManWithBoat,
+        NPCNano,
+        NPCBoatMan
+        
     }
 
-    public void SetConversationUI(GameObject obj) 
+    public void SetConversationUI(GameObject obj,int num) 
     {
         ConversationUI.SetActive(true);
+        SelectBtn.SetActive(false);
         switch (obj.name)
         {
             case "NPCHoon":
@@ -36,13 +40,26 @@ public class PopUp : MonoBehaviour
                 txtConversation.text = masterData.GetNPC(NPCs.NPCPing).Talk.text;
                 break;
             case "NPCBoatMan":
-                ImgNpc.sprite = masterData.GetNPC(NPCs.NPCBoatMan).thumbnail;
-                txtConversation.text = masterData.GetNPC(NPCs.NPCBoatMan).Talk.text;
+                if (num == 1)
+                {
+                    ImgNpc.sprite = masterData.GetNPC(NPCs.NPCBoatManWithBoat).thumbnail;
+                    txtConversation.text = masterData.GetNPC(NPCs.NPCBoatManWithBoat).Talk.text;
+                    SelectBtn.SetActive(true);
+                }
+                else
+                {
+                    ImgNpc.sprite = masterData.GetNPC(NPCs.NPCBoatMan).thumbnail;
+                    txtConversation.text = masterData.GetNPC(NPCs.NPCBoatMan).Talk.text;
+                    //SelectBtn.SetActive(false);
+                }
+               
                 break;
+                
             case "NPCNano":
                 ImgNpc.sprite = masterData.GetNPC(NPCs.NPCNano).thumbnail;
                 txtConversation.text = masterData.GetNPC(NPCs.NPCNano).Talk.text;
                 break;
+           
             default:
                 Debug.Log("err");
                 break;
