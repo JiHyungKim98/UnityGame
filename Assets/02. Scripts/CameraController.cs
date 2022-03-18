@@ -27,6 +27,10 @@ public class CameraController : MonoBehaviour
         RaycastHit hit;
         if(Physics.Raycast(transform.position,Direction,out hit, Distance))
         {
+            if (hit.transform.gameObject.tag == "Wall")
+            {
+                return;
+            }
             ObstacleRenderer = hit.transform.gameObject.GetComponentInChildren<Renderer>();
             Mat = ObstacleRenderer.material;
             if (ObstacleRenderer != null)

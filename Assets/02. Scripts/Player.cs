@@ -145,6 +145,7 @@ namespace ZombieWorld
 
         private void UpdateState()
         {
+            Debug.Log(state);
             /* HP <= 0 */
             if (base.HP <= 0)
             {
@@ -152,12 +153,12 @@ namespace ZombieWorld
                 isDie = true;
                 Die();
             }
-            if (joyStick.PlayerMoveFlag == true)
+            if (joyStick.playerMoveFlag == true)
             {
                 state = State.Walk;
                 PlaySound(state);
             }
-            else if (joyStick.PlayerMoveFlag == false && isAttack == true)
+            else if (joyStick.playerMoveFlag == false && isAttack == true)
             {
                 if(MainWeapon.transform.GetChild(0).name=="Gun")
                     state = State.AttackWithRipple;
@@ -263,7 +264,7 @@ namespace ZombieWorld
         public void MoveToEndingPos()
         {
             Debug.Log("MoveToEndingPos()");
-            transform.position = endingPos.transform.position;
+            controller.Move(endingPos.transform.position);
         }
         public void PlaySound(State state)
         {
@@ -274,7 +275,7 @@ namespace ZombieWorld
                     case State.Walk:
                         audioSource.clip = walkSound;
                         audioSource.volume = 1;
-                        audioSource.Play();
+                        audioSource.PlayOneShot(walkSound);
                         break;
                     case State.AttackWithRipple:
                         audioSource.clip = rippleSound;

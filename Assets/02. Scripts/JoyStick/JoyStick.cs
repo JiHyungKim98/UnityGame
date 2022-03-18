@@ -116,14 +116,14 @@ public class JoyStick : MonoBehaviour
     private Vector3 StickFirstPos;
     private Vector3 JoyVec;
     private float Radius; // JoyStick Background radius
-    private bool playerMoveFlag; // Player move switch
-    public bool PlayerMoveFlag
-    {
-        get
-        {
-            return this.playerMoveFlag;
-        }
-    }
+    public bool playerMoveFlag; // Player move switch
+    //public bool PlayerMoveFlag
+    //{
+    //    get
+    //    {
+    //        return this.playerMoveFlag;
+    //    }
+    //}
     private void Start()
     {
         Radius = GetComponent<RectTransform>().sizeDelta.y * 0.5f; // RectTransform y size.
@@ -164,7 +164,7 @@ public class JoyStick : MonoBehaviour
         PointerEventData Data = _Data as PointerEventData;
         Vector3 Pos = Data.position;
 
-        JoyVec = (StickFirstPos - Pos).normalized;
+        JoyVec = (Pos - StickFirstPos).normalized;
 
         // My Current Pos - first JoyStick Pos
         float Distance = Vector3.Distance(Pos, StickFirstPos);
@@ -172,12 +172,12 @@ public class JoyStick : MonoBehaviour
 
         if (Distance < Radius)
         {
-            Stick.position = StickFirstPos + (-JoyVec) * Distance;
+            Stick.position = StickFirstPos + (JoyVec) * Distance;
             currentSpeed = 0.1f;
         }
         else
         {
-            Stick.position = StickFirstPos + (-JoyVec) * Radius;
+            Stick.position = StickFirstPos + (JoyVec) * Radius;
             currentSpeed = 0.2f;
         }
 
